@@ -1,6 +1,8 @@
 package main;
 
 import entity.Player;
+import tile.TileManager;
+import tile.TiledMapViewer;
 
 import javax.swing.JPanel;
 import java.awt.*;
@@ -21,6 +23,8 @@ public class GamePanel extends JPanel implements Runnable{
     // FPS
     int FPS = 60;
 
+//    TileManager tileM = new TileManager("level1/level1.tmx");
+    TiledMapViewer tiledMapViewer = new TiledMapViewer("res/level1/level1.tmx");
     KeyHandler keyH = new KeyHandler();
     Thread gameThread; // keeps our program running
     Player player = new Player(this, keyH);
@@ -33,9 +37,9 @@ public class GamePanel extends JPanel implements Runnable{
     int gameState = 0; // the game starts at the menu
     int menuOption = 0; // 0 = START GAME, 1 = EXIT
     // player position on map
-    int playerX = 100;
+   /* int playerX = 100;
     int playerY = 100;
-    int playerSpeed = 4;
+    int playerSpeed = 4; */ // NU MAI AVEM NEVOIE.. LE STERGEM LA FINAL I GUESS
 
     public GamePanel(){
         // how big is the window
@@ -88,6 +92,9 @@ public class GamePanel extends JPanel implements Runnable{
 
         } else if (gameState == 1) {
             // updating the player
+
+            tiledMapViewer.draw(g2);
+
             player.draw(g2);
         }
         // to dispose of this graphic context and release
@@ -102,16 +109,27 @@ public class GamePanel extends JPanel implements Runnable{
         double delta = 0;
         long lastTime = System.nanoTime();
         long currentTime;
+        long timer = 0;
+        int drawCount = 0;
 
         while(gameThread != null) {
             currentTime = System.nanoTime();
             delta += (currentTime - lastTime) / drawInterval; // how much time has passed / drawInterval
+            timer += (currentTime - lastTime);
             lastTime = currentTime; // updating the last time
 
             if (delta >= 1) {
                 update();
                 repaint();
                 --delta;
+            }
+
+            if ( timer >= 1000000000) {
+
+                System.out.println("FPS: " + drawCount);
+                drawCount = 0;
+                timer = 0;
+
             }
         }
     }
