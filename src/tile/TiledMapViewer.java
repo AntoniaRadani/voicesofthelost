@@ -4,6 +4,8 @@ import javax.imageio.ImageIO;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import main.GamePanel;
+import main.KeyHandler;
 import org.w3c.dom.*;
 
 import java.awt.*;
@@ -11,6 +13,9 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 
 public class TiledMapViewer {
+
+    GamePanel gp;
+
     private int[][][] mapData;
     private int tileWidth = 16;  // Set default tile size (adjustable)
     private int tileHeight = 16;
@@ -21,8 +26,9 @@ public class TiledMapViewer {
 
     private int screenX, screenY;
 
-    public TiledMapViewer(String tmxFilePath) {
+    public TiledMapViewer(String tmxFilePath, GamePanel gp) {
         loadTMX(tmxFilePath);
+        this.gp = gp;
         screenX = 0;
         screenY = 0;
     }
@@ -61,8 +67,8 @@ public class TiledMapViewer {
             Element mapElement = (Element) doc.getElementsByTagName("map").item(0);
             mapWidth = Integer.parseInt(mapElement.getAttribute("width"));
             mapHeight = Integer.parseInt(mapElement.getAttribute("height"));
-            tileWidth = Integer.parseInt(mapElement.getAttribute("tilewidth"));
-            tileHeight = Integer.parseInt(mapElement.getAttribute("tileheight"));
+            tileWidth = Integer.parseInt(mapElement.getAttribute("tilewidth")) ;
+            tileHeight = Integer.parseInt(mapElement.getAttribute("tileheight")) ;
 
             // TILESET (support for external TSX)
             Node tilesetNode = doc.getElementsByTagName("tileset").item(0);
@@ -129,13 +135,25 @@ public class TiledMapViewer {
 
     public void draw(Graphics2D g2) {
        //  Parcurge toate layerele
+
+        int worldRow = 0;
+        int worldCol = 0;
+
         for (int layer = 0; layer < mapData.length; layer++) {
             // Parcurge fiecare celulă din strat
-            for (int row = 0; row < mapHeight; row++) {
-                for (int col = 0; col < mapWidth; col++) {
-                    int tileId = mapData[layer][row][col];  // Folosește layer-ul curent
+            for ( worldRow = 0; worldRow < mapHeight; worldRow++) {
+                for (worldCol = 0; worldCol < mapWidth; worldCol++) {
+
+                    int worldX = worldCol * gp.tileSize;
+                    int worldY = worldRow * gp.tileSize; // pozitia pe mapa
+                    screenX = worldX - gp.player.worldX + gp.player.screenX; // pozitia pe ecran unde desenam
+                    screenY = worldY - gp.player.worldY + gp.player.screenY;
+
+
+
+                    int tileId = mapData[layer][worldRow][worldCol];  // Folosește layer-ul curent
                     if (tileId > 0 && tileId < tileImages.length && tileImages[tileId] != null) {
-                        g2.drawImage(tileImages[tileId], col * tileWidth - screenX, row * tileHeight - screenY, null);                    }
+                        g2.drawImage(tileImages[tileId], screenX, screenY, gp.tileSize, gp.tileSize, null);                    }
                 }
             }
         }

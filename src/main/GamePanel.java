@@ -11,8 +11,8 @@ public class GamePanel extends JPanel implements Runnable{
     // screen settings
 
     // the default size of the player
-    final int originalTileSize = 16; // 16 x 16 tile size
-    final int scale = 3; // to make our player and tiles bigger
+    public final int originalTileSize = 16; // 16 x 16 tile size
+    public final int scale = 3; // to make our player and tiles bigger
 
     public final int tileSize = originalTileSize * scale; // 48 x 48 the actual tile size
     final int maxScreenCol = 16; // how many tiles can we see - column
@@ -36,7 +36,7 @@ public class GamePanel extends JPanel implements Runnable{
     int FPS = 60;
 
 //    TileManager tileM = new TileManager("level1/level1.tmx");
-public TiledMapViewer tiledMapViewer = new TiledMapViewer("res/level1/level1.tmx");
+public TiledMapViewer tiledMapViewer = new TiledMapViewer("res/level1/level1.tmx", this);
     KeyHandler keyH = new KeyHandler();
     Thread gameThread; // keeps our program running
     public Player player = new Player(this, keyH);
