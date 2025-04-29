@@ -39,6 +39,7 @@ public class GamePanel extends JPanel implements Runnable{
 public TiledMapViewer tiledMapViewer = new TiledMapViewer("res/level1/level1.tmx", this);
     KeyHandler keyH = new KeyHandler();
     Thread gameThread; // keeps our program running
+    public CollisionChecker cChecker = new CollisionChecker(this);
     public Player player = new Player(this, keyH);
     GameMenu menu = new GameMenu(this);
     MouseHandler mouseH = new MouseHandler(this);
@@ -126,6 +127,7 @@ public TiledMapViewer tiledMapViewer = new TiledMapViewer("res/level1/level1.tmx
             if ( timer >= 1000000000) {
                 timer = 0;
             }
+
 
 
         }

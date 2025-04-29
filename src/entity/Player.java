@@ -29,15 +29,15 @@ public class Player extends Entity{
         screenY = gp.screenHeight/2 - gp.tileSize/2;
 
         // making the "body" of the player smaller for better collision handling
-        solidArea = new Rectangle(8, 40, 32, 32);
+        solidArea = new Rectangle(12, 24, 24, 24); // posibil sa schimbam in frunctie de sprite dr zenn
 
         setDefaultValues();
         getPlayerImage();
     }
 
     public  void setDefaultValues(){
-        worldX = gp.tileSize * 23; // players position in the world map
-        worldY = gp.tileSize * 21; // where the player starts the game   gp.tileSize * coordonata( linis/coloana din matrice)
+        worldX = gp.tileSize * 24; // players position in the world map
+        worldY = gp.tileSize * 49; // where the player starts the game   gp.tileSize * coordonata( linis/coloana din matrice)
         speed = 4;
         direction = "down";
     }
@@ -60,21 +60,58 @@ public class Player extends Entity{
     }
 
     public void update() {
+
+        // Limite pe worldX și worldY
+        if (worldX < 0) {
+            worldX = 0;
+        }
+        if (worldY < 0) {
+            worldY = 0;
+        }
+        if (worldX > gp.worldWidth - gp.tileSize) {
+            worldX = gp.worldWidth - gp.tileSize;
+        }
+        if (worldY > gp.worldHeight - gp.tileSize) {
+            worldY = gp.worldHeight - gp.tileSize;
+        }
+
         // Actualizarea coordonatelor lumii în funcție de direcția de mișcare
         if (keyH.downPressed == true || keyH.upPressed == true || keyH.rightPressed == true || keyH.leftPressed == true ) {
 
             if (keyH.upPressed) {
                 direction = "up";
-                worldY -= speed;
+              //  worldY -= speed;
             } else if (keyH.downPressed) {
                 direction = "down";
-                worldY += speed;
+               // worldY += speed;
             } else if (keyH.leftPressed) {
                 direction = "left";
-                worldX -= speed;
+               // worldX -= speed;
             } else if (keyH.rightPressed) {
                 direction = "right";
-                worldX += speed;
+                //worldX += speed;
+            }
+            // verificare coliziune
+            this.collisionOn = false;
+            gp.cChecker.checkTile(this);
+
+            // daca collisionOn este false, player se misca
+
+            if(!this.collisionOn) {
+                switch (direction) {
+                    case "up":
+                        worldY -= speed; // Mișcare în sus
+                        break;
+                    case "down":
+                        worldY += speed; // Mișcare în jos
+                        break;
+                    case "left":
+                        worldX -= speed; // Mișcare la stânga
+                        break;
+                    case "right":
+                        worldX += speed; // Mișcare la dreapta
+                        break;
+                }
             }
 
             spriteCounter++;
@@ -92,28 +129,8 @@ public class Player extends Entity{
         }
 
 
-     /*   collisionOn = false;  // Resetăm flag-ul de coliziune
+        // gp.tiledMapViewer.updateCamera(worldX, worldY, gp.screenWidth, gp.screenHeight);
 
-        if(!collisionOn) {
-            switch (direction) {
-                case "up":
-                    worldY -= speed; // Mișcare în sus
-                    break;
-                case "down":
-                    worldY += speed; // Mișcare în jos
-                    break;
-                case "left":
-                    worldX -= speed; // Mișcare la stânga
-                    break;
-                case "right":
-                    worldX += speed; // Mișcare la dreapta
-                    break;
-            }
-        }
-
-        gp.tiledMapViewer.updateCamera(worldX, worldY, gp.screenWidth, gp.screenHeight);
-
-      */
     }
 
     public void draw(Graphics2D g2){
