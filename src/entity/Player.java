@@ -29,15 +29,15 @@ public class Player extends Entity{
         screenY = gp.screenHeight/2 - gp.tileSize/2;
 
         // making the "body" of the player smaller for better collision handling
-        solidArea = new Rectangle(8, 40, 32, 32);
+        solidArea = new Rectangle(12, 24, 24, 24); // posibil sa schimbam in frunctie de sprite dr zenn
 
         setDefaultValues();
         getPlayerImage();
     }
 
     public  void setDefaultValues(){
-        worldX = gp.tileSize * 23; // players position in the world map
-        worldY = gp.tileSize * 21; // where the player starts the game   gp.tileSize * coordonata( linis/coloana din matrice)
+        worldX = gp.tileSize * 24; // players position in the world map
+        worldY = gp.tileSize * 49; // where the player starts the game   gp.tileSize * coordonata( linis/coloana din matrice)
         speed = 4;
         direction = "down";
     }
@@ -60,52 +60,117 @@ public class Player extends Entity{
     }
 
     public void update() {
+
+        // Limite pe worldX și worldY
+        if (worldX < 0) {
+            worldX = 0;
+        }
+        if (worldY < 0) {
+            worldY = 0;
+        }
+        if (worldX > gp.worldWidth - gp.tileSize) {
+            worldX = gp.worldWidth - gp.tileSize;
+        }
+        if (worldY > gp.worldHeight - gp.tileSize) {
+            worldY = gp.worldHeight - gp.tileSize;
+        }
+
         // Actualizarea coordonatelor lumii în funcție de direcția de mișcare
-        if(keyH.upPressed){
-            direction = "up";
-        }
-        else if(keyH.downPressed){
-            direction = "down";
-        }
-        else if(keyH.leftPressed){
-            direction = "left";
-        }
-        else if(keyH.rightPressed){
-            direction = "right";
-        }
+        if (keyH.downPressed == true || keyH.upPressed == true || keyH.rightPressed == true || keyH.leftPressed == true ) {
 
-        collisionOn = false;  // Resetăm flag-ul de coliziune
-
-        if(!collisionOn) {
-            switch (direction) {
-                case "up":
-                    worldY -= speed; // Mișcare în sus
-                    break;
-                case "down":
-                    worldY += speed; // Mișcare în jos
-                    break;
-                case "left":
-                    worldX -= speed; // Mișcare la stânga
-                    break;
-                case "right":
-                    worldX += speed; // Mișcare la dreapta
-                    break;
+            if (keyH.upPressed) {
+                direction = "up";
+              //  worldY -= speed;
+            } else if (keyH.downPressed) {
+                direction = "down";
+               // worldY += speed;
+            } else if (keyH.leftPressed) {
+                direction = "left";
+               // worldX -= speed;
+            } else if (keyH.rightPressed) {
+                direction = "right";
+                //worldX += speed;
             }
+            // verificare coliziune
+            this.collisionOn = false;
+            gp.cChecker.checkTile(this);
+
+            // daca collisionOn este false, player se misca
+
+            if(!this.collisionOn) {
+                switch (direction) {
+                    case "up":
+                        worldY -= speed; // Mișcare în sus
+                        break;
+                    case "down":
+                        worldY += speed; // Mișcare în jos
+                        break;
+                    case "left":
+                        worldX -= speed; // Mișcare la stânga
+                        break;
+                    case "right":
+                        worldX += speed; // Mișcare la dreapta
+                        break;
+                }
+            }
+
+            spriteCounter++;
+
+            if ( spriteCounter > 12 ) {
+                if ( spriteNum == 1 ) {
+                    spriteNum = 2;
+                }
+                else if ( spriteNum == 2 ) {
+                    spriteNum = 1;
+                }
+                spriteCounter = 0;
+            }
+
         }
 
-        gp.tiledMapViewer.updateCamera(worldX, worldY, gp.screenWidth, gp.screenHeight);
-    }
 
+        // gp.tiledMapViewer.updateCamera(worldX, worldY, gp.screenWidth, gp.screenHeight);
+
+    }
 
     public void draw(Graphics2D g2){
 //        g2.setColor(Color.black);
 //        g2.fillRect(x, y, gp.tileSize, gp.tileSize);
-        BufferedImage image = switch (direction) {
-            case "up" -> up1;
-            case "down" -> down1;
-            case "left" -> left1;
-            case "right" -> right1;
-            default -> null;
+        BufferedImage image = null;
+
+        switch (direction) {
+            case "up":
+                if ( spriteNum == 1 ) {
+                    image = up1;
+                }
+                if ( spriteNum == 2 ) {
+                    image = up2;
+                }
+                break;
+            case "down":
+                if ( spriteNum == 1 ) {
+                    image = down1;
+                }
+                if ( spriteNum == 2 ) {
+                    image = down2;
+                }
+                break;
+            case "left":
+                if ( spriteNum == 1 ) {
+                    image = left1;
+                }
+                if ( spriteNum == 2 ) {
+                    image = left2;
+                }
+                break;
+            case "right":
+                if ( spriteNum == 1 ) {
+                    image = right1;
+                }
+                if ( spriteNum == 2 ) {
+                    image = right2;
+                }
+                break;
         };
 
         g2.drawImage(image, screenX, screenY, gp.tileSize, gp.tileSize, null);

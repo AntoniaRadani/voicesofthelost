@@ -11,6 +11,7 @@ public class Entity {
     public String direction;
     public int spriteCounter = 0;
     public int spriteNum = 1;
+    // pentru coliziuni
     public Rectangle solidArea;
     public boolean collisionOn = false;
 }
