@@ -11,23 +11,40 @@ public class GamePanel extends JPanel implements Runnable{
     // screen settings
 
     // the default size of the player
-    final int originalTileSize = 16; // 16 x 16 tile size
-    final int scale = 3; // to make our player and tiles bigger
+    public final int originalTileSize = 16; // 16 x 16 tile size
+    public final int scale = 3; // to make our player and tiles bigger
 
     public final int tileSize = originalTileSize * scale; // 48 x 48 the actual tile size
     final int maxScreenCol = 16; // how many tiles can we see - column
     final int maxScreenRow = 12; // how many tiles can we see - row
-    final int screenWidth = tileSize * maxScreenCol; // 768 pixels
-    final int screenHeight = tileSize * maxScreenRow; // 576 pixels
+    public final int screenWidth = tileSize * maxScreenCol; // 768 pixels
+    public final int screenHeight = tileSize * maxScreenRow; // 576 pixels
+
+    // volume
+
+    public int volumeLevel = 100; // intre 0 și 100
+    public boolean draggingVolume = false;
+
+    // WORLD PARAMETERS
+
+    public final int maxWorldCol = 50;
+    public final int maxWorldRow = 50;
+    public final int worldWidth = tileSize * maxWorldCol;
+    public final int worldHeight = tileSize * maxWorldRow;
 
     // FPS
     int FPS = 60;
 
 //    TileManager tileM = new TileManager("level1/level1.tmx");
+<<<<<<< HEAD
     TiledMapViewer tiledMapViewer = new TiledMapViewer("res/level1/level1.tmx");
+=======
+public TiledMapViewer tiledMapViewer = new TiledMapViewer("res/level1/level1.tmx", this);
+>>>>>>> antonia
     KeyHandler keyH = new KeyHandler();
     Thread gameThread; // keeps our program running
-    Player player = new Player(this, keyH);
+    public CollisionChecker cChecker = new CollisionChecker(this);
+    public Player player = new Player(this, keyH);
     GameMenu menu = new GameMenu(this);
     MouseHandler mouseH = new MouseHandler(this);
 
@@ -35,11 +52,20 @@ public class GamePanel extends JPanel implements Runnable{
     // 0 = MENU
     // 1 = JOC
     int gameState = 0; // the game starts at the menu
+<<<<<<< HEAD
     int menuOption = 0; // 0 = START GAME, 1 = EXIT
     // player position on map
    /* int playerX = 100;
     int playerY = 100;
     int playerSpeed = 4; */ // NU MAI AVEM NEVOIE.. LE STERGEM LA FINAL I GUESS
+=======
+    int menuOption = 0;
+    // 0 = INITIAL STATE (draw)
+    // 1 = START GAME
+    // 2 = QUIT GAME
+    // 3 = SETTINGS
+    // 4 = INSTRUCTIUNI
+>>>>>>> antonia
 
     public GamePanel(){
         // how big is the window
@@ -62,23 +88,12 @@ public class GamePanel extends JPanel implements Runnable{
 
     public void update(){
         // menu mode
-        if (keyH.upPressed || keyH.downPressed) {
-            menuOption = (menuOption + 1) % 2; // toggle between 0 and 1 (start game and exit)
-//                keyH.upPressed = true; // ?? ceva nu e ok
-//                keyH.downPressed = true;
-        }
-
-        if (keyH.enterPressed) {
-            if (menuOption == 0) {
-                gameState = 1; // Start Game
-            } else if (menuOption == 1) {
-                System.exit(0); // Exit
-            }
-            keyH.enterPressed = false;
-        }
-     else if (gameState == 1)
+        if(gameState == 0){
+            menu.update();
+       }
+        else if (gameState == 1)
         // game mode
-        player.update();
+            player.update();
     }
 
 
@@ -89,7 +104,6 @@ public class GamePanel extends JPanel implements Runnable{
         if (gameState == 0) {
             // drawing the menu
             menu.draw(g2);
-
         } else if (gameState == 1) {
             // updating the player
 
@@ -104,13 +118,15 @@ public class GamePanel extends JPanel implements Runnable{
     // our game loop
     @Override
     public void run() {
-
         double drawInterval = 1000000000 / FPS; // 0.01666 seconds
         double delta = 0;
         long lastTime = System.nanoTime();
         long currentTime;
         long timer = 0;
+<<<<<<< HEAD
         int drawCount = 0;
+=======
+>>>>>>> antonia
 
         while(gameThread != null) {
             currentTime = System.nanoTime();
@@ -121,16 +137,24 @@ public class GamePanel extends JPanel implements Runnable{
             if (delta >= 1) {
                 update();
                 repaint();
-                --delta;
+                delta--;
             }
 
             if ( timer >= 1000000000) {
+<<<<<<< HEAD
 
                 System.out.println("FPS: " + drawCount);
                 drawCount = 0;
                 timer = 0;
 
             }
+=======
+                timer = 0;
+            }
+
+
+
+>>>>>>> antonia
         }
     }
 }

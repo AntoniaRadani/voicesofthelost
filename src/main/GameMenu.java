@@ -56,6 +56,17 @@ public class GameMenu {
         }
     }
 
+    public void update(){
+       if(gp.menuOption == 0)
+           gp.gameState = 0;
+       if(gp.menuOption == 1)
+           gp.gameState = 1;
+       if(gp.menuOption == 2)
+           System.exit(0);
+       if(gp.menuOption == 3){
+           // meniu setari
+       }
+    }
 
     public void draw(Graphics2D g2) {
 
@@ -72,6 +83,26 @@ public class GameMenu {
         g2.drawImage(quit, exitX, exitY, btnWidth, btnHeight, null);
 
         g2.drawImage(settings, settingsX, settingsY, btnWidth, btnHeight, null);
+
+        if (gp.menuOption == 3) {
+            g2.setColor(Color.DARK_GRAY);
+            g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight);
+
+            g2.setColor(Color.WHITE);
+            g2.setFont(new Font("Minecraft", Font.PLAIN, 24));
+            g2.drawString("MUSIC", 100, 150);
+            g2.drawRect(200, 130, 200, 20); // slider
+
+            // Volum actual
+            g2.setColor(Color.GREEN);
+            g2.fillRect(200, 130, gp.volumeLevel * 2, 20);
+
+            // X button
+            g2.setColor(Color.RED);
+            g2.fillRect(550, 50, 30, 30);
+            g2.setColor(Color.WHITE);
+            g2.drawString("X", 560, 70);
+        }
     }
 
 }
