@@ -10,9 +10,21 @@ import java.awt.*;
 public class GamePanel extends JPanel implements Runnable{
     // screen settings
 
+    public boolean hoverExitButton = false;
+    public boolean hoverVolumeSlider = false;
+    public boolean hoverSoundSlider = false;
+    public boolean hoverStart = false;
+    public boolean hoverQuit = false;
+    public boolean hoverSettings = false;
+    public boolean hoverMuteVolume = false;
+    public boolean hoverMuteSound = false;
+
+    public boolean isVolumeMuted = false;
+    public boolean isSoundMuted = false;
+
     // the default size of the player
-    final int originalTileSize = 16; // 16 x 16 tile size
-    final int scale = 3; // to make our player and tiles bigger
+    public final int originalTileSize = 16; // 16 x 16 tile size
+    public final int scale = 3; // to make our player and tiles bigger
 
     public final int tileSize = originalTileSize * scale; // 48 x 48 the actual tile size
     final int maxScreenCol = 16; // how many tiles can we see - column
@@ -24,6 +36,11 @@ public class GamePanel extends JPanel implements Runnable{
 
     public int volumeLevel = 100; // intre 0 și 100
     public boolean draggingVolume = false;
+
+    // sound
+
+    public int soundLevel = 100;
+    public boolean draggingSound = false;
 
     // WORLD PARAMETERS
 
