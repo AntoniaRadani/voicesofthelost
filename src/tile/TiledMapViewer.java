@@ -24,6 +24,7 @@ public class TiledMapViewer {
     private int tileWidth = 16;  // Set default tile size (adjustable)
     private int tileHeight = 16;
     public int mapWidth, mapHeight;
+    public int layerLength;
 
     private BufferedImage tilesetImage;
     private BufferedImage[] tileImages;
@@ -77,8 +78,8 @@ public class TiledMapViewer {
             mapWidth = Integer.parseInt(mapElement.getAttribute("width"));
             mapHeight = Integer.parseInt(mapElement.getAttribute("height"));
 
-            tileWidth = Integer.parseInt(mapElement.getAttribute("tilewidth")) ;
-            tileHeight = Integer.parseInt(mapElement.getAttribute("tileheight")) ;
+            tileWidth = Integer.parseInt(mapElement.getAttribute("tilewidth"));
+            tileHeight = Integer.parseInt(mapElement.getAttribute("tileheight"));
 
 
             // TILESET (support for external TSX)
@@ -99,6 +100,7 @@ public class TiledMapViewer {
                 tileCollision = new boolean[tileCount + 1]; // +1 pentru că tile IDs încep de la 0
 
                 NodeList tileList = tilesetElement.getElementsByTagName("tile");
+
 
                 for (int i = 0; i < tileList.getLength(); i++) {
                     Element tileElement = (Element) tileList.item(i);
@@ -141,6 +143,8 @@ public class TiledMapViewer {
             NodeList layerList = doc.getElementsByTagName("layer");
             mapData = new int[layerList.getLength()][mapHeight][mapWidth]; // Array 3D pentru date
 
+            layerLength = layerList.getLength();
+
             for (int i = 0; i < layerList.getLength(); i++) {
                 Element layer = (Element) layerList.item(i);
                 Element data = (Element) layer.getElementsByTagName("data").item(0);
@@ -176,75 +180,34 @@ public class TiledMapViewer {
             }
         }
     }
-
     public void draw(Graphics2D g2) {
 
-        // Desenarea hărții cu toate straturile
-        for (int row = 0; row < mapHeight; row++) {
-            for (int col = 0; col < mapWidth; col++) {
-                int tileId = mapData[row][col];
-                if (tileId > 0 && tileId < tileImages.length && tileImages[tileId] != null) {
-                    g2.drawImage(tileImages[tileId], col * tileWidth, row * tileHeight, null);
-                }
-            }
-        }
-    }
-
-
-        screenX = gp.player.worldX - gp.player.worldX + gp.player.screenX;
-        screenY = gp.player.worldY - gp.player.worldY + gp.player.screenY;
-
-// Opțional: Clamp (limitează camera)
-        if (gp.player.worldX < gp.screenWidth/2) {
-            screenX = gp.player.worldX;
-        }
-        if (gp.player.worldY < gp.screenHeight/2) {
-            screenY = gp.player.worldY;
-        }
-
-        int rightOffset = gp.worldWidth - gp.player.worldX;
-        if (rightOffset < gp.screenWidth/2) {
-            screenX = gp.screenWidth - (gp.worldWidth - gp.player.worldX);
-        }
-
-        int bottomOffset = gp.worldHeight - gp.player.worldY;
-        if (bottomOffset < gp.screenHeight/2) {
-            screenY = gp.screenHeight - (gp.worldHeight - gp.player.worldY);
-        }
-
-        //  Parcurge toate layerele
-
-        int worldRow = 0;
-        int worldCol = 0;
-
-
-
         for (int layer = 0; layer < mapData.length; layer++) {
-            // Parcurge fiecare celulă din strat
-            for ( worldRow = 0; worldRow < mapHeight; worldRow++) {
-                for (worldCol = 0; worldCol < mapWidth; worldCol++) {
+            for (int row = 0; row < mapHeight; row++) {
+                for (int col = 0; col < mapWidth; col++) {
 
-                    int worldX = worldCol * gp.tileSize;
-                    int worldY = worldRow * gp.tileSize; // pozitia pe mapa
-                    screenX = worldX - gp.player.worldX + gp.player.screenX; // pozitia pe ecran unde desenam
-                    screenY = worldY - gp.player.worldY + gp.player.screenY;
+                    int worldX = col * gp.tileSize;
+                    int worldY = row * gp.tileSize;
 
+                    int screenX = worldX - gp.player.worldX + gp.player.screenX;
+                    int screenY = worldY - gp.player.worldY + gp.player.screenY;
 
+                    int tileId = mapData[layer][row][col];
 
-                    int tileId = mapData[layer][worldRow][worldCol];  // Folosește layer-ul curent
-                    if ( worldX + gp.tileSize > gp.player.worldX - gp.player.screenX && worldX - gp.tileSize < gp.player.worldX + gp.player.screenX &&
-                         worldY + gp.tileSize > gp.player.worldY - gp.player.screenY && worldY - gp.tileSize < gp.player.worldY + gp.player.screenY )  {
-                        // ca sa desenam doar in ecran, adica doar cat avem nevoie fara tile uri in plus
-                        // facem o granita pt desen
+                    if (
+                            worldX + gp.tileSize > gp.player.worldX - gp.player.screenX &&
+                                    worldX - gp.tileSize < gp.player.worldX + gp.player.screenX &&
+                                    worldY + gp.tileSize > gp.player.worldY - gp.player.screenY &&
+                                    worldY - gp.tileSize < gp.player.worldY + gp.player.screenY
+                    ) {
                         if (tileId > 0 && tileId < tileImages.length && tileImages[tileId] != null) {
-                            g2.drawImage(tileImages[tileId], screenX, screenY, gp.tileSize, gp.tileSize, null); // aici am marit tile ul
+                            g2.drawImage(tileImages[tileId], screenX, screenY, gp.tileSize, gp.tileSize, null);
                         }
                     }
-
                 }
             }
         }
-
     }
 
 }
+

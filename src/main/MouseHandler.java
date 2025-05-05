@@ -66,24 +66,24 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
 
             // Exit (when the exit button is clicked)
             if (mx >= exitX && mx <= exitX + btnWidth &&
-
+                    my >= exitY && my <= exitY + btnHeight) {
                 gp.menuOption = 2;
             }
+
+
+
 
             // Settings (when the settings button is clicked)
 
             if (mx >= settingsX && mx <= settingsX + btnWidth &&
                     my >= settingsY && my <= settingsY + btnHeight) {
                 gp.menuOption = 3;
-
             }
-        }
             else if(gp.menuOption == 3) {
                 // pt inchidere meniu setari
                 if (mx >= xX && mx <= xX + smallBtnWidth && my >= xY && my <= xY + smallBtnHeight) {
                     gp.menuOption = 0;
                 }
-
                 if (mx >= muteVolumeX && mx <= muteVolumeX + smallBtnWidth &&
                         my >= muteVolumeY && my <= muteVolumeY + smallBtnHeight) {
                     gp.isVolumeMuted = !gp.isVolumeMuted;  // change state
@@ -94,7 +94,6 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
                         gp.volumeLevel = gp.previousVolumeLevel;  // restore
                     }
                 }
-
                 if (mx >= muteSoundX && mx <= muteSoundX + smallBtnWidth &&
                         my >= muteSoundY && my <= muteSoundY + smallBtnHeight) {
                     gp.isSoundMuted = !gp.isSoundMuted;
@@ -106,6 +105,7 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
                     }
                 }
             }
+        }
     }
 
     @Override
