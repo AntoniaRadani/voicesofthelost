@@ -66,7 +66,7 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
 
             // Exit (when the exit button is clicked)
             if (mx >= exitX && mx <= exitX + btnWidth &&
-
+                my >= exitY && my <= exitY + btnWidth)
                 gp.menuOption = 2;
             }
 
@@ -77,7 +77,6 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
                 gp.menuOption = 3;
 
             }
-        }
             else if(gp.menuOption == 3) {
                 // pt inchidere meniu setari
                 if (mx >= xX && mx <= xX + smallBtnWidth && my >= xY && my <= xY + smallBtnHeight) {
