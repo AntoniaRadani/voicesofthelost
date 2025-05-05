@@ -35,11 +35,13 @@ public class GamePanel extends JPanel implements Runnable{
     // volume
 
     public int volumeLevel = 100; // intre 0 și 100
+    public int previousVolumeLevel = 100;
     public boolean draggingVolume = false;
 
     // sound
 
     public int soundLevel = 100;
+    public int previousSoundLevel = 100;
     public boolean draggingSound = false;
 
     // WORLD PARAMETERS
