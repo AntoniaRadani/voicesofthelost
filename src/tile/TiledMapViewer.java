@@ -4,11 +4,11 @@ import javax.imageio.ImageIO;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-<<<<<<< HEAD
-=======
+
 import main.GamePanel;
 import main.KeyHandler;
->>>>>>> antonia
+
+
 import org.w3c.dom.*;
 
 import java.awt.*;
@@ -16,12 +16,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 
 public class TiledMapViewer {
-<<<<<<< HEAD
-    private int[][] mapData;
-    private int tileWidth = 16;  // Set default tile size (adjustable)
-    private int tileHeight = 16;
-    private int mapWidth, mapHeight;
-=======
+
 
     GamePanel gp;
 
@@ -29,15 +24,11 @@ public class TiledMapViewer {
     private int tileWidth = 16;  // Set default tile size (adjustable)
     private int tileHeight = 16;
     public int mapWidth, mapHeight;
->>>>>>> antonia
 
     private BufferedImage tilesetImage;
     private BufferedImage[] tileImages;
 
-<<<<<<< HEAD
-    public TiledMapViewer(String tmxFilePath) {
-        loadTMX(tmxFilePath);
-=======
+
     private int screenX, screenY;
 
     public boolean[] tileCollision;
@@ -70,7 +61,7 @@ public class TiledMapViewer {
         }
 
         System.out.println("SCREEN VALUES : " + screenX + screenY);
->>>>>>> antonia
+
     }
 
     private void loadTMX(String filePath) {
@@ -85,13 +76,10 @@ public class TiledMapViewer {
             Element mapElement = (Element) doc.getElementsByTagName("map").item(0);
             mapWidth = Integer.parseInt(mapElement.getAttribute("width"));
             mapHeight = Integer.parseInt(mapElement.getAttribute("height"));
-<<<<<<< HEAD
-            tileWidth = Integer.parseInt(mapElement.getAttribute("tilewidth"));
-            tileHeight = Integer.parseInt(mapElement.getAttribute("tileheight"));
-=======
+
             tileWidth = Integer.parseInt(mapElement.getAttribute("tilewidth")) ;
             tileHeight = Integer.parseInt(mapElement.getAttribute("tileheight")) ;
->>>>>>> antonia
+
 
             // TILESET (support for external TSX)
             Node tilesetNode = doc.getElementsByTagName("tileset").item(0);
@@ -104,8 +92,7 @@ public class TiledMapViewer {
                 tsxDoc.getDocumentElement().normalize();
 
                 tilesetElement = (Element) tsxDoc.getElementsByTagName("tileset").item(0);
-<<<<<<< HEAD
-=======
+
                 // după încărcarea tilesetElement
 
                 int tileCount = Integer.parseInt(tilesetElement.getAttribute("tilecount"));
@@ -129,7 +116,6 @@ public class TiledMapViewer {
                     }
                 }
 
->>>>>>> antonia
             } else {
                 // Inline tileset
                 tilesetElement = (Element) tilesetNode;
@@ -138,21 +124,7 @@ public class TiledMapViewer {
             // Get tileset image
             Element imageElement = (Element) tilesetElement.getElementsByTagName("image").item(0);
             String imageSource = imageElement.getAttribute("source");
-<<<<<<< HEAD
 
-            File imageFile = new File(new File(filePath).getParent(), imageSource);
-
-
-
-            tilesetImage = ImageIO.read(getClass().getClassLoader().getResourceAsStream("resurse/level1.png"));
-
-
-            sliceTileset();
-
-            // MAP DATA - Multi-layer support
-            NodeList layerList = doc.getElementsByTagName("layer");
-            mapData = new int[mapHeight][mapWidth];
-=======
             File imageFile = new File(new File(filePath).getParent(), imageSource);
             tilesetImage = ImageIO.read(imageFile);
 
@@ -168,7 +140,6 @@ public class TiledMapViewer {
             // MAP DATA - Multi-layer support
             NodeList layerList = doc.getElementsByTagName("layer");
             mapData = new int[layerList.getLength()][mapHeight][mapWidth]; // Array 3D pentru date
->>>>>>> antonia
 
             for (int i = 0; i < layerList.getLength(); i++) {
                 Element layer = (Element) layerList.item(i);
@@ -178,12 +149,9 @@ public class TiledMapViewer {
                 for (int j = 0; j < tiles.length; j++) {
                     int row = j / mapWidth;
                     int col = j % mapWidth;
-<<<<<<< HEAD
-                    mapData[row][col] = Integer.parseInt(tiles[j].trim());
-=======
+
                     mapData[i][row][col] = Integer.parseInt(tiles[j].trim());
 
->>>>>>> antonia
                 }
             }
 
@@ -192,10 +160,6 @@ public class TiledMapViewer {
         }
     }
 
-<<<<<<< HEAD
-=======
-
->>>>>>> antonia
     private void sliceTileset() {
         int columns = tilesetImage.getWidth() / tileWidth;
         int rows = tilesetImage.getHeight() / tileHeight;
@@ -214,7 +178,7 @@ public class TiledMapViewer {
     }
 
     public void draw(Graphics2D g2) {
-<<<<<<< HEAD
+
         // Desenarea hărții cu toate straturile
         for (int row = 0; row < mapHeight; row++) {
             for (int col = 0; col < mapWidth; col++) {
@@ -225,7 +189,7 @@ public class TiledMapViewer {
             }
         }
     }
-=======
+
 
         screenX = gp.player.worldX - gp.player.worldX + gp.player.screenX;
         screenY = gp.player.worldY - gp.player.worldY + gp.player.screenY;
@@ -283,5 +247,4 @@ public class TiledMapViewer {
 
     }
 
->>>>>>> antonia
 }

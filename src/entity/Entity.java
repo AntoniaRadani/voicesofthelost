@@ -2,8 +2,10 @@ package entity;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+
 
 public class Entity {
     public int worldX, worldY;
@@ -11,6 +13,7 @@ public class Entity {
 
     public BufferedImage up1, up2, down1, down2, left1, left2, right1, right2;
     public String direction;
+
 
     public int spriteCounter = 0;
     int spriteIndex = 0;
@@ -34,4 +37,5 @@ public class Entity {
     public BufferedImage getCurrentSprite() {
         return animationSet.getFrame(direction, spriteIndex);
     }
+
 }

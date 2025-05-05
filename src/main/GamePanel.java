@@ -10,6 +10,18 @@ import java.awt.*;
 public class GamePanel extends JPanel implements Runnable{
     // screen settings
 
+    public boolean hoverExitButton = false;
+    public boolean hoverVolumeSlider = false;
+    public boolean hoverSoundSlider = false;
+    public boolean hoverStart = false;
+    public boolean hoverQuit = false;
+    public boolean hoverSettings = false;
+    public boolean hoverMuteVolume = false;
+    public boolean hoverMuteSound = false;
+
+    public boolean isVolumeMuted = false;
+    public boolean isSoundMuted = false;
+
     // the default size of the player
     public final int originalTileSize = 16; // 16 x 16 tile size
     public final int scale = 3; // to make our player and tiles bigger
@@ -25,6 +37,13 @@ public class GamePanel extends JPanel implements Runnable{
     public int volumeLevel = 100; // intre 0 și 100
     public boolean draggingVolume = false;
 
+
+    // sound
+
+    public int soundLevel = 100;
+    public boolean draggingSound = false;
+
+
     // WORLD PARAMETERS
 
     public final int maxWorldCol = 50;
@@ -36,11 +55,9 @@ public class GamePanel extends JPanel implements Runnable{
     int FPS = 60;
 
 //    TileManager tileM = new TileManager("level1/level1.tmx");
-<<<<<<< HEAD
-    TiledMapViewer tiledMapViewer = new TiledMapViewer("res/level1/level1.tmx");
-=======
+
 public TiledMapViewer tiledMapViewer = new TiledMapViewer("res/level1/level1.tmx", this);
->>>>>>> antonia
+
     KeyHandler keyH = new KeyHandler();
     Thread gameThread; // keeps our program running
     public CollisionChecker cChecker = new CollisionChecker(this);
@@ -52,20 +69,14 @@ public TiledMapViewer tiledMapViewer = new TiledMapViewer("res/level1/level1.tmx
     // 0 = MENU
     // 1 = JOC
     int gameState = 0; // the game starts at the menu
-<<<<<<< HEAD
-    int menuOption = 0; // 0 = START GAME, 1 = EXIT
-    // player position on map
-   /* int playerX = 100;
-    int playerY = 100;
-    int playerSpeed = 4; */ // NU MAI AVEM NEVOIE.. LE STERGEM LA FINAL I GUESS
-=======
+
     int menuOption = 0;
     // 0 = INITIAL STATE (draw)
     // 1 = START GAME
     // 2 = QUIT GAME
     // 3 = SETTINGS
     // 4 = INSTRUCTIUNI
->>>>>>> antonia
+
 
     public GamePanel(){
         // how big is the window
@@ -123,10 +134,9 @@ public TiledMapViewer tiledMapViewer = new TiledMapViewer("res/level1/level1.tmx
         long lastTime = System.nanoTime();
         long currentTime;
         long timer = 0;
-<<<<<<< HEAD
+
         int drawCount = 0;
-=======
->>>>>>> antonia
+
 
         while(gameThread != null) {
             currentTime = System.nanoTime();
@@ -138,23 +148,22 @@ public TiledMapViewer tiledMapViewer = new TiledMapViewer("res/level1/level1.tmx
                 update();
                 repaint();
                 delta--;
+
             }
 
             if ( timer >= 1000000000) {
-<<<<<<< HEAD
 
                 System.out.println("FPS: " + drawCount);
                 drawCount = 0;
                 timer = 0;
 
             }
-=======
+             
+
+            if ( timer >= 1000000000) {
                 timer = 0;
             }
 
-
-
->>>>>>> antonia
         }
     }
 }

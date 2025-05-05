@@ -35,8 +35,6 @@ public class Player extends Entity{
         setDefaultValues();
         getPlayerImage();
 
-
-
     }
 
     public  void setDefaultValues(){
@@ -45,6 +43,7 @@ public class Player extends Entity{
         speed = 4;
         direction = "down";
     }
+
 
     public void getPlayerImage() {
 
@@ -114,7 +113,6 @@ public class Player extends Entity{
 
         }
 
-
         // gp.tiledMapViewer.updateCamera(worldX, worldY, gp.screenWidth, gp.screenHeight);
 
     }
@@ -125,6 +123,7 @@ public class Player extends Entity{
         BufferedImage image = getCurrentSprite();
 
         g2.drawImage(image, screenX, screenY, gp.tileSize, gp.tileSize, null);
+
 
     }
 }

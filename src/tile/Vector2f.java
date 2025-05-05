@@ -56,11 +56,8 @@ public class Vector2f {
     }
 
     public Vector2f getWorldVar(){
-<<<<<<< HEAD
-        return new Vector2f(x = worldX, y - worldY);
-=======
+
         return new Vector2f(x = worldX, y = worldY);
->>>>>>> antonia
     }
 
     @Override
