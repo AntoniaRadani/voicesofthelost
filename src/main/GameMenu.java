@@ -19,11 +19,27 @@ public class GameMenu {
 
     GamePanel gp;
 
-    public int startX = 300, startY = 250;
-    public int exitX = 300, exitY = 320;
-    public int settingsX = 300, settingsY = 390;
-    public int xX = 700, xY = 50;
-    public int btnWidth = 200, btnHeight = 50;
+    // buttons positions
+    int startX = 300, startY = 250;
+    int exitX = 300, exitY = 320;
+    int settingsX = 300, settingsY = 390;
+    int xX = 700, xY = 50;
+    int smallBtnWidth = 40, smallBtnHeight = 40;
+    int btnWidth = 200, btnHeight = 50;
+    // dimensiuni slider
+    int sliderWidth = 200;
+    int sliderHeight = 20;
+    // centrul ecranului
+    int centerX;  // 284 asta e si volumeSliderX
+    int centerY; //278
+    // slider
+    int volumeSliderX;
+    int volumeSliderY;
+    int soundSliderX;
+    int soundSliderY;
+    // butoane mute
+    int muteVolumeX, muteVolumeY;
+    int muteSoundX, muteSoundY;
 
     BufferedImage background;
     BufferedImage start;
@@ -37,6 +53,18 @@ public class GameMenu {
 
     public GameMenu(GamePanel gp) {
         this.gp = gp;
+
+        centerX = (gp.screenWidth - sliderWidth) / 2; // 284 asta e si volumeSliderX
+        centerY = (gp.screenHeight - sliderHeight) / 2; //278
+        volumeSliderX = centerX;
+        volumeSliderY = centerY - 40;
+        soundSliderX = centerX;
+        soundSliderY = centerY + 40;
+        // butoane mute
+        muteVolumeX = centerX;
+        muteVolumeY = centerY + 100;
+        muteSoundX = centerX + 100;
+        muteSoundY = centerY + 100;
 
         // loading the images
         try {
@@ -131,7 +159,6 @@ public class GameMenu {
             g2.setColor(Color.WHITE);
             g2.setFont(new Font("Times New Roman", Font.BOLD, 24));
 
-
             drawSettings(g2);
 
         }
@@ -139,71 +166,63 @@ public class GameMenu {
 
     public void drawSettings(Graphics2D g2){
 
-        // dimensiuni slider
-        int sliderWidth = 200;
-        int sliderHeight = 20;
 
-        // centrul ecranului
-        int centerX = (gp.screenWidth - sliderWidth) / 2; // 284
-        int centerY = (gp.screenHeight - sliderHeight) / 2; //278
 
-        // butoane mute
-        int muteVolumeX = centerX, muteVolumeY = centerY + 100;
-        int muteSoundX = centerX + 100, muteSoundY = centerY + 100;
+
 
         // volume slider
 
         g2.drawString("VOLUME", centerX, centerY - 50);
         g2.setColor(Color.LIGHT_GRAY);
-        g2.drawRect(centerX, centerY - 40, sliderWidth, sliderHeight);
+        g2.drawRect(volumeSliderX, volumeSliderY, sliderWidth, sliderHeight);
         g2.setColor(Color.magenta);
-        g2.fillRect(centerX, centerY - 40, gp.volumeLevel * 2, 20);
+        g2.fillRect(volumeSliderX, volumeSliderY, gp.volumeLevel * 2, 20);
 
         // sound slider
 
         g2.setColor(Color.white);
         g2.drawString("SOUND", centerX, centerY + 30);
         g2.setColor(Color.LIGHT_GRAY);
-        g2.drawRect(centerX, centerY + 40, sliderWidth, sliderHeight);
+        g2.drawRect(soundSliderX, soundSliderY, sliderWidth, sliderHeight);
         g2.setColor(Color.magenta);
-        g2.fillRect(centerX, centerY + 40, gp.soundLevel * 2, 20);
+        g2.fillRect(soundSliderX, soundSliderY, gp.soundLevel * 2, 20);
 
         // Mute Volume Button
         if (gp.isVolumeMuted) {
             if (gp.hoverMuteVolume) {
-                g2.drawImage(muteVolumeMuted, muteVolumeX - 5, muteVolumeY - 5, 50, 50, null); // mai mare la hover
+                g2.drawImage(muteVolumeMuted, muteVolumeX - 5, muteVolumeY - 5, smallBtnWidth + 10, smallBtnHeight + 10, null); // mai mare la hover
             } else {
-                g2.drawImage(muteVolumeMuted, muteVolumeX, muteVolumeY, 40, 40, null);
+                g2.drawImage(muteVolumeMuted, muteVolumeX, muteVolumeY, smallBtnWidth, smallBtnHeight, null);
             }
         } else {
             if (gp.hoverMuteVolume) {
-                g2.drawImage(muteVolumeActive, muteVolumeX - 5, muteVolumeY - 5, 50, 50, null); // mai mare la hover
+                g2.drawImage(muteVolumeActive, muteVolumeX - 5, muteVolumeY - 5, smallBtnWidth + 10, smallBtnHeight + 10, null); // mai mare la hover
             } else {
-                g2.drawImage(muteVolumeActive, muteVolumeX, muteVolumeY, 40, 40, null);
+                g2.drawImage(muteVolumeActive, muteVolumeX, muteVolumeY, smallBtnWidth, smallBtnHeight, null);
             }
         }
 
         // Mute Sound Button
         if (gp.isSoundMuted) {
             if (gp.hoverMuteSound) {
-                g2.drawImage(muteSoundMuted, muteSoundX - 5, muteSoundY - 5, 50, 50, null); // mai mare la hover
+                g2.drawImage(muteSoundMuted, muteSoundX - 5, muteSoundY - 5, smallBtnWidth + 10, smallBtnHeight + 10, null); // mai mare la hover
             } else {
-                g2.drawImage(muteSoundMuted, muteSoundX, muteSoundY, 40, 40, null);
+                g2.drawImage(muteSoundMuted, muteSoundX, muteSoundY, smallBtnWidth, smallBtnHeight, null);
             }
         } else {
             if (gp.hoverMuteSound) {
-                g2.drawImage(muteSoundActive, muteSoundX - 5, muteSoundY - 5, 50, 50, null); // mai mare la hover
+                g2.drawImage(muteSoundActive, muteSoundX - 5, muteSoundY - 5, smallBtnWidth + 10, smallBtnHeight + 10, null); // mai mare la hover
             } else {
-                g2.drawImage(muteSoundActive, muteSoundX, muteSoundY, 40, 40, null);
+                g2.drawImage(muteSoundActive, muteSoundX, muteSoundY, smallBtnWidth, smallBtnHeight, null);
             }
         }
 
         // exit button
 
         if (gp.hoverExitButton) {
-            g2.drawImage(x_btn, xX - 5, xY - 5, 40, 40, null);
+            g2.drawImage(x_btn, xX - 5, xY - 5, smallBtnWidth + 10, smallBtnHeight + 10, null);
         } else {
-            g2.drawImage(x_btn, xX, xY, 30, 30, null);
+            g2.drawImage(x_btn, xX, xY, smallBtnWidth, smallBtnHeight, null);
         }
 
     }
