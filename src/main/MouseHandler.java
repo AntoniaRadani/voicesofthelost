@@ -38,14 +38,16 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
 
             // Exit (when the exit button is clicked)
             if (mx >= exitX && mx <= exitX + btnWidth &&
-                    my >= exitY && my <= exitY + btnHeight) {
+
                 gp.menuOption = 2;
             }
 
             // Settings (when the settings button is clicked)
+
             if (mx >= settingsX && mx <= settingsX + btnWidth &&
                     my >= settingsY && my <= settingsY + btnHeight) {
                 gp.menuOption = 3;
+
             }
         }
             else if(gp.menuOption == 3) {
@@ -70,6 +72,7 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
             int mx = e.getX();
             int my = e.getY();
 
+
             int sliderWidth = 200;
             int sliderHeight = 20;
             int centerX = (gp.screenWidth - sliderWidth) / 2;
@@ -91,6 +94,7 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
                 gp.draggingSound = true;
                 gp.draggingVolume = false;
                 gp.soundLevel = Math.max(0, Math.min(100, (mx - centerX) * 100 / sliderWidth));
+
             }
         }
     }
@@ -116,14 +120,17 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
             int mx = e.getX();
             gp.volumeLevel = Math.max(0, Math.min(100, (mx - 200) * 100 / 200));
         }
+
         if(gp.menuOption == 3 && gp.draggingSound){
             int mx = e.getX();
             gp.soundLevel = Math.max(0, Math.min(100, (mx - 200) * 100 / 200));
         }
+
     }
 
     @Override
     public void mouseMoved(MouseEvent e) {
+
         int mx = e.getX();
         int my = e.getY();
 
@@ -196,5 +203,6 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
                 gp.hoverMuteSound = false;
             }
         }
+
     }
 }

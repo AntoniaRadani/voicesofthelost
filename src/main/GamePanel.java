@@ -37,10 +37,12 @@ public class GamePanel extends JPanel implements Runnable{
     public int volumeLevel = 100; // intre 0 și 100
     public boolean draggingVolume = false;
 
+
     // sound
 
     public int soundLevel = 100;
     public boolean draggingSound = false;
+
 
     // WORLD PARAMETERS
 
@@ -53,7 +55,9 @@ public class GamePanel extends JPanel implements Runnable{
     int FPS = 60;
 
 //    TileManager tileM = new TileManager("level1/level1.tmx");
+
 public TiledMapViewer tiledMapViewer = new TiledMapViewer("res/level1/level1.tmx", this);
+
     KeyHandler keyH = new KeyHandler();
     Thread gameThread; // keeps our program running
     public CollisionChecker cChecker = new CollisionChecker(this);
@@ -65,12 +69,14 @@ public TiledMapViewer tiledMapViewer = new TiledMapViewer("res/level1/level1.tmx
     // 0 = MENU
     // 1 = JOC
     int gameState = 0; // the game starts at the menu
+
     int menuOption = 0;
     // 0 = INITIAL STATE (draw)
     // 1 = START GAME
     // 2 = QUIT GAME
     // 3 = SETTINGS
     // 4 = INSTRUCTIUNI
+
 
     public GamePanel(){
         // how big is the window
@@ -129,6 +135,9 @@ public TiledMapViewer tiledMapViewer = new TiledMapViewer("res/level1/level1.tmx
         long currentTime;
         long timer = 0;
 
+        int drawCount = 0;
+
+
         while(gameThread != null) {
             currentTime = System.nanoTime();
             delta += (currentTime - lastTime) / drawInterval; // how much time has passed / drawInterval
@@ -139,13 +148,21 @@ public TiledMapViewer tiledMapViewer = new TiledMapViewer("res/level1/level1.tmx
                 update();
                 repaint();
                 delta--;
+
             }
+
+            if ( timer >= 1000000000) {
+
+                System.out.println("FPS: " + drawCount);
+                drawCount = 0;
+                timer = 0;
+
+            }
+             
 
             if ( timer >= 1000000000) {
                 timer = 0;
             }
-
-
 
         }
     }
