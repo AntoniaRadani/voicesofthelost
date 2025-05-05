@@ -4,8 +4,11 @@ import javax.imageio.ImageIO;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+
 import main.GamePanel;
 import main.KeyHandler;
+
+
 import org.w3c.dom.*;
 
 import java.awt.*;
@@ -13,6 +16,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 
 public class TiledMapViewer {
+
 
     GamePanel gp;
 
@@ -23,6 +27,7 @@ public class TiledMapViewer {
 
     private BufferedImage tilesetImage;
     private BufferedImage[] tileImages;
+
 
     private int screenX, screenY;
 
@@ -56,6 +61,7 @@ public class TiledMapViewer {
         }
 
         System.out.println("SCREEN VALUES : " + screenX + screenY);
+
     }
 
     private void loadTMX(String filePath) {
@@ -70,8 +76,10 @@ public class TiledMapViewer {
             Element mapElement = (Element) doc.getElementsByTagName("map").item(0);
             mapWidth = Integer.parseInt(mapElement.getAttribute("width"));
             mapHeight = Integer.parseInt(mapElement.getAttribute("height"));
+
             tileWidth = Integer.parseInt(mapElement.getAttribute("tilewidth")) ;
             tileHeight = Integer.parseInt(mapElement.getAttribute("tileheight")) ;
+
 
             // TILESET (support for external TSX)
             Node tilesetNode = doc.getElementsByTagName("tileset").item(0);
@@ -84,6 +92,7 @@ public class TiledMapViewer {
                 tsxDoc.getDocumentElement().normalize();
 
                 tilesetElement = (Element) tsxDoc.getElementsByTagName("tileset").item(0);
+
                 // după încărcarea tilesetElement
 
                 int tileCount = Integer.parseInt(tilesetElement.getAttribute("tilecount"));
@@ -115,6 +124,7 @@ public class TiledMapViewer {
             // Get tileset image
             Element imageElement = (Element) tilesetElement.getElementsByTagName("image").item(0);
             String imageSource = imageElement.getAttribute("source");
+
             File imageFile = new File(new File(filePath).getParent(), imageSource);
             tilesetImage = ImageIO.read(imageFile);
 
@@ -139,6 +149,7 @@ public class TiledMapViewer {
                 for (int j = 0; j < tiles.length; j++) {
                     int row = j / mapWidth;
                     int col = j % mapWidth;
+
                     mapData[i][row][col] = Integer.parseInt(tiles[j].trim());
 
                 }
@@ -148,7 +159,6 @@ public class TiledMapViewer {
             e.printStackTrace();
         }
     }
-
 
     private void sliceTileset() {
         int columns = tilesetImage.getWidth() / tileWidth;
@@ -168,6 +178,18 @@ public class TiledMapViewer {
     }
 
     public void draw(Graphics2D g2) {
+
+        // Desenarea hărții cu toate straturile
+        for (int row = 0; row < mapHeight; row++) {
+            for (int col = 0; col < mapWidth; col++) {
+                int tileId = mapData[row][col];
+                if (tileId > 0 && tileId < tileImages.length && tileImages[tileId] != null) {
+                    g2.drawImage(tileImages[tileId], col * tileWidth, row * tileHeight, null);
+                }
+            }
+        }
+    }
+
 
         screenX = gp.player.worldX - gp.player.worldX + gp.player.screenX;
         screenY = gp.player.worldY - gp.player.worldY + gp.player.screenY;
