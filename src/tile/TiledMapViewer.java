@@ -180,24 +180,14 @@ public class TiledMapViewer {
     public void draw(Graphics2D g2) {
 
         // Desenarea hărții cu toate straturile
-        for (int row = 0; row < mapHeight; row++) {
-            for (int col = 0; col < mapWidth; col++) {
-                int tileId = mapData[row][col];
-                if (tileId > 0 && tileId < tileImages.length && tileImages[tileId] != null) {
-                    g2.drawImage(tileImages[tileId], col * tileWidth, row * tileHeight, null);
-                }
-            }
-        }
-    }
-
-
-        screenX = gp.player.worldX - gp.player.worldX + gp.player.screenX;
-        screenY = gp.player.worldY - gp.player.worldY + gp.player.screenY;
+        screenX = gp.player.screenX;
+        screenY = gp.player.screenY;
 
 // Opțional: Clamp (limitează camera)
         if (gp.player.worldX < gp.screenWidth/2) {
             screenX = gp.player.worldX;
         }
+
         if (gp.player.worldY < gp.screenHeight/2) {
             screenY = gp.player.worldY;
         }

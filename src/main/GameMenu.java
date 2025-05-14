@@ -20,23 +20,24 @@ public class GameMenu {
     GamePanel gp;
 
     // buttons positions
-    int startX = 300, startY = 250;
-    int exitX = 300, exitY = 320;
-    int settingsX = 300, settingsY = 390;
-    int xX = 700, xY = 50;
+//    int startX = 300, startY = 250;
+//    int exitX = 300, exitY = 320;
+//    int settingsX = 300, settingsY = 390;
+//    int xX = 700, xY = 50;
+    int startX, startY;
+    int exitX, exitY;
+    int settingsX, settingsY;
+    int xX, xY;
     int smallBtnWidth = 40, smallBtnHeight = 40;
     int btnWidth = 200, btnHeight = 50;
     // dimensiuni slider
     int sliderWidth = 200;
     int sliderHeight = 20;
     // centrul ecranului
-    int centerX;  // 284 asta e si volumeSliderX
-    int centerY; //278
+    int centerX, centerY; // 284, 278
     // slider
-    int volumeSliderX;
-    int volumeSliderY;
-    int soundSliderX;
-    int soundSliderY;
+    int volumeSliderX, volumeSliderY;
+    int soundSliderX, soundSliderY;
     // butoane mute
     int muteVolumeX, muteVolumeY;
     int muteSoundX, muteSoundY;
@@ -54,8 +55,16 @@ public class GameMenu {
     public GameMenu(GamePanel gp) {
         this.gp = gp;
 
-        centerX = (gp.screenWidth - sliderWidth) / 2; // 284 asta e si volumeSliderX
-        centerY = (gp.screenHeight - sliderHeight) / 2; //278
+        centerX = (gp.screenWidth - 200) / 2; // 284
+        centerY = (gp.screenHeight - 20) / 2; //278
+        startX = centerX;
+        startY = centerY - 60;
+        exitX = centerX;
+        exitY = centerY;
+        settingsX = centerX;
+        settingsY = centerY + 60;
+        xX = 2 * centerX + 130;
+        xY = centerY / 10;
         volumeSliderX = centerX;
         volumeSliderY = centerY - 40;
         soundSliderX = centerX;
@@ -160,18 +169,13 @@ public class GameMenu {
             g2.setFont(new Font("Times New Roman", Font.BOLD, 24));
 
             drawSettings(g2);
-
         }
     }
 
     public void drawSettings(Graphics2D g2){
 
-
-
-
-
         // volume slider
-
+        g2.setColor(Color.white);
         g2.drawString("VOLUME", centerX, centerY - 50);
         g2.setColor(Color.LIGHT_GRAY);
         g2.drawRect(volumeSliderX, volumeSliderY, sliderWidth, sliderHeight);

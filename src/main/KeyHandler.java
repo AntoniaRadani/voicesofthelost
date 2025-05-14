@@ -5,11 +5,18 @@ import java.awt.event.KeyListener;
 
 public class KeyHandler implements KeyListener {
 
+    GamePanel gp;
+
     public boolean upPressed;
     public boolean downPressed;
     public boolean leftPressed;
     public boolean rightPressed;
     public boolean enterPressed;
+    public boolean escPressed;
+
+    public KeyHandler(GamePanel gp){
+        this.gp = gp;
+    }
 
     @Override
     public void keyTyped(KeyEvent e) {
@@ -36,6 +43,13 @@ public class KeyHandler implements KeyListener {
         if(code == KeyEvent.VK_ENTER){
             enterPressed = true;
         }
+        if(code == KeyEvent.VK_ESCAPE){
+            escPressed = true;
+            if(gp.gameState == 1) // if it s in play mode
+                gp.gameState = 2; // paused
+            else if(gp.gameState == 2) // if the game is paused
+                gp.gameState = 1; // playing
+        }
     }
 
     @Override
@@ -55,6 +69,9 @@ public class KeyHandler implements KeyListener {
         }
         if(code == KeyEvent.VK_ENTER){
             enterPressed = false;
+        }
+        if(code == KeyEvent.VK_ESCAPE){
+            escPressed = false;
         }
     }
 }
