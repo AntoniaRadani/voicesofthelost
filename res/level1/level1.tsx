@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tileset version="1.10" tiledversion="1.11.2" name="level1" tilewidth="16" tileheight="16" tilecount="288" columns="24">
  <image source="level1.png" width="384" height="192"/>
-
  <tile id="2">
   <properties>
    <property name="collision" type="bool" value="true"/>
@@ -317,5 +316,24 @@
    <property name="collision" type="bool" value="true"/>
   </properties>
  </tile>
-
+ <tile id="255">
+  <properties>
+   <property name="collision" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="279">
+  <properties>
+   <property name="collision" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="280">
+  <properties>
+   <property name="collision" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="281">
+  <properties>
+   <property name="collision" type="bool" value="true"/>
+  </properties>
+ </tile>
 </tileset>

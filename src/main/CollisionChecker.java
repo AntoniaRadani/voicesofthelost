@@ -1,6 +1,11 @@
 package main;
 
 import entity.Entity;
+import tile.TiledMapViewer;
+import tile.Vector2f;
+
+import javax.swing.plaf.PanelUI;
+import java.awt.*;
 
 public class CollisionChecker {
 
@@ -76,6 +81,306 @@ public class CollisionChecker {
                 (tileNum2 > 0 && gp.tiledMapViewer.tileCollision[tileNum2])) {
             entity.collisionOn = true;
         }
+    }
+
+    public int checkObject(Entity entity, boolean player, Vector2f obj) {
+
+        int index = -1;
+
+
+
+        // poziția solidă în world coordinates
+        int entityLeftWorldX = entity.worldX + entity.solidArea.x;
+        int entityRightWorldX = entity.worldX + entity.solidArea.x + entity.solidArea.width;
+        int entityTopWorldY = entity.worldY + entity.solidArea.y;
+        int entityBottomWorldY = entity.worldY + entity.solidArea.y + entity.solidArea.height;
+
+        int entityLeftCol = entityLeftWorldX / gp.tileSize;
+        int entityRightCol = entityRightWorldX / gp.tileSize;
+        int entityTopRow = entityTopWorldY / gp.tileSize;
+        int entityBottomRow = entityBottomWorldY / gp.tileSize;
+
+        int tileNum1 = 0;
+        int tileNum2 = 0;
+
+        int entityCol = entity.worldX / gp.tileSize;
+        int entityRow = entity.worldY / gp.tileSize;
+
+        if (isInsideMap(entityRow, entityCol) && gp.tiledMapViewer.mapData[3][entityRow][entityCol] != 0) {
+            // este un obiect de interacțiune
+
+            switch (entity.direction) {
+                case "up":
+                    entityTopRow = (entityTopWorldY - entity.speed) / gp.tileSize;
+
+                    if (isInsideMap(entityTopRow, entityLeftCol)) {
+                        tileNum1 = gp.tiledMapViewer.mapData[3][entityTopRow][entityLeftCol];
+                    }
+                    if (isInsideMap(entityTopRow, entityRightCol)) {
+                        tileNum2 = gp.tiledMapViewer.mapData[3][entityTopRow][entityRightCol];
+                    }
+
+                    if ((tileNum1 > 0 && gp.tiledMapViewer.tileCollision[tileNum1]) ||
+                            (tileNum2 > 0 && gp.tiledMapViewer.tileCollision[tileNum2])) {
+                        entity.collisionOn = true;
+                    }
+                    if ( player == true ) {
+                        if (tileNum1 > 0 && gp.tiledMapViewer.tileCollision[tileNum1]) {
+                            obj.setVector(entityTopRow,entityLeftCol);
+                            index = tileNum1;
+                        } else if (tileNum2 > 0 && gp.tiledMapViewer.tileCollision[tileNum2]) {
+                            index = tileNum2;
+                            obj.setVector(entityTopRow,entityRightCol);
+                        }
+                    }
+                    break;
+
+                case "down":
+                    entityBottomRow = (entityBottomWorldY + entity.speed) / gp.tileSize;
+
+                    if (isInsideMap(entityBottomRow, entityLeftCol)) {
+                        tileNum1 = gp.tiledMapViewer.mapData[3][entityBottomRow][entityLeftCol];
+                    }
+                    if (isInsideMap(entityBottomRow, entityRightCol)) {
+                        tileNum2 = gp.tiledMapViewer.mapData[3][entityBottomRow][entityRightCol];
+                    }
+
+                    if ((tileNum1 > 0 && gp.tiledMapViewer.tileCollision[tileNum1]) ||
+                            (tileNum2 > 0 && gp.tiledMapViewer.tileCollision[tileNum2])) {
+                        entity.collisionOn = true;
+                    }
+                    if ( player == true ) {
+                        if (tileNum1 > 0 && gp.tiledMapViewer.tileCollision[tileNum1]) {
+                            obj.setVector(entityBottomRow,entityLeftCol);
+                            index = tileNum1;
+                        } else if (tileNum2 > 0 && gp.tiledMapViewer.tileCollision[tileNum2]) {
+                            index = tileNum2;
+                            obj.setVector(entityBottomRow,entityRightCol);
+                        }
+                    }
+                    break;
+
+                case "left":
+                    entityLeftCol = (entityLeftWorldX - entity.speed) / gp.tileSize;
+
+                    if (isInsideMap(entityTopRow, entityLeftCol)) {
+                        tileNum1 = gp.tiledMapViewer.mapData[3][entityTopRow][entityLeftCol];
+                    }
+                    if (isInsideMap(entityBottomRow, entityLeftCol)) {
+                        tileNum2 = gp.tiledMapViewer.mapData[3][entityBottomRow][entityLeftCol];
+                    }
+
+                    if ((tileNum1 > 0 && gp.tiledMapViewer.tileCollision[tileNum1]) ||
+                            (tileNum2 > 0 && gp.tiledMapViewer.tileCollision[tileNum2])) {
+                        entity.collisionOn = true;
+                    }
+                    if ( player == true ) {
+                        if (tileNum1 > 0 && gp.tiledMapViewer.tileCollision[tileNum1]) {
+                            obj.setVector(entityTopRow,entityLeftCol);
+                            index = tileNum1;
+                        } else if (tileNum2 > 0 && gp.tiledMapViewer.tileCollision[tileNum2]) {
+                            index = tileNum2;
+                            obj.setVector(entityBottomRow,entityLeftCol);
+
+                        }
+                    }
+                    break;
+
+                case "right":
+                    entityRightCol = (entityRightWorldX + entity.speed) / gp.tileSize;
+
+                    if (isInsideMap(entityTopRow, entityRightCol)) {
+                        tileNum1 = gp.tiledMapViewer.mapData[3][entityTopRow][entityRightCol];
+                    }
+                    if (isInsideMap(entityBottomRow, entityRightCol)) {
+                        tileNum2 = gp.tiledMapViewer.mapData[3][entityBottomRow][entityRightCol];
+                    }
+
+                    if ((tileNum1 > 0 && gp.tiledMapViewer.tileCollision[tileNum1]) ||
+                            (tileNum2 > 0 && gp.tiledMapViewer.tileCollision[tileNum2])) {
+                        entity.collisionOn = true;
+                    }
+                    if ( player == true ) {
+                        if (tileNum1 > 0 && gp.tiledMapViewer.tileCollision[tileNum1]) {
+                            index = tileNum1;
+                            obj.x = entityTopRow;
+                            obj.y = entityRightCol;
+                        } else if (tileNum2 > 0 && gp.tiledMapViewer.tileCollision[tileNum2]) {
+                            index = tileNum2;
+                            obj.x = entityBottomRow;
+                            obj.y = entityRightCol;
+                        }
+                    }
+                    break;
+            }
+
+
+            entity.solidArea.x = entity.solidAreaDefaultX;
+            entity.solidArea.y = entity.solidAreaDefaultY;
+
+            System.out.println(" index " + index );
+            System.out.println(" coordonatele boiectului: x " + obj.x + " y " + obj.y );
+        }
+
+        return index;
+    }
+
+    public void checkTile_layer_2(Entity entity) {
+
+        int entityLeftWorldX = entity.worldX + entity.solidArea.x;
+        int entityRightWorldX = entity.worldX + entity.solidArea.x + entity.solidArea.width;
+        int entityTopWorldY = entity.worldY + entity.solidArea.y;
+        int entityBottomWorldY = entity.worldY + entity.solidArea.y + entity.solidArea.height;
+
+        int entityLeftCol = entityLeftWorldX / gp.tileSize;
+        int entityRightCol = entityRightWorldX / gp.tileSize;
+        int entityTopRow = entityTopWorldY / gp.tileSize;
+        int entityBottomRow = entityBottomWorldY / gp.tileSize;
+
+        int tileNum1 = 0, tileNum2 = 0;
+
+        switch (entity.direction) {
+            case "up":
+                entityTopRow = (entityTopWorldY - entity.speed) / gp.tileSize;
+                if (isInsideMap(entityTopRow, entityLeftCol)) {
+                    tileNum1 = gp.tiledMapViewer.mapData[1][entityTopRow][entityLeftCol];
+                }
+                if (isInsideMap(entityTopRow, entityRightCol)) {
+                    tileNum2 = gp.tiledMapViewer.mapData[1][entityTopRow][entityRightCol];
+                }
+                break;
+
+            case "down":
+                entityBottomRow = (entityBottomWorldY + entity.speed) / gp.tileSize;
+                if (isInsideMap(entityBottomRow, entityLeftCol)) {
+                    tileNum1 = gp.tiledMapViewer.mapData[1][entityBottomRow][entityLeftCol];
+                }
+                if (isInsideMap(entityBottomRow, entityRightCol)) {
+                    tileNum2 = gp.tiledMapViewer.mapData[1][entityBottomRow][entityRightCol];
+                }
+                break;
+
+            case "left":
+                entityLeftCol = (entityLeftWorldX - entity.speed) / gp.tileSize;
+                if (isInsideMap(entityTopRow, entityLeftCol)) {
+                    tileNum1 = gp.tiledMapViewer.mapData[1][entityTopRow][entityLeftCol];
+                }
+                if (isInsideMap(entityBottomRow, entityLeftCol)) {
+                    tileNum2 = gp.tiledMapViewer.mapData[1][entityBottomRow][entityLeftCol];
+                }
+                break;
+
+            case "right":
+                entityRightCol = (entityRightWorldX + entity.speed) / gp.tileSize;
+                if (isInsideMap(entityTopRow, entityRightCol)) {
+                    tileNum1 = gp.tiledMapViewer.mapData[1][entityTopRow][entityRightCol];
+                }
+                if (isInsideMap(entityBottomRow, entityRightCol)) {
+                    tileNum2 = gp.tiledMapViewer.mapData[1][entityBottomRow][entityRightCol];
+                }
+                break;
+        }
+
+        if ((tileNum1 > 0 && gp.tiledMapViewer.tileCollision[tileNum1]) ||
+                (tileNum2 > 0 && gp.tiledMapViewer.tileCollision[tileNum2])) {
+            entity.collisionOn = true;
+        }
+    }
+
+    public int checkEntity( Entity entity, Entity[] target ) { // check npc or monster collision
+
+        int index = -1;
+
+        for ( int i = 0; i < target.length; i++ ) {
+
+            if ( target[i] != null ) {
+                // entity solid area pos
+                entity.solidArea.x = entity.worldX + entity.solidArea.x;
+                entity.solidArea.y = entity.worldY + entity.solidArea.y;
+                // get target solid area pos
+                target[i].solidArea.x = target[i].worldX + target[i].solidArea.x;
+                target[i].solidArea.y = target[i].worldY + target[i].solidArea.y;
+
+                switch (entity.direction) {
+                    case "up":
+                        entity.solidArea.y -= entity.speed;
+                        if( entity.solidArea.intersects(target[i].solidArea) ) {
+                                entity.collisionOn = true;
+                                index = i;
+                        }
+                        break;
+                    case "down":
+                        entity.solidArea.y += entity.speed;
+                        if( entity.solidArea.intersects(target[i].solidArea) ) {
+                            entity.collisionOn = true;
+                            index = i;
+                        }
+                        break;
+                    case "left":
+                        entity.solidArea.x -= entity.speed;
+                        if( entity.solidArea.intersects(target[i].solidArea) ) {
+                            entity.collisionOn = true;
+                            index = i;
+                        }
+                        break;
+                    case "right":
+                        entity.solidArea.x += entity.speed;
+                        if( entity.solidArea.intersects(target[i].solidArea) ) {
+                            entity.collisionOn = true;
+                            index = i;
+                        }
+                        break;
+                }
+                entity.solidArea.x = entity.solidAreaDefaultX;
+                entity.solidArea.y = entity.solidAreaDefaultY;
+
+                target[i].solidArea.x = target[i].solidAreaDefaultX;
+                target[i].solidArea.y = target[i].solidAreaDefaultY;
+            }
+        }
+
+        return index;
+    }
+
+    public void checkPlayer( Entity entity ) {
+        // entity solid area pos
+        entity.solidArea.x = entity.worldX + entity.solidArea.x;
+        entity.solidArea.y = entity.worldY + entity.solidArea.y;
+        // get target solid area pos
+        gp.player.solidArea.x = gp.player.worldX + gp.player.solidArea.x;
+        gp.player.solidArea.y = gp.player.worldY + gp.player.solidArea.y;
+
+        switch (entity.direction) {
+            case "up":
+                entity.solidArea.y -= entity.speed;
+                if( entity.solidArea.intersects(gp.player.solidArea) ) {
+                    entity.collisionOn = true;
+                }
+                break;
+            case "down":
+                entity.solidArea.y += entity.speed;
+                if( entity.solidArea.intersects(gp.player.solidArea) ) {
+                    entity.collisionOn = true;
+                }
+                break;
+            case "left":
+                entity.solidArea.x -= entity.speed;
+                if( entity.solidArea.intersects(gp.player.solidArea) ) {
+                    entity.collisionOn = true;
+                }
+                break;
+            case "right":
+                entity.solidArea.x += entity.speed;
+                if( entity.solidArea.intersects(gp.player.solidArea) ) {
+                    entity.collisionOn = true;
+                }
+                break;
+        }
+        entity.solidArea.x = entity.solidAreaDefaultX;
+        entity.solidArea.y = entity.solidAreaDefaultY;
+
+        gp.player.solidArea.x = gp.player.solidAreaDefaultX;
+        gp.player.solidArea.y = gp.player.solidAreaDefaultY;
     }
 
 }

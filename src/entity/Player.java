@@ -2,6 +2,7 @@ package entity;
 
 import main.GamePanel;
 import main.KeyHandler;
+import tile.Vector2f;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -12,7 +13,6 @@ import java.util.Objects;
 
 public class Player extends Entity{
 
-    GamePanel gp;
     KeyHandler keyH;
 
 
@@ -23,7 +23,8 @@ public class Player extends Entity{
 
     // constructor
     public Player(GamePanel gp, KeyHandler keyH){
-        this.gp = gp;
+
+        super(gp); // calling the constructor of the superclass ( entity )
         this.keyH = keyH;
 
         screenX = gp.screenWidth/2 - gp.tileSize/2;  // the center of the screen
@@ -32,6 +33,8 @@ public class Player extends Entity{
         // making the "body" of the player smaller for better collision handling
         solidArea = new Rectangle(12, 24, 24, 24); // posibil sa schimbam in frunctie de sprite dr zenn
 
+        solidAreaDefaultX = solidArea.x;
+        solidAreaDefaultY = solidArea.y;
         setDefaultValues();
         getPlayerImage();
 
@@ -47,7 +50,9 @@ public class Player extends Entity{
 
     public void getPlayerImage() {
 
-        this.animationSet.load("player", Entity.DIRECTIONS , 7, "player");
+            animationSet.loadSeparate("player", Entity.DIRECTIONS, "player", 8); // 4 cadre per direcție
+
+
     }
 
 
@@ -88,6 +93,16 @@ public class Player extends Entity{
             this.collisionOn = false;
             gp.cChecker.checkTile(this);
 
+            // verificare coliziune object
+            Vector2f obj = new Vector2f();
+            int objIndex = gp.cChecker.checkObject(this, true, obj);
+            pickUpObject(objIndex, obj);
+
+            // npc collision verificare
+
+            int npcIndex = gp.cChecker.checkEntity(this, gp.npc );
+            interactNPC(npcIndex);
+
             // daca collisionOn este false, player se misca
 
             if(!this.collisionOn) {
@@ -117,13 +132,26 @@ public class Player extends Entity{
 
     }
 
+    public void pickUpObject(int index, Vector2f ob) {
+
+        if ( index != -1 ) { // adica am atins obiecte
+            gp.tiledMapViewer.mapData[3][(int)ob.x][(int)ob.y] = 0;
+        }
+    }
+
     public void draw(Graphics2D g2){
 //        g2.setColor(Color.black);
 //        g2.fillRect(x, y, gp.tileSize, gp.tileSize);
         BufferedImage image = getCurrentSprite();
 
-        g2.drawImage(image, screenX, screenY, gp.tileSize, gp.tileSize, null);
+        g2.drawImage(image, screenX, screenY, gp.tileSize + 20, gp.tileSize + 20, null);
 
 
+    }
+
+    public void interactNPC(int index ) {
+        if ( index != -1 ) {
+            System.out.println(" you are hitting an npc ");
+        }
     }
 }

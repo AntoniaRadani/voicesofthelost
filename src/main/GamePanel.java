@@ -1,5 +1,6 @@
 package main;
 
+import entity.Entity;
 import entity.Player;
 import tile.TileManager;
 import tile.TiledMapViewer;
@@ -63,9 +64,14 @@ public TiledMapViewer tiledMapViewer = new TiledMapViewer("res/level1/level1.tmx
     KeyHandler keyH = new KeyHandler();
     Thread gameThread; // keeps our program running
     public CollisionChecker cChecker = new CollisionChecker(this);
+    public AssetSetter aSetter = new AssetSetter(this);
     public Player player = new Player(this, keyH);
     GameMenu menu = new GameMenu(this);
     MouseHandler mouseH = new MouseHandler(this);
+
+    // for npc
+
+    public Entity []npc = new Entity[10];
 
     // GAME STATES <- pentru meniu
     // 0 = MENU
@@ -92,6 +98,13 @@ public TiledMapViewer tiledMapViewer = new TiledMapViewer("res/level1/level1.tmx
         // to receive mouse input
         this.addMouseListener(mouseH);
         this.setFocusable(true);
+
+        aSetter.setNPC();
+    }
+
+    public void setupGame() {
+
+        aSetter.setNPC();
     }
 
     public void startGameThread(){
@@ -104,9 +117,16 @@ public TiledMapViewer tiledMapViewer = new TiledMapViewer("res/level1/level1.tmx
         if(gameState == 0){
             menu.update();
        }
-        else if (gameState == 1)
-        // game mode
+        else if (gameState == 1) {
+            // game mode
             player.update();
+            for (int i = 0; i < npc.length; i++) {
+                if (npc[i] != null) {
+                    npc[i].update();
+                }
+            }
+        }
+
     }
 
 
@@ -121,6 +141,14 @@ public TiledMapViewer tiledMapViewer = new TiledMapViewer("res/level1/level1.tmx
             // updating the player
 
             tiledMapViewer.draw(g2);
+
+            // npc
+
+            for ( int i = 0; i < npc.length; i++ ) {
+                if ( npc[i] != null ) {
+                    npc[i].draw(g2, this);
+                }
+            }
 
             player.draw(g2);
         }

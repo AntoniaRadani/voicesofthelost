@@ -99,9 +99,12 @@ public class TiledMapViewer {
                 int tileCount = Integer.parseInt(tilesetElement.getAttribute("tilecount"));
                 tileCollision = new boolean[tileCount + 1]; // +1 pentru că tile IDs încep de la 0
 
+                System.out.println("tileCount: " + tileCount );
+// tile count = cate tile uri sunt in total: aprox 290
                 NodeList tileList = tilesetElement.getElementsByTagName("tile");
 
-
+              //  System.out.println("tileList.getLength: " + tileList.getLength() );
+// tileList.getLength = tile urile care au proprietate(oricare cred) : aprox 85
                 for (int i = 0; i < tileList.getLength(); i++) {
                     Element tileElement = (Element) tileList.item(i);
                     int id = Integer.parseInt(tileElement.getAttribute("id"));
@@ -113,7 +116,7 @@ public class TiledMapViewer {
                         String propertyValue = property.getAttribute("value");
 
                         if (propertyName.equals("collision") && propertyValue.equals("true")) {
-                            tileCollision[id] = true;
+                            tileCollision[id + 1] = true; // toate tile urile care au proprietatea collision sunt setate
                         }
                     }
                 }
@@ -122,6 +125,16 @@ public class TiledMapViewer {
                 // Inline tileset
                 tilesetElement = (Element) tilesetNode;
             }
+
+            System.out.println("=== TILE COLLISIONS ===");
+            for (int i = 0; i < tileCollision.length; i++) {
+                if (tileCollision[i]) {
+                    System.out.println("Tile " + i + " is solid");
+                }
+            }
+
+
+
 
             // Get tileset image
             Element imageElement = (Element) tilesetElement.getElementsByTagName("image").item(0);
@@ -175,8 +188,8 @@ public class TiledMapViewer {
             for (int x = 0; x < columns; x++) {
                 int index = y * columns + x + 1;
                 tileImages[index] = tilesetImage.getSubimage(
-                        x * tileWidth, y * tileHeight, tileWidth, tileHeight
-                );
+                        x * tileWidth, y * tileHeight, tileWidth, tileHeight);
+
             }
         }
     }
