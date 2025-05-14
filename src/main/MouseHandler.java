@@ -10,10 +10,10 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
     GamePanel gp;
 
     // buttons positions
-    int startX = 300, startY = 250;
-    int exitX = 300, exitY = 320;
-    int settingsX = 300, settingsY = 390;
-    int xX = 700, xY = 50;
+    int startX, startY;
+    int exitX, exitY;
+    int settingsX, settingsY;
+    int xX, xY;
     int smallBtnWidth = 40, smallBtnHeight = 40;
     int btnWidth = 200, btnHeight = 50;
     // dimensiuni slider
@@ -34,10 +34,16 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
 
     public MouseHandler(GamePanel gp) {
         this.gp = gp;
-        centerX = (gp.screenWidth - sliderWidth) / 2; // 284 asta e si volumeSliderX
-        centerY = (gp.screenHeight - sliderHeight) / 2; //278
-        centerX = (gp.screenWidth - sliderWidth) / 2; // 284 asta e si volumeSliderX
-        centerY = (gp.screenHeight - sliderHeight) / 2; //278
+        centerX = (gp.screenWidth - 200) / 2; // 284
+        centerY = (gp.screenHeight - 20) / 2; //278
+        startX = centerX;
+        startY = centerY - 40;
+        exitX = centerX;
+        exitY = centerY;
+        settingsX = centerX;
+        settingsY = centerY + 40;
+        xX = 2 * centerX + 130;
+        xY = centerY / 10;
         volumeSliderX = centerX;
         volumeSliderY = centerY - 40;
         soundSliderX = centerX;
@@ -60,15 +66,13 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
             // Start Game (when the start button is clicked)
             if (mx >= startX && mx <= startX + btnWidth &&
                     my >= startY && my <= startY + btnHeight) {
-                //gp.gameState = 1;
                 gp.menuOption = 1;
             }
 
             // Exit (when the exit button is clicked)
             if (mx >= exitX && mx <= exitX + btnWidth &&
-
+                my >= exitY && my <= exitY + btnHeight)
                 gp.menuOption = 2;
-            }
 
             // Settings (when the settings button is clicked)
 
@@ -106,6 +110,14 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
                     }
                 }
             }
+            else if(gp.gameState == 2){
+            if (mx >= exitX && mx <= exitX + btnWidth &&
+                    my >= exitY && my <= exitY + btnWidth) {
+                gp.gameState = 0;
+                gp.menuOption = 0;
+            }
+
+        }
     }
 
     @Override
@@ -231,6 +243,15 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
                 gp.hoverMuteSound = true;
             } else {
                 gp.hoverMuteSound = false;
+            }
+        }
+
+        if(gp.gameState == 2){
+            if (mx >= exitX && mx <= exitX + btnWidth &&
+                    my >= exitY && my <= exitY + btnHeight) {
+                gp.hoverQuit = true;
+            } else {
+                gp.hoverQuit = false;
             }
         }
 

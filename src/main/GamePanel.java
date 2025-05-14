@@ -38,13 +38,11 @@ public class GamePanel extends JPanel implements Runnable{
     public int previousVolumeLevel = 100;
     public boolean draggingVolume = false;
 
-
     // sound
 
     public int soundLevel = 100;
     public int previousSoundLevel = 100;
     public boolean draggingSound = false;
-
 
     // WORLD PARAMETERS
 
@@ -56,20 +54,21 @@ public class GamePanel extends JPanel implements Runnable{
     // FPS
     int FPS = 60;
 
-//    TileManager tileM = new TileManager("level1/level1.tmx");
-
-public TiledMapViewer tiledMapViewer = new TiledMapViewer("res/level1/level1.tmx", this);
-
-    KeyHandler keyH = new KeyHandler();
+    // SYSTEM
+    public TiledMapViewer tiledMapViewer = new TiledMapViewer("res/level1/level1.tmx", this);
+    KeyHandler keyH = new KeyHandler(this);
     Thread gameThread; // keeps our program running
     public CollisionChecker cChecker = new CollisionChecker(this);
     public Player player = new Player(this, keyH);
+    Sound sound = new Sound();
     GameMenu menu = new GameMenu(this);
     MouseHandler mouseH = new MouseHandler(this);
+    GamePause pause = new GamePause(this);
 
     // GAME STATES <- pentru meniu
     // 0 = MENU
     // 1 = JOC
+    // 2 = PAUSED
     int gameState = 0; // the game starts at the menu
 
     int menuOption = 0;
@@ -79,6 +78,9 @@ public TiledMapViewer tiledMapViewer = new TiledMapViewer("res/level1/level1.tmx
     // 3 = SETTINGS
     // 4 = INSTRUCTIUNI
 
+    int pauseOption = 0;
+    // 0 = PAUSED
+    // 1 = RELOADED
 
     public GamePanel(){
         // how big is the window
@@ -99,14 +101,22 @@ public TiledMapViewer tiledMapViewer = new TiledMapViewer("res/level1/level1.tmx
         gameThread.start();
     }
 
+    public void setUpGame(){
+        // ceva cu obiecte
+        playMusic(0);
+    }
+
     public void update(){
-        // menu mode
-        if(gameState == 0){
+
+        if(gameState == 0)
+            // menu mode
             menu.update();
-       }
         else if (gameState == 1)
-        // game mode
+            // game mode
             player.update();
+        else if (gameState == 2)
+            // pause mode
+            pause.update();
     }
 
 
@@ -119,18 +129,37 @@ public TiledMapViewer tiledMapViewer = new TiledMapViewer("res/level1/level1.tmx
             menu.draw(g2);
         } else if (gameState == 1) {
             // updating the player
-
             tiledMapViewer.draw(g2);
-
             player.draw(g2);
         }
+        else if (gameState == 2) {
+            pause.draw(g2);
+        }
+
         // to dispose of this graphic context and release
         // any system resources that its using
         g2.dispose();
     }
+
+    public void playMusic(int i){
+        sound.setFile(i);
+        sound.play();
+        sound.loop();
+    }
+
+    public void stopMusic(){
+        sound.stop();
+    }
+
+    public void playSE(int i){
+        sound.setFile(i);
+        sound.play();
+    }
+
     // our game loop
     @Override
     public void run() {
+
         double drawInterval = 1000000000 / FPS; // 0.01666 seconds
         double delta = 0;
         long lastTime = System.nanoTime();
@@ -139,33 +168,25 @@ public TiledMapViewer tiledMapViewer = new TiledMapViewer("res/level1/level1.tmx
 
         int drawCount = 0;
 
-
         while(gameThread != null) {
             currentTime = System.nanoTime();
             delta += (currentTime - lastTime) / drawInterval; // how much time has passed / drawInterval
             timer += (currentTime - lastTime);
             lastTime = currentTime; // updating the last time
-
             if (delta >= 1) {
                 update();
                 repaint();
                 delta--;
 
             }
-
             if ( timer >= 1000000000) {
-
                 System.out.println("FPS: " + drawCount);
                 drawCount = 0;
                 timer = 0;
-
             }
-             
-
             if ( timer >= 1000000000) {
                 timer = 0;
             }
-
         }
     }
 }
