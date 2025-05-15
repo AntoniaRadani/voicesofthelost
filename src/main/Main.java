@@ -54,8 +54,10 @@ public class Main {
         // APELĂM TOT DUPĂ setVisible
         window.setVisible(true);
 
+
         gamePanel.setupGame();         // se poate apela acum
         gamePanel.startGameThread();   // loop pornește
     }
+
 
 }

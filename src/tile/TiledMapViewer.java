@@ -100,11 +100,11 @@ public class TiledMapViewer {
                 tileCollision = new boolean[tileCount + 1]; // +1 pentru că tile IDs încep de la 0
 
                 System.out.println("tileCount: " + tileCount );
-// tile count = cate tile uri sunt in total: aprox 290
+                // tile count = cate tile uri sunt in total: aprox 290
                 NodeList tileList = tilesetElement.getElementsByTagName("tile");
 
-              //  System.out.println("tileList.getLength: " + tileList.getLength() );
-// tileList.getLength = tile urile care au proprietate(oricare cred) : aprox 85
+                //  System.out.println("tileList.getLength: " + tileList.getLength() );
+                // tileList.getLength = tile urile care au proprietate(oricare cred) : aprox 85
                 for (int i = 0; i < tileList.getLength(); i++) {
                     Element tileElement = (Element) tileList.item(i);
                     int id = Integer.parseInt(tileElement.getAttribute("id"));
@@ -125,6 +125,7 @@ public class TiledMapViewer {
                 // Inline tileset
                 tilesetElement = (Element) tilesetNode;
             }
+
 
             // Get tileset image
             Element imageElement = (Element) tilesetElement.getElementsByTagName("image").item(0);
@@ -185,12 +186,11 @@ public class TiledMapViewer {
     }
     public void draw(Graphics2D g2) {
 
-
         // Desenarea hărții cu toate straturile
         screenX = gp.player.screenX;
         screenY = gp.player.screenY;
 
-// Opțional: Clamp (limitează camera)
+        // Opțional: Clamp (limitează camera)
         if (gp.player.worldX < gp.screenWidth/2) {
             screenX = gp.player.worldX;
         }
@@ -213,8 +213,6 @@ public class TiledMapViewer {
 
         int worldRow = 0;
         int worldCol = 0;
-
-
 
         for (int layer = 0; layer < mapData.length; layer++) {
             for (int row = 0; row < mapHeight; row++) {
