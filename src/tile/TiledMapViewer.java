@@ -126,12 +126,6 @@ public class TiledMapViewer {
                 tilesetElement = (Element) tilesetNode;
             }
 
-            System.out.println("=== TILE COLLISIONS ===");
-            for (int i = 0; i < tileCollision.length; i++) {
-                if (tileCollision[i]) {
-                    System.out.println("Tile " + i + " is solid");
-                }
-            }
 
             // Get tileset image
             Element imageElement = (Element) tilesetElement.getElementsByTagName("image").item(0);

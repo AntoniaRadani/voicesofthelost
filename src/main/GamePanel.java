@@ -8,7 +8,14 @@ import tile.TiledMapViewer;
 
 import javax.swing.JPanel;
 import java.awt.*;
+
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
+import javax.swing.JFrame;
+
 import java.util.Objects;
+
 
 public class GamePanel extends JPanel implements Runnable {
     // screen settings
@@ -30,10 +37,17 @@ public class GamePanel extends JPanel implements Runnable {
     public final int scale = 3; // to make our player and tiles bigger
 
     public final int tileSize = originalTileSize * scale; // 48 x 48 the actual tile size
-    final int maxScreenCol = 16; // how many tiles can we see - column
+    final int maxScreenCol = 20; // how many tiles can we see - column
     final int maxScreenRow = 12; // how many tiles can we see - row
-    public final int screenWidth = tileSize * maxScreenCol; // 768 pixels
-    public final int screenHeight = tileSize * maxScreenRow; // 576 pixels
+    public int screenWidth = tileSize * maxScreenCol; // 960 pixels
+    public int screenHeight = tileSize * maxScreenRow; // 576 pixels
+
+
+    // for full screen
+    int screenWidth2 = screenWidth;
+    int screenHeight2 = screenHeight;
+    BufferedImage tempScreen;
+    Graphics2D g2;
 
     // volume
 
@@ -106,12 +120,72 @@ public class GamePanel extends JPanel implements Runnable {
         this.addMouseListener(mouseH);
         this.setFocusable(true);
 
+        // Listener pentru toggle F11
+        this.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_E) {
+                    toggleFullScreen();
+                }
+            }
+        });
+
         aSetter.setNPC();
     }
 
+    public void toggleFullScreen() {
+        GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+        boolean isFullScreen = gd.getFullScreenWindow() == Main.window;
+
+        try {
+            if (isFullScreen) {
+                gd.setFullScreenWindow(null);
+                Main.window.dispose();
+                Main.window.setUndecorated(false);
+                Main.window.setVisible(true);
+                Main.window.setExtendedState(JFrame.MAXIMIZED_BOTH);
+            } else {
+                Main.window.dispose();
+                Main.window.setUndecorated(true);
+                Main.window.setVisible(true);
+                gd.setFullScreenWindow(Main.window);
+            }
+
+            screenWidth2 = Main.window.getWidth();
+            screenHeight2 = Main.window.getHeight();
+            tempScreen = new BufferedImage(screenWidth2, screenHeight2, BufferedImage.TYPE_INT_ARGB);
+            g2 = (Graphics2D) tempScreen.getGraphics();
+            System.out.println("[TOGGLE] Now: " + screenWidth2 + "x" + screenHeight2);
+        } catch (Exception e) {
+            System.out.println("[ERROR] Fullscreen toggle failed: " + e.getMessage());
+        }
+    }
+
+
     public void setupGame() {
+        System.out.println("[SETUP] Called");
+
+
+        setFullScreen();
+
+        screenWidth = Main.window.getWidth();
+        screenHeight = Main.window.getHeight();
+
+        tempScreen = new BufferedImage(screenWidth2, screenHeight2, BufferedImage.TYPE_INT_ARGB);
+        g2 = tempScreen.createGraphics();
+        this.requestFocusInWindow();
 
         aSetter.setNPC();
+
+        this.setFocusable(true);
+        this.requestFocusInWindow();
+    }
+
+
+    public void setFullScreen() {
+
+        System.out.println("set full screen ");
+
     }
 
     public void startGameThread() {
@@ -119,10 +193,6 @@ public class GamePanel extends JPanel implements Runnable {
         gameThread.start();
     }
 
-    public void setUpGame() {
-        aSetter.setObject();
-        playMusic(0);
-    }
 
     public void update() {
 
@@ -146,7 +216,65 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
 
-    public void paintComponent(Graphics g){
+    public void drawToTempScreen() {
+
+     /*  g2.setColor(Color.RED);
+        g2.fillRect(0, 0, screenWidth2, screenHeight2); */
+
+        if (gameState == 0) {
+            // drawing the menu
+            menu.draw(g2);
+        } else if (gameState == 1) {
+            // updating the player
+            tiledMapViewer.draw(g2);
+            // npc
+
+            for ( int i = 0; i < npc.length; i++ ) {
+                if ( npc[i] != null ) {
+                    npc[i].draw(g2, this);
+                }
+            }
+
+            player.draw(g2);
+        }
+        else if (gameState == 2) {
+            pause.draw(g2);
+        }
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+
+        // Dimensiunile imaginii originale (jocul)
+        int originalW = screenWidth;
+        int originalH = screenHeight;
+
+        // Dimensiunile ecranului real (fereastră, fullscreen etc.)
+        int actualW = screenWidth2;
+        int actualH = screenHeight2;
+
+        // Calculează scale factor uniform (menține proporții)
+        double scaleX = (double) actualW / originalW;
+        double scaleY = (double) actualH / originalH;
+        double scale = Math.min(scaleX, scaleY);
+
+        // Dimensiunile finale redimensionate
+        int finalW = (int) (originalW * scale);
+        int finalH = (int) (originalH * scale);
+
+        // Calculează coordonatele de centrare
+        int x = (actualW - finalW) / 2;
+        int y = (actualH - finalH) / 2;
+
+        // Desenează imaginea redimensionată și centrată
+        g.drawImage(tempScreen, x, y, finalW, finalH, null);
+    }
+
+
+
+  /*  public void paintComponent(Graphics g){ // este numai pt JPannel. o sa l inlocuim cu drawTempScreen
+        // putem sterge ulterior
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D)g;
 
@@ -178,7 +306,7 @@ public class GamePanel extends JPanel implements Runnable {
         // to dispose of this graphic context and release
         // any system resources that its using
         g2.dispose();
-    }
+    } */
 
     public void playMusic(int i){
         sound.setFile(i);
@@ -199,6 +327,8 @@ public class GamePanel extends JPanel implements Runnable {
     @Override
     public void run() {
 
+        System.out.println("[LOOP] Game loop running");
+
         double drawInterval = 1000000000 / FPS; // 0.01666 seconds
         double delta = 0;
         long lastTime = System.nanoTime();
@@ -214,6 +344,7 @@ public class GamePanel extends JPanel implements Runnable {
             lastTime = currentTime; // updating the last time
             if (delta >= 1) {
                 update();
+                drawToTempScreen();
                 repaint();
                 delta--;
 
@@ -227,5 +358,14 @@ public class GamePanel extends JPanel implements Runnable {
                 timer = 0;
             }
         }
+    }
+
+    public void drawToScreen() {
+       /* Graphics g = this.getGraphics();
+        if (g != null && tempScreen != null) {
+            g.drawImage(tempScreen, 0, 0, screenWidth2, screenHeight2, null);
+            g.dispose();
+        } */
+        repaint();
     }
 }
