@@ -19,6 +19,10 @@ public class Player extends Entity{
     public final int screenX;
     public final int screenY;
 
+    int hasKey = 0;
+    int hasApple = 0;
+    boolean openChest = false;
+
     int counter2 = 0;
 
     // constructor
@@ -89,14 +93,18 @@ public class Player extends Entity{
                 direction = "right";
                 //worldX += speed;
             }
+
             // verificare coliziune
             this.collisionOn = false;
             gp.cChecker.checkTile(this);
 
+            // verificare coliziune object v2
+            int objIndex = gp.cChecker.checkObject2(this, true);
+            pickUpObject2(objIndex);
             // verificare coliziune object
-            Vector2f obj = new Vector2f();
-            int objIndex = gp.cChecker.checkObject(this, true, obj);
-            pickUpObject(objIndex, obj);
+//            Vector2f obj = new Vector2f();
+//            int objIndex = gp.cChecker.checkObject(this, true, obj);
+//            pickUpObject(objIndex, obj);
 
             // npc collision verificare
 
@@ -124,8 +132,6 @@ public class Player extends Entity{
 
             updateAnimation();
 
-
-
         }
 
         // gp.tiledMapViewer.updateCamera(worldX, worldY, gp.screenWidth, gp.screenHeight);
@@ -136,6 +142,33 @@ public class Player extends Entity{
 
         if ( index != -1 ) { // adica am atins obiecte
             gp.tiledMapViewer.mapData[3][(int)ob.x][(int)ob.y] = 0;
+        }
+    }
+
+    public void pickUpObject2(int i){
+        if(i != 999){
+            String objectName = gp.obj[i].name;
+
+            switch (objectName){
+                case "Key":
+                    hasKey++;
+                    gp.playSE(2);
+                    gp.obj[i] = null;
+                    System.out.println("Key : " + hasKey);
+                    break;
+                case "Apple":
+                    hasApple++;
+                    gp.playSE(2);
+                    gp.obj[i] = null;
+                    break;
+                case "Chest":
+                    if(hasKey > 0){
+                        gp.playSE(1);
+                        gp.obj[i] = null;
+                        hasKey--;
+                        System.out.println("Key : " + hasKey);
+                    }
+            }
         }
     }
 

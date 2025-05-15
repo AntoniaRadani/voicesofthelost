@@ -29,6 +29,7 @@ public class Main {
         // make the window visible on screen
         window.setVisible(true);
 
+        gamePanel.setUpGame();
         gamePanel.startGameThread();
     }
 }

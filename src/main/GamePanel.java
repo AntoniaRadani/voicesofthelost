@@ -2,11 +2,13 @@ package main;
 
 import entity.Entity;
 import entity.Player;
+import object.SuperObject;
 import tile.TileManager;
 import tile.TiledMapViewer;
 
 import javax.swing.JPanel;
 import java.awt.*;
+import java.util.Objects;
 
 public class GamePanel extends JPanel implements Runnable {
     // screen settings
@@ -52,6 +54,9 @@ public class GamePanel extends JPanel implements Runnable {
     public final int worldWidth = tileSize * maxWorldCol;
     public final int worldHeight = tileSize * maxWorldRow;
 
+    // OBJECTS
+
+
     // FPS
     int FPS = 60;
 
@@ -66,7 +71,7 @@ public class GamePanel extends JPanel implements Runnable {
     GameMenu menu = new GameMenu(this);
     MouseHandler mouseH = new MouseHandler(this);
     GamePause pause = new GamePause(this);
-
+    public SuperObject obj[] = new SuperObject[10];
     // for npc
 
     public Entity[] npc = new Entity[10];
@@ -115,7 +120,7 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void setUpGame() {
-        // ceva cu obiecte
+        aSetter.setObject();
         playMusic(0);
     }
 
@@ -149,16 +154,21 @@ public class GamePanel extends JPanel implements Runnable {
             // drawing the menu
             menu.draw(g2);
         } else if (gameState == 1) {
-            // updating the player
+            // tile
             tiledMapViewer.draw(g2);
             // npc
-
             for ( int i = 0; i < npc.length; i++ ) {
                 if ( npc[i] != null ) {
                     npc[i].draw(g2, this);
                 }
             }
-
+            // object
+            for(int i = 0; i < obj.length; i++){
+                if(obj[i] != null && !Objects.equals(obj[i].name, "open_chest")){
+                    obj[i].draw(g2, this);
+                }
+            }
+            // player
             player.draw(g2);
         }
         else if (gameState == 2) {
