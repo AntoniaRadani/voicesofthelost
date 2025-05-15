@@ -1,5 +1,6 @@
 package main;
 
+import entity.Entity;
 import entity.Player;
 import tile.TileManager;
 import tile.TiledMapViewer;
@@ -7,7 +8,7 @@ import tile.TiledMapViewer;
 import javax.swing.JPanel;
 import java.awt.*;
 
-public class GamePanel extends JPanel implements Runnable{
+public class GamePanel extends JPanel implements Runnable {
     // screen settings
 
     public boolean hoverExitButton = false;
@@ -59,11 +60,16 @@ public class GamePanel extends JPanel implements Runnable{
     KeyHandler keyH = new KeyHandler(this);
     Thread gameThread; // keeps our program running
     public CollisionChecker cChecker = new CollisionChecker(this);
+    public AssetSetter aSetter = new AssetSetter(this);
     public Player player = new Player(this, keyH);
     Sound sound = new Sound();
     GameMenu menu = new GameMenu(this);
     MouseHandler mouseH = new MouseHandler(this);
     GamePause pause = new GamePause(this);
+
+    // for npc
+
+    public Entity[] npc = new Entity[10];
 
     // GAME STATES <- pentru meniu
     // 0 = MENU
@@ -82,7 +88,7 @@ public class GamePanel extends JPanel implements Runnable{
     // 0 = PAUSED
     // 1 = RELOADED
 
-    public GamePanel(){
+    public GamePanel() {
         // how big is the window
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
         // the background color
@@ -94,31 +100,46 @@ public class GamePanel extends JPanel implements Runnable{
         // to receive mouse input
         this.addMouseListener(mouseH);
         this.setFocusable(true);
+
+        aSetter.setNPC();
     }
 
-    public void startGameThread(){
+    public void setupGame() {
+
+        aSetter.setNPC();
+    }
+
+    public void startGameThread() {
         gameThread = new Thread(this);
         gameThread.start();
     }
 
-    public void setUpGame(){
+    public void setUpGame() {
         // ceva cu obiecte
         playMusic(0);
     }
 
-    public void update(){
+    public void update() {
 
-        if(gameState == 0)
+        if (gameState == 0)
             // menu mode
             menu.update();
+
         else if (gameState == 1)
             // game mode
             player.update();
         else if (gameState == 2)
             // pause mode
             pause.update();
+        else if (gameState == 1)
+            // game mode
+            player.update();
+        for (int i = 0; i < npc.length; i++) {
+            if (npc[i] != null) {
+                npc[i].update();
+            }
+        }
     }
-
 
     public void paintComponent(Graphics g){
         super.paintComponent(g);
@@ -130,6 +151,14 @@ public class GamePanel extends JPanel implements Runnable{
         } else if (gameState == 1) {
             // updating the player
             tiledMapViewer.draw(g2);
+            // npc
+
+            for ( int i = 0; i < npc.length; i++ ) {
+                if ( npc[i] != null ) {
+                    npc[i].draw(g2, this);
+                }
+            }
+
             player.draw(g2);
         }
         else if (gameState == 2) {

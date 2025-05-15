@@ -24,6 +24,7 @@ public class TiledMapViewer {
     private int tileWidth = 16;  // Set default tile size (adjustable)
     private int tileHeight = 16;
     public int mapWidth, mapHeight;
+    public int layerLength;
 
     private BufferedImage tilesetImage;
     private BufferedImage[] tileImages;
@@ -77,8 +78,8 @@ public class TiledMapViewer {
             mapWidth = Integer.parseInt(mapElement.getAttribute("width"));
             mapHeight = Integer.parseInt(mapElement.getAttribute("height"));
 
-            tileWidth = Integer.parseInt(mapElement.getAttribute("tilewidth")) ;
-            tileHeight = Integer.parseInt(mapElement.getAttribute("tileheight")) ;
+            tileWidth = Integer.parseInt(mapElement.getAttribute("tilewidth"));
+            tileHeight = Integer.parseInt(mapElement.getAttribute("tileheight"));
 
 
             // TILESET (support for external TSX)
@@ -98,8 +99,12 @@ public class TiledMapViewer {
                 int tileCount = Integer.parseInt(tilesetElement.getAttribute("tilecount"));
                 tileCollision = new boolean[tileCount + 1]; // +1 pentru că tile IDs încep de la 0
 
+                System.out.println("tileCount: " + tileCount );
+// tile count = cate tile uri sunt in total: aprox 290
                 NodeList tileList = tilesetElement.getElementsByTagName("tile");
 
+              //  System.out.println("tileList.getLength: " + tileList.getLength() );
+// tileList.getLength = tile urile care au proprietate(oricare cred) : aprox 85
                 for (int i = 0; i < tileList.getLength(); i++) {
                     Element tileElement = (Element) tileList.item(i);
                     int id = Integer.parseInt(tileElement.getAttribute("id"));
@@ -111,7 +116,7 @@ public class TiledMapViewer {
                         String propertyValue = property.getAttribute("value");
 
                         if (propertyName.equals("collision") && propertyValue.equals("true")) {
-                            tileCollision[id] = true;
+                            tileCollision[id + 1] = true; // toate tile urile care au proprietatea collision sunt setate
                         }
                     }
                 }
@@ -120,6 +125,16 @@ public class TiledMapViewer {
                 // Inline tileset
                 tilesetElement = (Element) tilesetNode;
             }
+
+            System.out.println("=== TILE COLLISIONS ===");
+            for (int i = 0; i < tileCollision.length; i++) {
+                if (tileCollision[i]) {
+                    System.out.println("Tile " + i + " is solid");
+                }
+            }
+
+
+
 
             // Get tileset image
             Element imageElement = (Element) tilesetElement.getElementsByTagName("image").item(0);
@@ -140,6 +155,8 @@ public class TiledMapViewer {
             // MAP DATA - Multi-layer support
             NodeList layerList = doc.getElementsByTagName("layer");
             mapData = new int[layerList.getLength()][mapHeight][mapWidth]; // Array 3D pentru date
+
+            layerLength = layerList.getLength();
 
             for (int i = 0; i < layerList.getLength(); i++) {
                 Element layer = (Element) layerList.item(i);
@@ -171,13 +188,13 @@ public class TiledMapViewer {
             for (int x = 0; x < columns; x++) {
                 int index = y * columns + x + 1;
                 tileImages[index] = tilesetImage.getSubimage(
-                        x * tileWidth, y * tileHeight, tileWidth, tileHeight
-                );
+                        x * tileWidth, y * tileHeight, tileWidth, tileHeight);
+
             }
         }
     }
-
     public void draw(Graphics2D g2) {
+
 
         // Desenarea hărții cu toate straturile
         screenX = gp.player.screenX;
@@ -210,31 +227,31 @@ public class TiledMapViewer {
 
 
         for (int layer = 0; layer < mapData.length; layer++) {
-            // Parcurge fiecare celulă din strat
-            for ( worldRow = 0; worldRow < mapHeight; worldRow++) {
-                for (worldCol = 0; worldCol < mapWidth; worldCol++) {
+            for (int row = 0; row < mapHeight; row++) {
+                for (int col = 0; col < mapWidth; col++) {
 
-                    int worldX = worldCol * gp.tileSize;
-                    int worldY = worldRow * gp.tileSize; // pozitia pe mapa
-                    screenX = worldX - gp.player.worldX + gp.player.screenX; // pozitia pe ecran unde desenam
-                    screenY = worldY - gp.player.worldY + gp.player.screenY;
+                    int worldX = col * gp.tileSize;
+                    int worldY = row * gp.tileSize;
 
+                    int screenX = worldX - gp.player.worldX + gp.player.screenX;
+                    int screenY = worldY - gp.player.worldY + gp.player.screenY;
 
+                    int tileId = mapData[layer][row][col];
 
-                    int tileId = mapData[layer][worldRow][worldCol];  // Folosește layer-ul curent
-                    if ( worldX + gp.tileSize > gp.player.worldX - gp.player.screenX && worldX - gp.tileSize < gp.player.worldX + gp.player.screenX &&
-                         worldY + gp.tileSize > gp.player.worldY - gp.player.screenY && worldY - gp.tileSize < gp.player.worldY + gp.player.screenY )  {
-                        // ca sa desenam doar in ecran, adica doar cat avem nevoie fara tile uri in plus
-                        // facem o granita pt desen
+                    if (
+                            worldX + gp.tileSize > gp.player.worldX - gp.player.screenX &&
+                                    worldX - gp.tileSize < gp.player.worldX + gp.player.screenX &&
+                                    worldY + gp.tileSize > gp.player.worldY - gp.player.screenY &&
+                                    worldY - gp.tileSize < gp.player.worldY + gp.player.screenY
+                    ) {
                         if (tileId > 0 && tileId < tileImages.length && tileImages[tileId] != null) {
-                            g2.drawImage(tileImages[tileId], screenX, screenY, gp.tileSize, gp.tileSize, null); // aici am marit tile ul
+                            g2.drawImage(tileImages[tileId], screenX, screenY, gp.tileSize, gp.tileSize, null);
                         }
                     }
-
                 }
             }
         }
-
     }
 
 }
+
