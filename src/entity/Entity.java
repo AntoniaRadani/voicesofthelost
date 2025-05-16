@@ -82,8 +82,7 @@ public class Entity {
 
         collisionOn = false;
         gp.cChecker.checkTile(this);
-        Vector2f obj = new Vector2f();
-        int objIndex = gp.cChecker.checkObject(this, false, obj);
+
         gp.cChecker.checkPlayer(this);
 
         if(!this.collisionOn) {
