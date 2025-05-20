@@ -6,8 +6,9 @@ import object.SuperObject;
 import tile.TileManager;
 import tile.TiledMapViewer;
 
-import javax.swing.JPanel;
+import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.util.Objects;
 
 public class GamePanel extends JPanel implements Runnable {
@@ -36,6 +37,19 @@ public class GamePanel extends JPanel implements Runnable {
     public final int screenHeight = tileSize * maxScreenRow; // 576 pixels
 
     // volume
+
+    // for maps
+    public final int maxMap = 3; // the max number of maps that we can have
+    public int currentMap = 0;
+
+    // for full screen
+    public int screenWidth2 = screenWidth;
+    public int screenHeight2 = screenHeight;
+    BufferedImage tempScreen;
+    Graphics2D g2;
+
+    public boolean isFullscreen = true;
+
 
     public int volumeLevel = 100; // intre 0 și 100
     public int previousVolumeLevel = 100;
@@ -109,10 +123,7 @@ public class GamePanel extends JPanel implements Runnable {
         aSetter.setNPC();
     }
 
-    public void setupGame() {
 
-        aSetter.setNPC();
-    }
 
     public void startGameThread() {
         gameThread = new Thread(this);
@@ -121,7 +132,11 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void setUpGame() {
         aSetter.setObject();
+        aSetter.setNPC();
         playMusic(0);
+
+        tempScreen = new BufferedImage(screenWidth, screenHeight, BufferedImage.TYPE_INT_ARGB);
+        g2 = (Graphics2D)tempScreen.getGraphics();
     }
 
     public void update() {
@@ -146,7 +161,34 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
 
-    public void paintComponent(Graphics g){
+    public void drawToTempScreen() {
+        if (gameState == 0) {
+            // drawing the menu
+            menu.draw(g2);
+        } else if (gameState == 1) {
+            // tile
+            tiledMapViewer.draw(g2);
+            // npc
+            for ( int i = 0; i < npc.length; i++ ) {
+                if ( npc[i] != null ) {
+                    npc[i].draw(g2, this);
+                }
+            }
+            // object
+            for(int i = 0; i < obj.length; i++){
+                if(obj[i] != null && !Objects.equals(obj[i].name, "open_chest")){
+                    obj[i].draw(g2, this);
+                }
+            }
+            // player
+            player.draw(g2);
+        }
+        else if (gameState == 2) {
+            pause.draw(g2);
+        }
+    }
+
+  /*  public void paintComponent(Graphics g){
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D)g;
 
@@ -178,7 +220,7 @@ public class GamePanel extends JPanel implements Runnable {
         // to dispose of this graphic context and release
         // any system resources that its using
         g2.dispose();
-    }
+    } */
 
     public void playMusic(int i){
         sound.setFile(i);
@@ -194,6 +236,18 @@ public class GamePanel extends JPanel implements Runnable {
         sound.setFile(i);
         sound.play();
     }
+
+    public void toggleFullscreen() {
+        if (Main.window == null) return;
+
+        isFullscreen = !isFullscreen;
+        Main.window.dispose();
+        Main.window.setUndecorated(isFullscreen);
+        Main.window.setExtendedState(isFullscreen ? JFrame.MAXIMIZED_BOTH : JFrame.NORMAL);
+        Main.window.setVisible(true);
+        this.requestFocusInWindow(); // pentru a primi din nou input
+    }
+
 
     // our game loop
     @Override
@@ -228,4 +282,6 @@ public class GamePanel extends JPanel implements Runnable {
             }
         }
     }
+
+
 }

@@ -50,6 +50,9 @@ public class KeyHandler implements KeyListener {
             else if(gp.gameState == 2) // if the game is paused
                 gp.gameState = 1; // playing
         }
+        if (code == KeyEvent.VK_E) {
+            gp.toggleFullscreen();  // vei avea nevoie de această metodă în GamePanel
+        }
     }
 
     @Override
