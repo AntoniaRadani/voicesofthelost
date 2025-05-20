@@ -62,7 +62,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     // SYSTEM
     public TiledMapViewer tiledMapViewer = new TiledMapViewer("res/level1/level1.tmx", this);
-    KeyHandler keyH = new KeyHandler(this);
+    public KeyHandler keyH = new KeyHandler(this);
     Thread gameThread; // keeps our program running
     public CollisionChecker cChecker = new CollisionChecker(this);
     public AssetSetter aSetter = new AssetSetter(this);
@@ -71,6 +71,7 @@ public class GamePanel extends JPanel implements Runnable {
     GameMenu menu = new GameMenu(this);
     MouseHandler mouseH = new MouseHandler(this);
     GamePause pause = new GamePause(this);
+    public UI ui = new UI(this);
     public SuperObject obj[] = new SuperObject[10];
     // for npc
 
@@ -80,7 +81,13 @@ public class GamePanel extends JPanel implements Runnable {
     // 0 = MENU
     // 1 = JOC
     // 2 = PAUSED
-    int gameState = 0; // the game starts at the menu
+    // 3 = CHARACTER STATUS
+    public int gameState; // the game starts at the menu
+    public final int menuState = 0;
+    public final int playState = 1;
+    public final int pauseState = 2;
+    public final int characterStatus = 3;
+    public final int dialogueState = 4;
 
     int menuOption = 0;
     // 0 = INITIAL STATE (draw)
@@ -122,6 +129,8 @@ public class GamePanel extends JPanel implements Runnable {
     public void setUpGame() {
         aSetter.setObject();
         playMusic(0);
+        stopMusic();
+        gameState = playState;
     }
 
     public void update() {
@@ -150,28 +159,35 @@ public class GamePanel extends JPanel implements Runnable {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D)g;
 
-        if (gameState == 0) {
+        if (gameState == menuState) {
             // drawing the menu
             menu.draw(g2);
-        } else if (gameState == 1) {
+        } else if (gameState == playState || gameState == dialogueState || gameState == characterStatus) {
+
             // tile
             tiledMapViewer.draw(g2);
+
             // npc
             for ( int i = 0; i < npc.length; i++ ) {
                 if ( npc[i] != null ) {
                     npc[i].draw(g2, this);
                 }
             }
+
             // object
             for(int i = 0; i < obj.length; i++){
-                if(obj[i] != null && !Objects.equals(obj[i].name, "open_chest")){
+                if(obj[i] != null){
                     obj[i].draw(g2, this);
                 }
             }
+
             // player
             player.draw(g2);
+
+            // ui
+            ui.draw(g2);
         }
-        else if (gameState == 2) {
+        else if (gameState == pauseState) {
             pause.draw(g2);
         }
 

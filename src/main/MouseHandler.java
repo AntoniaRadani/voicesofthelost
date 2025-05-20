@@ -61,7 +61,7 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
         // getting the position of the mouse
         int mx = e.getX();
         int my = e.getY();
-        if (gp.gameState == 0 && gp.menuOption != 3) {
+        if (gp.gameState == gp.menuState && gp.menuOption != 3) {
 
             // Start Game (when the start button is clicked)
             if (mx >= startX && mx <= startX + btnWidth &&
@@ -110,10 +110,10 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
                     }
                 }
             }
-            else if(gp.gameState == 2){
+            else if(gp.gameState == gp.pauseState){
             if (mx >= exitX && mx <= exitX + btnWidth &&
                     my >= exitY && my <= exitY + btnWidth) {
-                gp.gameState = 0;
+                gp.gameState = gp.menuState;
                 gp.menuOption = 0;
             }
 
@@ -180,7 +180,7 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
         int mx = e.getX();
         int my = e.getY();
 
-        if (gp.gameState == 0) {
+        if (gp.gameState == gp.menuState) {
             // Hover pentru Start
             if (mx >= startX && mx <= startX + btnWidth &&
                     my >= startY && my <= startY + btnHeight) {

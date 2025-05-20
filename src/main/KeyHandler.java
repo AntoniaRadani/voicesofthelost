@@ -13,6 +13,8 @@ public class KeyHandler implements KeyListener {
     public boolean rightPressed;
     public boolean enterPressed;
     public boolean escPressed;
+    public boolean shiftPressed;
+    public boolean fPressed;
 
     public KeyHandler(GamePanel gp){
         this.gp = gp;
@@ -28,27 +30,44 @@ public class KeyHandler implements KeyListener {
         // returns the integer keyCode associated with the key
         int code = e.getKeyCode();
 
-        if(code == KeyEvent.VK_W) {
-            upPressed = true;
+        if(gp.gameState == gp.playState) {
+            if (code == KeyEvent.VK_W) {
+                upPressed = true;
+            }
+            if (code == KeyEvent.VK_S) {
+                downPressed = true;
+            }
+            if (code == KeyEvent.VK_A) {
+                leftPressed = true;
+            }
+            if (code == KeyEvent.VK_D) {
+                rightPressed = true;
+            }
+            if (code == KeyEvent.VK_ENTER) {
+                enterPressed = true;
+            }
+            if (code == KeyEvent.VK_F) {
+                fPressed = true;
+            }
+            if (code == KeyEvent.VK_ESCAPE) {
+                escPressed = true;
+                if (gp.gameState == gp.playState) // if it s in play mode
+                    gp.gameState = gp.pauseState; // paused
+                else if (gp.gameState == gp.pauseState) // if the game is paused
+                    gp.gameState = gp.playState; // playing
+            }
+
+            if (code == KeyEvent.VK_SHIFT) {
+                shiftPressed = true;
+                if (gp.gameState == gp.playState) // in play mode
+                    gp.gameState = gp.characterStatus; // character status mode
+                else if (gp.gameState == gp.characterStatus) // if it is in character status
+                    gp.gameState = gp.playState; // switch to play mode
+            }
         }
-        if(code == KeyEvent.VK_S) {
-            downPressed = true;
-        }
-        if(code == KeyEvent.VK_A) {
-            leftPressed = true;
-        }
-        if(code == KeyEvent.VK_D) {
-            rightPressed = true;
-        }
-        if(code == KeyEvent.VK_ENTER){
-            enterPressed = true;
-        }
-        if(code == KeyEvent.VK_ESCAPE){
-            escPressed = true;
-            if(gp.gameState == 1) // if it s in play mode
-                gp.gameState = 2; // paused
-            else if(gp.gameState == 2) // if the game is paused
-                gp.gameState = 1; // playing
+        else if(gp.gameState == gp.dialogueState || gp.gameState == gp.characterStatus){
+            if(code == KeyEvent.VK_N)
+                gp.gameState = gp.playState;
         }
     }
 
@@ -72,6 +91,9 @@ public class KeyHandler implements KeyListener {
         }
         if(code == KeyEvent.VK_ESCAPE){
             escPressed = false;
+        }
+        if(code == KeyEvent.VK_SHIFT){
+            shiftPressed = false;
         }
     }
 }

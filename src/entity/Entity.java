@@ -6,6 +6,7 @@ import tile.Vector2f;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
+import java.nio.Buffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -14,13 +15,35 @@ public class Entity {
 
     GamePanel gp;
     public int worldX, worldY;
-    public int speed;
 
     public String direction;
 
-
     public int spriteCounter = 0;
     int spriteIndex = 0;
+
+    // dialog
+    String dialogues[] = new String[20];
+    int dialogueIndex;
+
+    // character attributes
+    public int type; // 0 = player, 1 = npc, 2 = monster
+    public String name;
+    public int speed;
+    public int maxLife;
+    public int life;
+    public int level;
+    public int attack;
+    public int defense;
+    public int cards;
+    public int strength;
+    public int dexterity;
+    public Entity currentWeapon;
+    public Entity currentShield;
+
+    // items attributes
+    public BufferedImage down1;
+    public int attackValue;
+    public int defenseValue;
 
     public static final String[] DIRECTIONS = { "up", "down", "left", "right" };
 
@@ -36,9 +59,6 @@ public class Entity {
     public int solidAreaDefaultX;
     public int solidAreaDefaultY;
 
-
-    // character status
-    public int maxLife;
     public Entity(GamePanel gp) {
         this.gp = gp;
     }
@@ -76,6 +96,9 @@ public class Entity {
 
     }
 
+    public void speak(){
+
+    }
     public void update() {
 
         setAction();

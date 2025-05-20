@@ -17,9 +17,17 @@ public class NPC extends Entity {
         super(gp);
 
         direction = "right";
-        speed = 4; // faster than player
+        speed = 1; // faster than player
 
         getPlayerImage();
+        setDialogue();
+    }
+
+    public void setDialogue(){
+        dialogues[0] = "Hello, lad.";
+        dialogues[1] = "Dialog 1";
+        dialogues[2] = "Dialog 2";
+        dialogues[3] = "Dialog 3";
     }
 
     public void setAction() {
@@ -38,7 +46,29 @@ public class NPC extends Entity {
             }
             actionLockCounter = 0;
         }
+    }
 
+    public void speak(){
+        if(dialogues[dialogueIndex] == null)
+            dialogueIndex = 0;
+
+        gp.ui.currentDialogue = dialogues[dialogueIndex];
+        dialogueIndex++;
+
+        switch(gp.player.direction) {
+            case "up":
+                direction = "down";
+                break;
+            case "down":
+                direction = "up";
+                break;
+            case "left":
+                direction = "right";
+                break;
+            case "right":
+                direction = "left";
+                break;
+        }
 
     }
 

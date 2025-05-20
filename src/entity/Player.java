@@ -1,7 +1,10 @@
 package entity;
 
+import jdk.jshell.execution.Util;
 import main.GamePanel;
 import main.KeyHandler;
+import main.UtilityTool;
+import object.OBJ_Shield;
 import tile.Vector2f;
 
 import javax.imageio.ImageIO;
@@ -14,13 +17,13 @@ import java.util.Objects;
 public class Player extends Entity{
 
     KeyHandler keyH;
-
+    UtilityTool uTool = new UtilityTool();
 
     public final int screenX;
     public final int screenY;
 
-    int hasKey = 0;
-    int hasApple = 0;
+    public int hasKey = 0;
+    public int hasApple = 0;
     boolean openChest = false;
 
     int counter2 = 0;
@@ -49,8 +52,28 @@ public class Player extends Entity{
         worldY = gp.tileSize * 49; // where the player starts the game   gp.tileSize * coordonata( linis/coloana din matrice)
         speed = 4;
         direction = "down";
+
+        // player status
+
+        maxLife = 6;
+        life = maxLife;
+        level = 1;
+        strength = 1;
+        dexterity = 1;
+        cards = 0;
+        currentWeapon = new OBJ_Shield(gp);
+        currentShield = new OBJ_Shield(gp);
+        attack = getAttack(); // total attack value is decided by strength and weapon
+        defense = getDefense(); // total defense value is decided by dexterity and shield
     }
 
+    public int getAttack(){
+        return attack = strength * currentWeapon.attackValue;
+    }
+
+    public int getDefense(){
+        return defense = dexterity * currentShield.defenseValue;
+    }
 
     public void getPlayerImage() {
 
@@ -58,8 +81,6 @@ public class Player extends Entity{
 
 
     }
-
-
 
     public void update() {
 
@@ -154,7 +175,7 @@ public class Player extends Entity{
                     hasKey++;
                     gp.playSE(2);
                     gp.obj[i] = null;
-                    System.out.println("Key : " + hasKey);
+                    gp.ui.showMessage("You got a key!");
                     break;
                 case "Apple":
                     hasApple++;
@@ -166,10 +187,37 @@ public class Player extends Entity{
                         gp.playSE(1);
                         gp.obj[i] = null;
                         hasKey--;
-                        System.out.println("Key : " + hasKey);
+                        gp.ui.showMessage("You opened a chest!");
+                    }
+                    else{
+                        gp.ui.showMessage("You need a key!");
+                    }
+                case "Door":
+                    if(hasKey > 0){
+                        gp.playSE(1);
+                        gp.obj[i] = null;
+                        hasKey--;
+                        gp.ui.showMessage("You opened a door!");
+                    }
+                    else{
+                        gp.ui.showMessage("You need a key!");
                     }
             }
         }
+    }
+
+    public BufferedImage setup(String imageName){
+        UtilityTool tool = new UtilityTool();
+        BufferedImage image = null;
+
+        try{
+            image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/object/" + imageName +".png")));
+            image = uTool.scaleImage(image, gp.tileSize, gp.tileSize);
+        }catch(IOException e){
+            System.out.println("NOT FOUND");
+        }
+
+        return image;
     }
 
     public void draw(Graphics2D g2){
@@ -184,7 +232,12 @@ public class Player extends Entity{
 
     public void interactNPC(int index ) {
         if ( index != -1 ) {
-            System.out.println(" you are hitting an npc ");
+            if(gp.keyH.fPressed) {
+                System.out.println(" you are hitting an npc ");
+                gp.gameState = gp.dialogueState;
+                gp.npc[index].speak();
+            }
         }
+        gp.keyH.fPressed = false;
     }
 }
