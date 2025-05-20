@@ -13,6 +13,8 @@ public class KeyHandler implements KeyListener {
     public boolean rightPressed;
     public boolean enterPressed;
     public boolean escPressed;
+    public boolean shiftPressed;
+    public boolean fPressed;
 
     public KeyHandler(GamePanel gp){
         this.gp = gp;
@@ -28,27 +30,76 @@ public class KeyHandler implements KeyListener {
         // returns the integer keyCode associated with the key
         int code = e.getKeyCode();
 
-        if(code == KeyEvent.VK_W) {
-            upPressed = true;
+        if(gp.gameState == gp.playState) {
+            if (code == KeyEvent.VK_W) {
+                upPressed = true;
+            }
+            if (code == KeyEvent.VK_S) {
+                downPressed = true;
+            }
+            if (code == KeyEvent.VK_A) {
+                leftPressed = true;
+            }
+            if (code == KeyEvent.VK_D) {
+                rightPressed = true;
+            }
+            if (code == KeyEvent.VK_ENTER) {
+                enterPressed = true;
+            }
+            if (code == KeyEvent.VK_F) {
+                fPressed = true;
+            }
+            if (code == KeyEvent.VK_ESCAPE) {
+                escPressed = true;
+                gp.gameState = gp.pauseState; // paused
+            }
+
+            if (code == KeyEvent.VK_SHIFT) {
+                shiftPressed = true;
+                // in play mode
+                gp.gameState = gp.characterStatus; // character status mode
+                characterStatus(code);
+            }
         }
-        if(code == KeyEvent.VK_S) {
-            downPressed = true;
+        else if(gp.gameState == gp.characterStatus) {
+            characterStatus(code);
+            if (code == KeyEvent.VK_SHIFT)
+                gp.gameState = gp.playState;
         }
-        if(code == KeyEvent.VK_A) {
-            leftPressed = true;
+        else if(gp.gameState == gp.pauseState){
+            if(code == KeyEvent.VK_ESCAPE)
+                gp.gameState = gp.playState;
         }
-        if(code == KeyEvent.VK_D) {
-            rightPressed = true;
+        else if(gp.gameState == gp.dialogueState){
+            if(code == KeyEvent.VK_F)
+                gp.gameState = gp.playState;
         }
-        if(code == KeyEvent.VK_ENTER){
-            enterPressed = true;
+    }
+
+    public void characterStatus(int code){
+        if(code == KeyEvent.VK_W){
+            if(gp.ui.slotRow != 0) {
+                gp.ui.slotRow--;
+                gp.playSE(1);  // trebuie sa adaug un sound
+            }
         }
-        if(code == KeyEvent.VK_ESCAPE){
-            escPressed = true;
-            if(gp.gameState == 1) // if it s in play mode
-                gp.gameState = 2; // paused
-            else if(gp.gameState == 2) // if the game is paused
-                gp.gameState = 1; // playing
+        if(code == KeyEvent.VK_A){
+            if(gp.ui.slotCol != 0) {
+                gp.ui.slotCol--;
+                gp.playSE(1);
+            }
+        }
+        if(code == KeyEvent.VK_S){
+            if(gp.ui.slotRow != 3) {
+                gp.ui.slotRow++;
+                gp.playSE(1);
+            }
+        }
+        if(code == KeyEvent.VK_D){
+            if(gp.ui.slotCol != 4) {
+                gp.ui.slotCol++;
+                gp.playSE(1);
+            }
         }
         if (code == KeyEvent.VK_E) {
             gp.toggleFullscreen();  // vei avea nevoie de această metodă în GamePanel
@@ -75,6 +126,9 @@ public class KeyHandler implements KeyListener {
         }
         if(code == KeyEvent.VK_ESCAPE){
             escPressed = false;
+        }
+        if(code == KeyEvent.VK_SHIFT){
+            shiftPressed = false;
         }
     }
 }
