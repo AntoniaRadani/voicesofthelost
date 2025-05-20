@@ -137,10 +137,6 @@ public class Player extends Entity{
             // verificare coliziune object v2
             int objIndex = gp.cChecker.checkObject2(this, true);
             pickUpObject2(objIndex);
-            // verificare coliziune object
-//            Vector2f obj = new Vector2f();
-//            int objIndex = gp.cChecker.checkObject(this, true, obj);
-//            pickUpObject(objIndex, obj);
 
             // npc collision verificare
 

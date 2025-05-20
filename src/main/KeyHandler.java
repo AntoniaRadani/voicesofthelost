@@ -101,6 +101,9 @@ public class KeyHandler implements KeyListener {
                 gp.playSE(1);
             }
         }
+        if (code == KeyEvent.VK_E) {
+            gp.toggleFullscreen();  // vei avea nevoie de această metodă în GamePanel
+        }
     }
 
     @Override
