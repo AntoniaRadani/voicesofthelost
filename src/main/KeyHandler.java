@@ -51,23 +51,55 @@ public class KeyHandler implements KeyListener {
             }
             if (code == KeyEvent.VK_ESCAPE) {
                 escPressed = true;
-                if (gp.gameState == gp.playState) // if it s in play mode
-                    gp.gameState = gp.pauseState; // paused
-                else if (gp.gameState == gp.pauseState) // if the game is paused
-                    gp.gameState = gp.playState; // playing
+                gp.gameState = gp.pauseState; // paused
             }
 
             if (code == KeyEvent.VK_SHIFT) {
                 shiftPressed = true;
-                if (gp.gameState == gp.playState) // in play mode
-                    gp.gameState = gp.characterStatus; // character status mode
-                else if (gp.gameState == gp.characterStatus) // if it is in character status
-                    gp.gameState = gp.playState; // switch to play mode
+                // in play mode
+                gp.gameState = gp.characterStatus; // character status mode
+                characterStatus(code);
             }
         }
-        else if(gp.gameState == gp.dialogueState || gp.gameState == gp.characterStatus){
-            if(code == KeyEvent.VK_N)
+        else if(gp.gameState == gp.characterStatus) {
+            characterStatus(code);
+            if (code == KeyEvent.VK_SHIFT)
                 gp.gameState = gp.playState;
+        }
+        else if(gp.gameState == gp.pauseState){
+            if(code == KeyEvent.VK_ESCAPE)
+                gp.gameState = gp.playState;
+        }
+        else if(gp.gameState == gp.dialogueState){
+            if(code == KeyEvent.VK_F)
+                gp.gameState = gp.playState;
+        }
+    }
+
+    public void characterStatus(int code){
+        if(code == KeyEvent.VK_W){
+            if(gp.ui.slotRow != 0) {
+                gp.ui.slotRow--;
+                gp.playSE(1);  // trebuie sa adaug un sound
+            }
+        }
+        if(code == KeyEvent.VK_A){
+            if(gp.ui.slotCol != 0) {
+                gp.ui.slotCol--;
+                gp.playSE(1);
+            }
+        }
+        if(code == KeyEvent.VK_S){
+            if(gp.ui.slotRow != 3) {
+                gp.ui.slotRow++;
+                gp.playSE(1);
+            }
+        }
+        if(code == KeyEvent.VK_D){
+            if(gp.ui.slotCol != 4) {
+                gp.ui.slotCol++;
+                gp.playSE(1);
+            }
         }
     }
 

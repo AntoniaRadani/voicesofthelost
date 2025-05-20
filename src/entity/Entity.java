@@ -44,6 +44,7 @@ public class Entity {
     public BufferedImage down1;
     public int attackValue;
     public int defenseValue;
+    public String description = "";
 
     public static final String[] DIRECTIONS = { "up", "down", "left", "right" };
 

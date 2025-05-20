@@ -1,6 +1,5 @@
 package object;
 
-import jdk.jshell.execution.Util;
 import main.GamePanel;
 import main.UtilityTool;
 
@@ -15,6 +14,7 @@ public class SuperObject {
     public Rectangle solidArea = new Rectangle(0, 0, 48, 48);
     public int solidAreaDefaultX = 0;
     public int solidAreaDefaultY = 0;
+    public String description = "";
     UtilityTool uTool = new UtilityTool();
 
     public void draw(Graphics2D g2, GamePanel gp){

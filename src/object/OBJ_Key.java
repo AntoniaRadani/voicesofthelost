@@ -18,6 +18,7 @@ public class OBJ_Key extends SuperObject{
             System.out.println("IMAGINE CHEIE NU S A GASIT");
             e.printStackTrace();
         }
+        description = "[Key]\nOpens something...";
 
     }
 }
