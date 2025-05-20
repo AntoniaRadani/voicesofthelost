@@ -42,10 +42,10 @@ public class TiledMapViewer {
         screenY = 0;
     }
 
-    public void updateCamera(int playerX, int playerY, int screenWidth, int screenHeight) {
+    public void updateCamera(int playerX, int playerY) {
         // Setează screenX și screenY astfel încât jucătorul să fie în mijlocul ecranului
-        screenX = playerX - (screenWidth / 2);  // Centrarea camerei pe jucător
-        screenY = playerY - (screenHeight / 2);
+        screenX = playerX - (gp.screenWidth / 2);  // Centrarea camerei pe jucător
+        screenY = playerY - (gp.screenHeight / 2);
 
         // Asigură-te că camera nu depășește limitele hărții
         if (screenX < 0) {
@@ -54,18 +54,18 @@ public class TiledMapViewer {
         if (screenY < 0) {
             screenY = 0;
         }
-        if (screenX > mapWidth * tileWidth - screenWidth) {
-            screenX = mapWidth * tileWidth - screenWidth;
+        if (screenX > mapWidth * tileWidth - gp.screenWidth) {
+            screenX = mapWidth * tileWidth - gp.screenWidth;
         }
-        if (screenY > mapHeight * tileHeight - screenHeight) {
-            screenY = mapHeight * tileHeight - screenHeight;
+        if (screenY > mapHeight * tileHeight - gp.screenHeight) {
+            screenY = mapHeight * tileHeight - gp.screenHeight;
         }
 
         System.out.println("SCREEN VALUES : " + screenX + screenY);
 
     }
 
-    private void loadTMX(String filePath) {
+    public void loadTMX(String filePath) {
         try {
             File tmxFile = new File(filePath);
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -239,6 +239,10 @@ public class TiledMapViewer {
                 }
             }
         }
+    }
+
+    public void loadMap(String tmxFilePath) {
+        loadTMX(tmxFilePath);
     }
 
 }

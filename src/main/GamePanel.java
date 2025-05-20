@@ -35,6 +35,7 @@ public class GamePanel extends JPanel implements Runnable {
     final int maxScreenRow = 12; // how many tiles can we see - row
     public final int screenWidth = tileSize * maxScreenCol; // 768 pixels
     public final int screenHeight = tileSize * maxScreenRow; // 576 pixels
+    // for camera limits
 
     // volume
 
@@ -46,7 +47,7 @@ public class GamePanel extends JPanel implements Runnable {
     public int screenWidth2 = screenWidth;
     public int screenHeight2 = screenHeight;
     BufferedImage tempScreen;
-    Graphics2D g2;
+    Graphics2D g2temp;
 
     public boolean isFullscreen = true;
 
@@ -69,6 +70,9 @@ public class GamePanel extends JPanel implements Runnable {
     public final int worldHeight = tileSize * maxWorldRow;
 
     // OBJECTS
+
+    // for levels
+    public int currentLevel = 1; // start
 
 
     // FPS
@@ -126,6 +130,9 @@ public class GamePanel extends JPanel implements Runnable {
         // to receive mouse input
         this.addMouseListener(mouseH);
         this.setFocusable(true);
+    // pe g2temp vom desena tot jocul, apoi scalam in paintcomponewnt
+        tempScreen = new BufferedImage(screenWidth, screenHeight, BufferedImage.TYPE_INT_ARGB);
+        g2temp = (Graphics2D) tempScreen.getGraphics();
 
         aSetter.setNPC();
     }
@@ -153,9 +160,10 @@ public class GamePanel extends JPanel implements Runnable {
             // menu mode
             menu.update();
 
-        else if (gameState == 1)
+        else if (gameState == 1) {
             // game mode
             player.update();
+        }
         else if (gameState == 2)
             // pause mode
             pause.update();
@@ -169,72 +177,64 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
 
-    public void drawToTempScreen() {
-        if (gameState == 0) {
-            // drawing the menu
-            menu.draw(g2);
-        } else if (gameState == 1) {
-            // tile
-            tiledMapViewer.draw(g2);
-            // npc
-            for ( int i = 0; i < npc.length; i++ ) {
-                if ( npc[i] != null ) {
-                    npc[i].draw(g2, this);
-                }
-            }
-            // object
-            for(int i = 0; i < obj.length; i++){
-                if(obj[i] != null && !Objects.equals(obj[i].name, "open_chest")){
-                    obj[i].draw(g2, this);
-                }
-            }
-            // player
-            player.draw(g2);
-        }
-        else if (gameState == 2) {
-            pause.draw(g2);
-        }
-    }
 
     public void paintComponent(Graphics g){
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D)g;
+        // curatam/ eliberam canvas ul intern, ca sa nu se suprapuna imaginile
+        g2temp.setColor(Color.BLACK);
+        g2temp.fillRect(0, 0, screenWidth, screenHeight);
 
         if (gameState == menuState) {
             // drawing the menu
-            menu.draw(g2);
+            menu.draw(g2temp);
         } else if (gameState == playState || gameState == dialogueState || gameState == characterStatus) {
 
             // tile
-            tiledMapViewer.draw(g2);
+            tiledMapViewer.draw(g2temp);
 
             // npc
             for ( int i = 0; i < npc.length; i++ ) {
                 if ( npc[i] != null ) {
-                    npc[i].draw(g2, this);
+                    npc[i].draw(g2temp, this);
                 }
             }
 
             // object
             for(int i = 0; i < obj.length; i++){
                 if(obj[i] != null){
-                    obj[i].draw(g2, this);
+                    obj[i].draw(g2temp, this);
                 }
             }
 
             // player
-            player.draw(g2);
+            player.draw(g2temp);
 
             // ui
-            ui.draw(g2);
+            ui.draw(g2temp);
         }
         else if (gameState == pauseState) {
-            pause.draw(g2);
+            pause.draw(g2temp);
         }
+        // calculam cu cat trebuie scalat pt full screen
+
+        int panelWidth = getWidth();
+        int panelHeight = getHeight();
+        double scaleX = (double) panelWidth / screenWidth;
+        double scaleY = (double) panelHeight / screenHeight;
+        double scale = Math.min(scaleX, scaleY); // păstrează proporția
+
+        int drawWidth = (int)(screenWidth * scale);
+        int drawHeight = (int)(screenHeight * scale);
+
+        int drawX = (panelWidth - drawWidth) / 2;
+        int drawY = (panelHeight - drawHeight) / 2;
 
         // to dispose of this graphic context and release
         // any system resources that its using
-        g2.dispose();
+        // g2temp este un canvas intern pe care desenam jocul, iar g2 este graficul real al ferestrei
+        g2.drawImage(tempScreen, drawX, drawY, drawWidth, drawHeight, null);
+       // g2.dispose();
     } 
 
     public void playMusic(int i){
@@ -252,17 +252,37 @@ public class GamePanel extends JPanel implements Runnable {
         sound.play();
     }
 
+
     public void toggleFullscreen() {
-        if (Main.window == null) return;
+        GraphicsDevice device = GraphicsEnvironment
+                .getLocalGraphicsEnvironment()
+                .getDefaultScreenDevice();
 
-        isFullscreen = !isFullscreen;
-        Main.window.dispose();
-        Main.window.setUndecorated(isFullscreen);
-        Main.window.setExtendedState(isFullscreen ? JFrame.MAXIMIZED_BOTH : JFrame.NORMAL);
-        Main.window.setVisible(true);
-        this.requestFocusInWindow(); // pentru a primi din nou input
+        if (isFullscreen) {
+            // ieșire din fullscreen, fereastră normală CU decorații
+            device.setFullScreenWindow(null);
+
+            Main.window.dispose(); // refacem frame-ul
+            Main.window.setUndecorated(false); // adaugam bara de titlu cu X
+            Main.window.setVisible(true);
+
+            Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+            Main.window.setSize(screenSize);
+            Main.window.setLocationRelativeTo(null);
+
+            isFullscreen = false;
+        } else {
+            // intrare în fullscreen: fără decorații
+            Main.window.dispose();
+            Main.window.setUndecorated(true);
+            Main.window.setVisible(true);
+
+            device.setFullScreenWindow(Main.window); // FULL fullscreen (fără bară/dock)
+            isFullscreen = true;
+        }
+
+        this.requestFocusInWindow(); // readuce focusul tastelor
     }
-
 
     // our game loop
     @Override
@@ -298,5 +318,35 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
 
+    public void loadLevel(int level ) {
+
+        currentLevel = level; // update
+
+        if (level == 1) {
+            tiledMapViewer.loadMap("res/level1/level1.tmx");
+        } else if (level == 2) {
+            tiledMapViewer.loadMap("res/level2/level2.tmx");
+        }
+
+        // resetare
+        player.worldX = 8;
+        player.worldY = 48;
+
+        for (int i = 0; i < obj.length; i++) {
+            obj[i] = null;
+        }
+        for (int i = 0; i < npc.length; i++) {
+            npc[i] = null;
+
+        }
+        // reincarcam pe noua mapa
+        aSetter.setObject();
+        aSetter.setNPC();
+
+        tiledMapViewer.updateCamera(8, 48);
+
+        System.out.println(" LEVEL CHANGED TO: " + level );
+
+    }
 
 }

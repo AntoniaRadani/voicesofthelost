@@ -53,6 +53,9 @@ public class KeyHandler implements KeyListener {
                 escPressed = true;
                 gp.gameState = gp.pauseState; // paused
             }
+            if (code == KeyEvent.VK_E) {
+                gp.toggleFullscreen();
+            }
 
             if (code == KeyEvent.VK_SHIFT) {
                 shiftPressed = true;
