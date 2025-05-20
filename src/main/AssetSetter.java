@@ -5,6 +5,7 @@ import object.OBJ_Apple;
 import object.OBJ_Chest;
 import object.OBJ_Heart;
 import object.OBJ_Key;
+import object.OBJ_HealthPotion;
 
 public class AssetSetter {
 
@@ -28,6 +29,11 @@ public class AssetSetter {
         gp.obj[i] = new OBJ_Chest(gp);
         gp.obj[i].worldX = 4 * gp.tileSize;
         gp.obj[i].worldY = 25 * gp.tileSize;
+        i++;
+        gp.obj[i] = new OBJ_HealthPotion(gp);
+        gp.obj[i].worldX = 4 * gp.tileSize;
+        gp.obj[i].worldY = 27 * gp.tileSize;
+        i++;
 
     }
 

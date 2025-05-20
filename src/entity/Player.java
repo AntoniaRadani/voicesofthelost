@@ -4,10 +4,7 @@ import jdk.jshell.execution.Util;
 import main.GamePanel;
 import main.KeyHandler;
 import main.UtilityTool;
-import object.OBJ_Chest2;
-import object.OBJ_Key;
-import object.OBJ_Shield;
-import object.SuperObject;
+import object.*;
 import tile.Vector2f;
 
 import javax.imageio.ImageIO;
@@ -28,6 +25,7 @@ public class Player extends Entity{
 
     public int hasKey = 0;
     public int hasApple = 0;
+    public int hasHealthPotion = 0;
     boolean openChest = false;
 
     int counter2 = 0;
@@ -188,60 +186,93 @@ public class Player extends Entity{
         }
     }
 
+    public void pickUpObject3(int i){
+        if(i != 999){
+            String objectName = gp.obj[i].name;
+
+            if(inventory.size() != maxInventorySize){
+
+            }
+        }
+    }
+
     public void pickUpObject2(int i){
         if(i != 999){
             String objectName = gp.obj[i].name;
 
             if(inventory.size() != maxInventorySize) {
 
-                if(!Objects.equals(objectName, "Chest")) {
-                    inventory.add(gp.obj[i]);
-                    gp.playSE(1); // de cautat un sunet
-                }
-                else{
-                    if(hasKey > 0)
-                        for(int j = 0; j < inventory.size(); j++)
-                            if(inventory.get(j).name == "Key") {
-                                hasKey--;
-                                inventory.remove(j);
-                                gp.obj[i] = new OBJ_Chest2(gp);
-                                break;
-                            }
-                    else{
-                        gp.ui.showMessage("YOU NEED A KEY");
-                    }
-                }
+//                if(!Objects.equals(objectName, "Chest")) {
+//                    inventory.add(gp.obj[i]);
+//                    gp.playSE(1); // de cautat un sunet
+//                }
+//                else{
+//                    if(hasKey > 0)
+//                        for(int j = 0; j < inventory.size(); j++)
+//                            if(inventory.get(j).name == "Key") {
+//                                hasKey--;
+//                                inventory.remove(j);
+//                                gp.obj[i] = new OBJ_Chest2(gp);
+//                                break;
+//                            }
+//                    else{
+//                        gp.ui.showMessage("YOU NEED A KEY");
+//                    }
+//                }
 
                 switch (objectName) {
                     case "Key":
                         hasKey++;
                         gp.playSE(2);
+                        inventory.add(gp.obj[i]);
                         gp.obj[i] = null;
                         gp.ui.showMessage("You got a key!");
                         break;
                     case "Apple":
                         hasApple++;
                         gp.playSE(2);
+                        inventory.add(gp.obj[i]);
+                        gp.obj[i] = null;
+                        break;
+                    case "HealthPotion":
+                        hasHealthPotion++;
+                        gp.playSE(2);
+                        inventory.add(gp.obj[i]);
                         gp.obj[i] = null;
                         break;
                     case "Chest":
                         if (hasKey > 0) {
                             gp.playSE(1);
-                            gp.obj[i] = null;
+                            for(int j = 0; j < inventory.size(); j++)
+                                if(Objects.equals(inventory.get(j).name, "Key")) {
+                                    inventory.remove(j);
+                                    break;
+                                }
+                            gp.obj[i] = new OBJ_Chest2(gp);
+                            gp.obj[i].worldX = 4 * gp.tileSize;
+                            gp.obj[i].worldY = 25 * gp.tileSize;
                             hasKey--;
                             gp.ui.showMessage("You opened a chest!");
                         } else {
                             gp.ui.showMessage("You need a key!");
                         }
+                        break;
                     case "Door":
                         if (hasKey > 0) {
                             gp.playSE(1);
-                            gp.obj[i] = null;
+                            for(int j = 0; j < inventory.size(); j++)
+                                if(Objects.equals(inventory.get(j).name, "Key")) {
+                                    inventory.remove(j);
+                                    break;
+                                }
+                            gp.obj[i] = new OBJ_Chest2(gp);
                             hasKey--;
                             gp.ui.showMessage("You opened a door!");
                         } else {
                             gp.ui.showMessage("You need a key!");
                         }
+                        break;
+
                 }
             }
             else{
