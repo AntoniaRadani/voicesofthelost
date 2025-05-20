@@ -164,6 +164,17 @@ public class Player extends Entity{
 
             updateAnimation();
 
+            // verificam daca este pe pozitia unde trebuie trecut la next level
+
+            int playerX = worldX / gp.tileSize;
+            int playerY = worldY / gp.tileSize;
+
+            int tileID = gp.tiledMapViewer.mapData[1][playerX][playerY];
+            System.out.println("playerX: " + playerX + " playerY: " + playerY + "ID: " + tileID );
+            if (gp.currentLevel == 1 && playerX == 5 && playerY == 2 ) {
+                gp.loadLevel(2);
+            }
+
         }
 
         // gp.tiledMapViewer.updateCamera(worldX, worldY, gp.screenWidth, gp.screenHeight);

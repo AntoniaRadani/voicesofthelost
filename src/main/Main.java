@@ -4,7 +4,7 @@ import javax.swing.*;
 
 public class Main {
 
-    public static JFrame window;  // 🔹 static pentru a fi accesibil global
+    public static JFrame window;
 
     public static void main(String[] args) {
 
