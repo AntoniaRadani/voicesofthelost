@@ -9,6 +9,7 @@ import java.util.Objects;
 public class OBJ_Chest2 extends SuperObject {
     GamePanel gp;
     public OBJ_Chest2(GamePanel gp) {
+
         this.gp = gp;
         name = "open_chest";
         try {
@@ -16,7 +17,6 @@ public class OBJ_Chest2 extends SuperObject {
             image = uTool.scaleImage(image, gp.tileSize, gp.tileSize);
         } catch (IOException e) {
             System.out.println("IMAGINE CUFAR DESCHIS NU S A GASIT");
-            e.printStackTrace();
         }
     }
 }

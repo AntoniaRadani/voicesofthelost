@@ -66,8 +66,10 @@ public class KeyHandler implements KeyListener {
         }
         else if(gp.gameState == gp.characterStatus) {
             characterStatus(code);
-            if (code == KeyEvent.VK_SHIFT)
+            if(code == KeyEvent.VK_SHIFT)
                 gp.gameState = gp.playState;
+            if(code == KeyEvent.VK_ENTER)
+                gp.player.selectItem();
         }
         else if(gp.gameState == gp.pauseState){
             if(code == KeyEvent.VK_ESCAPE)

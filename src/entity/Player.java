@@ -51,7 +51,6 @@ public class Player extends Entity{
         setDefaultValues();
         setItems();
         getPlayerImage();
-
     }
 
     public  void setDefaultValues(){
@@ -63,36 +62,35 @@ public class Player extends Entity{
         // player status
 
         maxLife = 6;
-        life = maxLife;
+        life = 3;
         level = 1;
         strength = 1;
         dexterity = 1;
         cards = 0;
-        currentWeapon = new OBJ_Shield(gp);
+        currentWeapon = new OBJ_Sword(gp);
         currentShield = new OBJ_Shield(gp);
         attack = getAttack(); // total attack value is decided by strength and weapon
         defense = getDefense(); // total defense value is decided by dexterity and shield
-
     }
 
     public void setItems(){
+        System.out.println("Am facut initializere");
+        inventory.add(currentWeapon);
+        inventory.add(currentShield);
         inventory.add(new OBJ_Key(gp));
-        inventory.add(new OBJ_Key(gp));
+
     }
 
     public int getAttack(){
-        return attack = strength * currentWeapon.attackValue;
+        return attack = strength * currentWeapon.attack;
     }
 
     public int getDefense(){
-        return defense = dexterity * currentShield.defenseValue;
+        return defense = dexterity * currentShield.defense;
     }
 
     public void getPlayerImage() {
-
             animationSet.loadSeparate("player", Entity.DIRECTIONS, "player", 8); // 4 cadre per direcție
-
-
     }
 
     public void update() {
@@ -172,7 +170,6 @@ public class Player extends Entity{
             if (gp.currentLevel == 1 && playerX == 5 && playerY == 2 ) {
                 gp.loadLevel(2);
             }
-
         }
 
         // gp.tiledMapViewer.updateCamera(worldX, worldY, gp.screenWidth, gp.screenHeight);
@@ -240,6 +237,21 @@ public class Player extends Entity{
                         inventory.add(gp.obj[i]);
                         gp.obj[i] = null;
                         break;
+                    case "Sword":
+                        gp.playSE(2);
+                        inventory.add(gp.obj[i]);
+                        gp.obj[i] = null;
+                        break;
+                    case "RedSword":
+                        gp.playSE(2);
+                        inventory.add(gp.obj[i]);
+                        gp.obj[i] = null;
+                        break;
+                    case "Shield":
+                        gp.playSE(2);
+                        inventory.add(gp.obj[i]);
+                        gp.obj[i] = null;
+                        break;
                     case "Chest":
                         if (hasKey > 0) {
                             gp.playSE(1);
@@ -302,6 +314,26 @@ public class Player extends Entity{
 
         g2.drawImage(image, screenX, screenY, gp.tileSize + 20, gp.tileSize + 20, null);
 
+
+    }
+
+    public void selectItem(){
+        int itemIndex = gp.ui.getItemIndexOnSlot();
+        if(itemIndex < inventory.size()){
+            SuperObject selectedItem = inventory.get(itemIndex);
+            if(selectedItem.type == type_sword) {
+                currentWeapon =  selectedItem;
+                attack = getAttack();
+            }
+            if(selectedItem.type == type_shield){
+                currentShield = selectedItem;
+                defense = getDefense();
+            }
+            if(selectedItem.type == type_consumable){
+                selectedItem.use(this);
+                inventory.remove(itemIndex);
+            }
+        }
 
     }
 

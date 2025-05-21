@@ -9,6 +9,7 @@ import java.util.Objects;
 public class OBJ_Heart extends SuperObject{
     GamePanel gp;
     public OBJ_Heart(GamePanel gp){
+
         this.gp = gp;
         name = "Heart";
         try{

@@ -10,6 +10,7 @@ public class OBJ_Apple extends SuperObject{
     GamePanel gp;
 
     public OBJ_Apple(GamePanel gp){
+
         this.gp = gp;
         name = "Apple";
         try{
@@ -17,7 +18,6 @@ public class OBJ_Apple extends SuperObject{
             image = uTool.scaleImage(image, gp.tileSize, gp.tileSize);
         }catch(IOException e){
             System.out.println("IMAGINE MAR NU S A GASIT");
-            e.printStackTrace();
         }
     }
 }

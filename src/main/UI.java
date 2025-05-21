@@ -117,7 +117,14 @@ public class UI {
 
         // draw player items
         for(int i = 0; i < gp.player.inventory.size(); i++){
-            BufferedImage itemImage = gp.player.inventory.get(i).image;;
+
+            // equip cursor
+            if(gp.player.inventory.get(i) == gp.player.currentWeapon ||
+            gp.player.inventory.get(i) == gp.player.currentShield){
+                g2.setColor(new Color(240, 190, 90));
+                g2.fillRoundRect(slotX, slotY, gp.tileSize, gp.tileSize, 10, 10);}
+
+            BufferedImage itemImage = gp.player.inventory.get(i).image;
             g2.drawImage(itemImage, slotX, slotY, null);
             slotX += slotSize;
 
@@ -195,9 +202,9 @@ public class UI {
         g2.drawString("Defense", textX, textY);
         textY += lineHeight;
         g2.drawString("Cards", textX, textY);
-        textY += lineHeight;
+        textY += gp.tileSize + 15;
         g2.drawString("Weapon", textX, textY);
-        textY += lineHeight;
+        textY += gp.tileSize;
         g2.drawString("Shield", textX, textY);
         textY += lineHeight;
 
@@ -242,20 +249,23 @@ public class UI {
         g2.drawString(value, textX, textY);
         textY += lineHeight;
 
-        value = String.valueOf(gp.player.currentWeapon.attack);
-        textX = getXForAlignToRight(value, tailX);
-        g2.drawString(value, textX, textY);
-        textY += lineHeight;
+//        value = String.valueOf(gp.player.currentWeapon.attack);
+//        textX = getXForAlignToRight(value, tailX);
+//        g2.drawString(value, textX, textY);
+//        textY += lineHeight;
+//
+//        value = String.valueOf(gp.player.currentShield.defense);
+//        textX = getXForAlignToRight(value, tailX);
+//        g2.drawString(value, textX, textY);
+//        textY += lineHeight;
 
-        value = String.valueOf(gp.player.currentShield.defense);
-        textX = getXForAlignToRight(value, tailX);
-        g2.drawString(value, textX, textY);
-        textY += lineHeight;
+        g2.drawImage(gp.player.currentWeapon.image, tailX - gp.tileSize, textY, null);
+        textY += gp.tileSize;
+        g2.drawImage(gp.player.currentShield.image, tailX - gp.tileSize, textY, null);
+
     }
 
     public void drawPlayerLife(){
-
-        gp.player.life = 3;
 
         int x = gp.tileSize / 2;
         int y = gp.tileSize / 2;

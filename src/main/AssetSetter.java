@@ -1,11 +1,7 @@
 package main;
 
 import entity.NPC;
-import object.OBJ_Apple;
-import object.OBJ_Chest;
-import object.OBJ_Heart;
-import object.OBJ_Key;
-import object.OBJ_HealthPotion;
+import object.*;
 
 public class AssetSetter {
 
@@ -34,7 +30,10 @@ public class AssetSetter {
         gp.obj[i].worldX = 4 * gp.tileSize;
         gp.obj[i].worldY = 27 * gp.tileSize;
         i++;
-
+        gp.obj[i] = new OBJ_RedSword(gp);
+        gp.obj[i].worldX = 23 * gp.tileSize;
+        gp.obj[i].worldY = 37 * gp.tileSize;
+        i++;
     }
 
     public void setNPC() {

@@ -1,5 +1,6 @@
 package object;
 
+import entity.Entity;
 import main.GamePanel;
 import main.UtilityTool;
 
@@ -16,6 +17,10 @@ public class SuperObject {
     public int solidAreaDefaultY = 0;
     public String description = "";
     UtilityTool uTool = new UtilityTool();
+    public int type;
+    public int attack;
+    public int defense;
+    int value;
 
     public void draw(Graphics2D g2, GamePanel gp){
         int screenX = worldX - gp.player.worldX + gp.player.screenX;
@@ -28,4 +33,7 @@ public class SuperObject {
             g2.drawImage(image, screenX, screenY, gp.tileSize, gp.tileSize, null);
         }
     }
+
+    public void use(Entity entity){}
+
 }

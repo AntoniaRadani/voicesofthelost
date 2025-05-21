@@ -9,6 +9,7 @@ import java.util.Objects;
 public class OBJ_Key extends SuperObject{
     GamePanel gp;
     public OBJ_Key(GamePanel gp){
+
         this.gp = gp;
         name = "Key";
         try{
@@ -16,7 +17,6 @@ public class OBJ_Key extends SuperObject{
             image = uTool.scaleImage(image, gp.tileSize, gp.tileSize);
         }catch(IOException e){
             System.out.println("IMAGINE CHEIE NU S A GASIT");
-            e.printStackTrace();
         }
         description = "[Key]\nOpens something...";
 

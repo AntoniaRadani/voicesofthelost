@@ -90,7 +90,8 @@ public class GamePanel extends JPanel implements Runnable {
     MouseHandler mouseH = new MouseHandler(this);
     GamePause pause = new GamePause(this);
     public UI ui = new UI(this);
-    public SuperObject obj[] = new SuperObject[10];
+    public SuperObject[] obj = new SuperObject[10];
+
     // for npc
 
     public Entity[] npc = new Entity[10];
