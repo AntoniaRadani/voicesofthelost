@@ -15,25 +15,25 @@ public class AssetSetter {
 
         int i = 0;
         gp.obj[i] = new OBJ_Key(gp);
-        gp.obj[i].worldX = 23 * gp.tileSize;
-        gp.obj[i].worldY = 42 * gp.tileSize;
+        gp.obj[i].worldX = 44 * gp.tileSize;
+        gp.obj[i].worldY = 33 * gp.tileSize;
         i++;
         gp.obj[i] = new OBJ_Key(gp);
-        gp.obj[i].worldX = 23 * gp.tileSize;
-        gp.obj[i].worldY = 40 * gp.tileSize;
+        gp.obj[i].worldX = 5 * gp.tileSize;
+        gp.obj[i].worldY = 42 * gp.tileSize;
         i++;
-        gp.obj[i] = new OBJ_Chest(gp);
+        gp.obj[i] = new OBJ_ChestLevel1(gp);
         gp.obj[i].worldX = 4 * gp.tileSize;
-        gp.obj[i].worldY = 25 * gp.tileSize;
+        gp.obj[i].worldY = 21 * gp.tileSize;
         i++;
         gp.obj[i] = new OBJ_HealthPotion(gp);
         gp.obj[i].worldX = 4 * gp.tileSize;
         gp.obj[i].worldY = 27 * gp.tileSize;
         i++;
-        gp.obj[i] = new OBJ_RedSword(gp);
-        gp.obj[i].worldX = 23 * gp.tileSize;
-        gp.obj[i].worldY = 37 * gp.tileSize;
-        i++;
+//        gp.obj[i] = new OBJ_RedSword(gp);
+//        gp.obj[i].worldX = 23 * gp.tileSize;
+//        gp.obj[i].worldY = 37 * gp.tileSize;
+//        i++;
     }
 
     public void setNPC() {

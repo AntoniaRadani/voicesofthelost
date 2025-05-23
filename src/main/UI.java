@@ -249,19 +249,12 @@ public class UI {
         g2.drawString(value, textX, textY);
         textY += lineHeight;
 
-//        value = String.valueOf(gp.player.currentWeapon.attack);
-//        textX = getXForAlignToRight(value, tailX);
-//        g2.drawString(value, textX, textY);
-//        textY += lineHeight;
-//
-//        value = String.valueOf(gp.player.currentShield.defense);
-//        textX = getXForAlignToRight(value, tailX);
-//        g2.drawString(value, textX, textY);
-//        textY += lineHeight;
-
-        g2.drawImage(gp.player.currentWeapon.image, tailX - gp.tileSize, textY, null);
+        if(gp.player.currentWeapon != null)
+            g2.drawImage(gp.player.currentWeapon.image, tailX - gp.tileSize, textY, null);
         textY += gp.tileSize;
-        g2.drawImage(gp.player.currentShield.image, tailX - gp.tileSize, textY, null);
+
+        if(gp.player.currentShield != null)
+            g2.drawImage(gp.player.currentShield.image, tailX - gp.tileSize, textY, null);
 
     }
 
