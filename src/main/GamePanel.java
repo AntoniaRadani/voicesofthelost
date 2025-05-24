@@ -13,7 +13,6 @@ import java.util.Objects;
 
 public class GamePanel extends JPanel implements Runnable {
     // screen settings
-
     public boolean hoverExitButton = false;
     public boolean hoverVolumeSlider = false;
     public boolean hoverSoundSlider = false;
@@ -90,7 +89,7 @@ public class GamePanel extends JPanel implements Runnable {
     MouseHandler mouseH = new MouseHandler(this);
     GamePause pause = new GamePause(this);
     public UI ui = new UI(this);
-    public SuperObject[] obj = new SuperObject[10];
+    public SuperObject[][] obj = new SuperObject[3][10];
 
     // for npc
 
@@ -150,9 +149,6 @@ public class GamePanel extends JPanel implements Runnable {
         aSetter.setNPC();
         playMusic(0);
 
-        stopMusic();
-        gameState = playState;
-
     }
 
     public void update() {
@@ -202,9 +198,9 @@ public class GamePanel extends JPanel implements Runnable {
             }
 
             // object
-            for(int i = 0; i < obj.length; i++){
-                if(obj[i] != null){
-                    obj[i].draw(g2temp, this);
+            for(int i = 0; i < obj[currentMap].length; i++){
+                if(obj[currentMap][i] != null){
+                    obj[currentMap][i].draw(g2temp, this);
                 }
             }
 

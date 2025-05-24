@@ -55,7 +55,7 @@ public class GameMenu {
     public GameMenu(GamePanel gp) {
         this.gp = gp;
 
-        centerX = (gp.screenWidth - 200) / 2; // 284
+        centerX = (gp.screenWidth  - 200) / 2; // 284
         centerY = (gp.screenHeight - 20) / 2; //278
         startX = centerX;
         startY = centerY - 60;

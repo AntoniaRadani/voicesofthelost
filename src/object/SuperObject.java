@@ -21,6 +21,7 @@ public class SuperObject {
     public int attack;
     public int defense;
     int value;
+    int harta_id;
 
     public void draw(Graphics2D g2, GamePanel gp){
         int screenX = worldX - gp.player.worldX + gp.player.screenX;
@@ -32,8 +33,6 @@ public class SuperObject {
                 worldY - gp.tileSize < gp.player.worldY + gp.player.screenY) {
             g2.drawImage(image, screenX, screenY, image.getWidth(), image.getHeight(), null);
         }
-
-            g2.drawImage(image, worldX, worldY, null);
 
     }
 

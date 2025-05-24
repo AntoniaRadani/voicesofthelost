@@ -15,13 +15,13 @@ public class OBJ_HealthPotion extends SuperObject{
         type = 6;
         name = "HealthPotion";
         value = 1;
+        description = "[Health potion]\nGives back 1 life...";
         try{
             image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/object/health_potion.png")));
             image = uTool.scaleImage(image, gp.tileSize, gp.tileSize);
         }catch(IOException e){
             System.out.println("IMAGINE HEALTH POTION NU S A GASIT");
         }
-        description = "[Health potion]\nGives back 1 life...";
 
     }
 

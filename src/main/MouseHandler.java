@@ -32,6 +32,29 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
     int muteSoundX, muteSoundY;
 
 
+    private int scaledMouseX(MouseEvent e) {
+        int panelWidth = gp.getWidth();
+        int panelHeight = gp.getHeight();
+        double scaleX = (double) panelWidth / gp.screenWidth;
+        double scaleY = (double) panelHeight / gp.screenHeight;
+        double scale = Math.min(scaleX, scaleY); // păstrează proporția
+        int drawWidth = (int)(gp.screenWidth * scale);
+        int drawX = (panelWidth - drawWidth) / 2;
+
+        return (int)((e.getX() - drawX) / scale);
+    }
+
+    private int scaledMouseY(MouseEvent e) {
+        int panelWidth = gp.getWidth();
+        int panelHeight = gp.getHeight();
+        double scaleX = (double) panelWidth / gp.screenWidth;
+        double scaleY = (double) panelHeight / gp.screenHeight;
+        double scale = Math.min(scaleX, scaleY); // păstrează proporția
+        int drawHeight = (int)(gp.screenHeight * scale);
+        int drawY = (panelHeight - drawHeight) / 2;
+        return (int)((e.getY() - drawY) / scale);
+    }
+
     public MouseHandler(GamePanel gp) {
         this.gp = gp;
         centerX = (gp.screenWidth - 200) / 2; // 284
@@ -59,8 +82,8 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
     @Override
     public void mouseClicked(MouseEvent e) {
         // getting the position of the mouse
-        int mx = e.getX();
-        int my = e.getY();
+        int mx = scaledMouseX(e);
+        int my = scaledMouseY(e);
         if (gp.gameState == gp.menuState && gp.menuOption != 3) {
 
             // Start Game (when the start button is clicked)
@@ -123,8 +146,8 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
     @Override
     public void mousePressed(MouseEvent e) {
         if (gp.menuOption == 3) {
-            int mx = e.getX();
-            int my = e.getY();
+            int mx = scaledMouseX(e);
+            int my = scaledMouseY(e);
 
             // zona sliderului volum
             if (mx >= volumeSliderX && mx <= volumeSliderX + sliderWidth &&
@@ -163,12 +186,12 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
     @Override
     public void mouseDragged(MouseEvent e) {
         if (gp.menuOption == 3 && gp.draggingVolume) {
-            int mx = e.getX();
+            int mx = scaledMouseX(e);
             gp.volumeLevel = Math.max(0, Math.min(100, (mx - 200) * 100 / 200));
         }
 
         if(gp.menuOption == 3 && gp.draggingSound){
-            int mx = e.getX();
+            int mx = scaledMouseX(e);
             gp.soundLevel = Math.max(0, Math.min(100, (mx - 200) * 100 / 200));
         }
 
@@ -177,8 +200,8 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
     @Override
     public void mouseMoved(MouseEvent e) {
 
-        int mx = e.getX();
-        int my = e.getY();
+        int mx = scaledMouseX(e);
+        int my = scaledMouseY(e);
 
         if (gp.gameState == gp.menuState) {
             // Hover pentru Start
