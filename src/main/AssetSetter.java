@@ -1,5 +1,7 @@
 package main;
 
+import entity.Monster;
+import entity.MonsterLevel1;
 import entity.NPC;
 import object.*;
 
@@ -68,5 +70,13 @@ public class AssetSetter {
         gp.npc[0].worldX = gp.tileSize * 26;
         gp.npc[0].worldY = gp.tileSize * 44;
 
+    }
+
+    public void setMonster(){
+        // instantiem monstrii
+
+        gp.monsters[0] = new MonsterLevel1(gp);
+        gp.monsters[0].worldX = 40 * gp.tileSize;
+        gp.monsters[0].worldY = 21 * gp.tileSize;
     }
 }

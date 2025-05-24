@@ -2,6 +2,7 @@ package main;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.security.Key;
 
 public class KeyHandler implements KeyListener {
 
@@ -31,6 +32,9 @@ public class KeyHandler implements KeyListener {
         int code = e.getKeyCode();
 
         if(gp.gameState == gp.playState) {
+
+            inputNumber(code);
+
             if (code == KeyEvent.VK_W) {
                 upPressed = true;
             }
@@ -135,5 +139,48 @@ public class KeyHandler implements KeyListener {
         if(code == KeyEvent.VK_SHIFT){
             shiftPressed = false;
         }
+    }
+
+    public void inputNumber(int code){
+        if (gp.waitingForNumberInput) {
+            if (code >= KeyEvent.VK_0 && code <= KeyEvent.VK_9) {
+                gp.inputNumber += (char) code;
+                gp.ui.inputString = gp.inputNumber;  // sincronizează cu UI
+            } else if (code == KeyEvent.VK_BACK_SPACE && !gp.inputNumber.isEmpty()) {
+                gp.inputNumber = gp.inputNumber.substring(0, gp.inputNumber.length() - 1);
+                gp.ui.inputString = gp.inputNumber;  // sincronizează cu UI
+            } else if (code == KeyEvent.VK_ENTER) {
+                int guessedNumber = -1;
+                try {
+                    guessedNumber = Integer.parseInt(gp.inputNumber);
+                } catch (NumberFormatException ex) {
+                    gp.inputNumber = "";
+                    gp.ui.inputString = "";
+                    return;
+                }
+
+                if (guessedNumber == gp.correctNumber) {
+                    System.out.println("Escaped from trap room!");
+                    gp.waitingForNumberInput = false;
+                    gp.escapedFromTrapRoom = true;
+                    gp.inputNumber = "";
+                    gp.ui.inputString = "";
+                    gp.trapRoomLevel1.monster.dead = true;
+                    gp.monsters[0].dead = true;
+                } else {
+                    gp.inputNumber = "";
+                    gp.ui.inputString = "";
+                }
+            }
+        }else {
+            // restul input-ului normal
+            if (gp.player.isNearMonster(gp.trapRoomLevel1.monster, gp)) {
+                if (code == KeyEvent.VK_F) {
+                    gp.waitingForNumberInput = true;
+                    gp.inputNumber = "";
+                }
+            }
+        }
+
     }
 }

@@ -26,6 +26,9 @@ public class UI {
     public String currentDialogue = "";
     public int slotCol = 0;
     public int slotRow = 0;
+    public boolean inputActive = false;
+    public String inputString = "";
+    public String feedbackMessage = "";
 
     public UI(GamePanel gp){
         this.gp = gp;
@@ -61,6 +64,10 @@ public class UI {
         if(gp.gameState == gp.characterStatus){
             drawCharacterScreen();
             drawInventory();
+        }
+
+        if (gp.waitingForNumberInput) {
+            inputMessage();
         }
 
 //        if(gameFinished){
@@ -322,6 +329,24 @@ public class UI {
     public void showMessage(String text){
         message = text;
         messageOn = true;
+    }
+
+    public void inputMessage(){
+        int x = gp.tileSize * 2;
+        int y = gp.screenHeight - gp.tileSize * 4;
+        int width = gp.tileSize * 10;
+        int height = gp.tileSize * 3;
+        drawSubWindow(x - 10, y - 30, width, height);
+
+        g2.setColor(Color.WHITE);
+        g2.setFont(arial_20);
+        g2.drawString("Introdu numar: " + inputString, x, y);
+
+        if (!feedbackMessage.isEmpty()) {
+            g2.setFont(g2.getFont().deriveFont(Font.PLAIN, 18f));
+            g2.drawString(feedbackMessage, x, y + 30);
+        }
+
     }
 
     public int getXForCenteredText(String text){

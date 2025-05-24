@@ -24,11 +24,12 @@ public class Player extends Entity{
     public final int screenY;
 
     public int hasKey = 0;
-    public int hasKey1 = 0; // number of special keys to open really important rooms
+    public int hasKey1 = 1; // number of special keys to open really important rooms
     public int hasApple = 0;
     public int hasHealthPotion = 0;
     public int hasCard = 0;
     public int hasLevelKey = 1;
+    public boolean doorOpen1 = false;
     int counter2 = 0;
 
     // invetory
@@ -78,9 +79,7 @@ public class Player extends Entity{
         // initializarea obiectelor din inventar cu armele basic
 //        inventory.add(currentWeapon);
 //        inventory.add(currentShield);
-        inventory.add(new OBJ_Key(gp));
         inventory.add(new OBJ_Key1(gp));
-        inventory.add(new OBJ_LevelKey(gp));
 
     }
 
@@ -291,6 +290,7 @@ public class Player extends Entity{
                                 }
                             gp.obj[mapNum][i] = null;
                             hasKey1--;
+                            doorOpen1 = true;
                             gp.ui.showMessage("You opened the right door!");
                         } else {
                             collisionOn = true;
@@ -353,6 +353,23 @@ public class Player extends Entity{
         return image;
     }
 
+    public boolean isNearMonster(Monster monster, GamePanel gp) {
+        if (monster == null) return false;
+
+        Rectangle playerRect = new Rectangle(worldX + solidArea.x, worldY + solidArea.y, solidArea.width, solidArea.height);
+        Rectangle monsterRect = new Rectangle(monster.getWorldX() + monster.solidArea.x, monster.getWorldY() + monster.solidArea.y,
+                monster.solidArea.width, monster.solidArea.height);
+
+        // extindem zona monsterului pentru a verifica "aproape"
+        Rectangle interactionZone = new Rectangle(
+                monsterRect.x - gp.tileSize,
+                monsterRect.y - gp.tileSize,
+                monsterRect.width + gp.tileSize * 2,
+                monsterRect.height + gp.tileSize * 2);
+
+        return playerRect.intersects(interactionZone);
+    }
+
     public void draw(Graphics2D g2){
 
         BufferedImage image = getCurrentSprite();
@@ -391,4 +408,5 @@ public class Player extends Entity{
         }
         gp.keyH.fPressed = false;
     }
+
 }

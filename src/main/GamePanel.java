@@ -2,9 +2,11 @@ package main;
 
 import entity.Entity;
 import entity.Player;
+import entity.Monster;
 import object.SuperObject;
 import tile.TileManager;
 import tile.TiledMapViewer;
+import trap_room.TrapRoomLevel1;
 
 import javax.swing.*;
 import java.awt.*;
@@ -90,6 +92,15 @@ public class GamePanel extends JPanel implements Runnable {
     GamePause pause = new GamePause(this);
     public UI ui = new UI(this);
     public SuperObject[][] obj = new SuperObject[3][10];
+    public Monster[] monsters = new Monster[10];
+    public TrapRoomLevel1 trapRoomLevel1 = new TrapRoomLevel1(this);
+
+    // for trap room 1
+    public boolean waitingForNumberInput = false;
+    public String inputNumber = "";
+    public boolean escapedFromTrapRoom = false;
+    public final int correctNumber = 14;
+    public boolean roomCleared = false;
 
     // for npc
 
@@ -147,6 +158,7 @@ public class GamePanel extends JPanel implements Runnable {
     public void setUpGame() {
         aSetter.setObject();
         aSetter.setNPC();
+        aSetter.setMonster();
         playMusic(0);
 
     }
@@ -172,6 +184,12 @@ public class GamePanel extends JPanel implements Runnable {
                 npc[i].update();
             }
         }
+
+        if(!roomCleared) {
+            trapRoomLevel1.update();
+            if (escapedFromTrapRoom == true)
+                roomCleared = true;
+        }
     }
 
 
@@ -194,6 +212,13 @@ public class GamePanel extends JPanel implements Runnable {
             for ( int i = 0; i < npc.length; i++ ) {
                 if ( npc[i] != null ) {
                     npc[i].draw(g2temp, this);
+                }
+            }
+
+            // monster
+            for ( int i = 0; i < monsters.length; i++ ) {
+                if ( monsters[i] != null ) {
+                    monsters[i].draw(g2temp, this);
                 }
             }
 

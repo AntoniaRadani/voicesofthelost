@@ -9,15 +9,15 @@ public class NPC extends Entity {
     String [] dir = {"left" , "right"};
 
     public void getPlayerImage() {
-
         animationSet.loadSeparate("npc", dir , "npc_walk", 23); // 23 cadre per direcție
     }
+
     public NPC(GamePanel gp) {
 
         super(gp);
 
         direction = "right";
-        speed = 1; // faster than player
+        speed = 3; // faster than player
 
         getPlayerImage();
         setDialogue();
@@ -33,7 +33,7 @@ public class NPC extends Entity {
     public void setAction() {
 
         actionLockCounter++;
-        if ( actionLockCounter == 120 || collisionOn == true) {
+        if ( actionLockCounter == 120 || collisionOn) {
             Random random = new Random();
 
             int i = random.nextInt(100) + 1; // random num 0-100
