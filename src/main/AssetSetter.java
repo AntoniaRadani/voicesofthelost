@@ -36,21 +36,30 @@ public class AssetSetter {
         gp.obj[mapNum][i].worldX = 8 * gp.tileSize;
         gp.obj[mapNum][i].worldY = 14 * gp.tileSize;
         i++;
-        gp.obj[mapNum][i] = new OBJ_Key(gp);
-        gp.obj[mapNum][i].worldX = 44 * gp.tileSize;
-        gp.obj[mapNum][i].worldY = 33 * gp.tileSize;
+        gp.obj[mapNum][i] = new OBJ_Chest(gp);
+        gp.obj[mapNum][i].worldX = 42 * gp.tileSize;
+        gp.obj[mapNum][i].worldY = 32 * gp.tileSize;
         i++;
         gp.obj[mapNum][i] = new OBJ_Key(gp);
         gp.obj[mapNum][i].worldX = 5 * gp.tileSize;
         gp.obj[mapNum][i].worldY = 42 * gp.tileSize;
+        i++;
+        gp.obj[mapNum][i] = new OBJ_Key(gp);
+        gp.obj[mapNum][i].worldX = 47 * gp.tileSize;
+        gp.obj[mapNum][i].worldY = 5 * gp.tileSize;
         i++;
         gp.obj[mapNum][i] = new OBJ_ChestLevel1(gp);
         gp.obj[mapNum][i].worldX = 3 * gp.tileSize;
         gp.obj[mapNum][i].worldY = 21 * gp.tileSize;
         i++;
         gp.obj[mapNum][i] = new OBJ_HealthPotion(gp);
-        gp.obj[mapNum][i].worldX = 4 * gp.tileSize;
-        gp.obj[mapNum][i].worldY = 27 * gp.tileSize;
+        gp.obj[mapNum][i].worldX = 14 * gp.tileSize;
+        gp.obj[mapNum][i].worldY = 7 * gp.tileSize;
+        i++;
+        gp.obj[mapNum][i] = new OBJ_Table(gp);
+        gp.obj[mapNum][i].worldX = 16 * gp.tileSize;
+        gp.obj[mapNum][i].worldY = 8 * gp.tileSize;
+
         mapNum++;
         i = 0;
         if (gp.obj[mapNum] == null) {

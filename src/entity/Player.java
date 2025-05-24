@@ -58,7 +58,7 @@ public class Player extends Entity{
     public  void setDefaultValues(){
         worldX = gp.tileSize * 24; // players position in the world map
         worldY = gp.tileSize * 49; // where the player starts the game   gp.tileSize * coordonata( linis/coloana din matrice)
-        speed = 4;
+        speed = 10;
         direction = "down";
 
         // player status
@@ -79,7 +79,7 @@ public class Player extends Entity{
         // initializarea obiectelor din inventar cu armele basic
 //        inventory.add(currentWeapon);
 //        inventory.add(currentShield);
-        inventory.add(new OBJ_Key1(gp));
+        //inventory.add(new OBJ_Key1(gp));
 
     }
 
@@ -256,6 +256,15 @@ public class Player extends Entity{
                         inventory.add(gp.obj[mapNum][i]);
                         gp.obj[mapNum][i] = null;
                         break;
+                    case "Table":
+                        gp.playSE(2);
+                        //startMiniGame();
+                        //if(miniGameCleared == true)
+                        //  inventory.add(new OBJ_Card(gp)
+                        // facem masa sa dispara ca sa nu poata lua mai multe carti de la un singur nivel
+                        // poate daca avem timp implementam si varianta in care ramane masa idk
+                        gp.obj[mapNum][i] = null;
+                        break;
                     case "ChestLevel1":
                         if (hasKey > 0) {
                             gp.playSE(1);
@@ -279,6 +288,27 @@ public class Player extends Entity{
                             gp.ui.showMessage("You need a key!");
                         }
                         break;
+                    case "Chest":
+                        if (hasKey > 0) {
+                            gp.playSE(1);
+                            for (int j = 0; j < inventory.size(); j++)
+                                if (Objects.equals(inventory.get(j).name, "Key")) {
+                                    inventory.remove(j);
+                                    break;
+                                }
+                            inventory.add(new OBJ_Key(gp));
+                            inventory.add(new OBJ_HealthPotion(gp));
+                            int worldX = gp.obj[mapNum][i].worldX;
+                            int worldY = gp.obj[mapNum][i].worldY;
+                            gp.obj[mapNum][i] = new OBJ_Chest2(gp);
+                            gp.obj[mapNum][i].worldX = worldX;
+                            gp.obj[mapNum][i].worldY = worldY;
+                            hasKey--;
+                            gp.ui.showMessage("You opened a chest!");
+                        } else {
+                            gp.ui.showMessage("You need a key!");
+                        }
+                            break;
                     case "ClosedDoor":
                         // asta e usa speciala unde se afla raspunsul
                         if (hasKey1 > 0) {

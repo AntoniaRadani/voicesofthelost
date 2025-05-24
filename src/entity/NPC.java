@@ -25,7 +25,7 @@ public class NPC extends Entity {
 
     public void setDialogue(){
         dialogues[0] = "Hello, lad.";
-        dialogues[1] = "Dialog 1";
+        dialogues[1] = "Be aware of every object near you";
         dialogues[2] = "Dialog 2";
         dialogues[3] = "Dialog 3";
     }

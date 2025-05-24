@@ -64,10 +64,6 @@ public class TrapRoomLevel1 {
         if(monster == null)
             monster = gp.monsters[0];
 
-        System.out.println("Room locked: " + roomLocked);
-        System.out.println("Escaped from trap room: " + gp.escapedFromTrapRoom);
-        System.out.println();
-
         if (roomArea.intersects(playerBox) && gp.player.doorOpen1) {
             // daca traproom ul nu e activ si player ul a deschis usa
             if (!active) {
