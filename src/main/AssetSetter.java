@@ -14,6 +14,18 @@ public class AssetSetter {
     public void setObject() {
 
         int i = 0;
+        gp.obj[i] = new OBJ_ClosedDoor(gp);
+        gp.obj[i].worldX = 37 * gp.tileSize;
+        gp.obj[i].worldY = 42 * gp.tileSize;
+        i++;
+        gp.obj[i] = new OBJ_Door(gp);
+        gp.obj[i].worldX = 33 * gp.tileSize;
+        gp.obj[i].worldY = 28 * gp.tileSize;
+        i++;
+        gp.obj[i] = new OBJ_ClosedDoor(gp);
+        gp.obj[i].worldX = 19 * gp.tileSize;
+        gp.obj[i].worldY = 15 * gp.tileSize;
+        i++;
         gp.obj[i] = new OBJ_Key(gp);
         gp.obj[i].worldX = 44 * gp.tileSize;
         gp.obj[i].worldY = 33 * gp.tileSize;

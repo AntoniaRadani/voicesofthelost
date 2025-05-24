@@ -14,4 +14,13 @@ public class UtilityTool {
 
         return scaledImage;
     }
+
+    public BufferedImage rescale(BufferedImage originalImage, int width, int height) {
+        BufferedImage resized = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2d = resized.createGraphics();
+        g2d.drawImage(originalImage, 0, 0, resized.getWidth(), resized.getHeight(), null);
+        g2d.dispose();
+
+        return resized;
+    }
 }

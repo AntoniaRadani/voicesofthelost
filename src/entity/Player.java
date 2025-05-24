@@ -295,10 +295,11 @@ public class Player extends Entity{
                                     inventory.remove(j);
                                     break;
                                 }
-                            gp.obj[i] = new OBJ_Chest2(gp);
+                            gp.obj[i] = null;
                             hasKey1--;
                             gp.ui.showMessage("You opened the right door!");
                         } else {
+                            collisionOn = true;
                             gp.ui.showMessage("You need a special key!");
                         }
                         break;
@@ -311,10 +312,11 @@ public class Player extends Entity{
                                     inventory.remove(j);
                                     break;
                                 }
-                            gp.obj[i] = new OBJ_Chest2(gp);
+                            gp.obj[i] = null;
                             hasKey--;
                             gp.ui.showMessage("You opened a door...");
                         } else {
+                            collisionOn = true;
                             gp.ui.showMessage("You need a key!");
                         }
                         break;
@@ -341,10 +343,8 @@ public class Player extends Entity{
     }
 
     public void draw(Graphics2D g2){
-//        g2.setColor(Color.black);
-//        g2.fillRect(x, y, gp.tileSize, gp.tileSize);
-        BufferedImage image = getCurrentSprite();
 
+        BufferedImage image = getCurrentSprite();
         g2.drawImage(image, screenX, screenY, gp.tileSize + 20, gp.tileSize + 20, null);
 
 
