@@ -3,6 +3,7 @@ package main;
 import entity.Entity;
 import entity.Player;
 import object.SuperObject;
+import tile.Map;
 import tile.TileManager;
 import tile.TiledMapViewer;
 
@@ -30,11 +31,11 @@ public class GamePanel extends JPanel implements Runnable {
     public final int originalTileSize = 16; // 16 x 16 tile size
     public final int scale = 3; // to make our player and tiles bigger
 
-    public final int tileSize = originalTileSize * scale; // 48 x 48 the actual tile size
+    public int tileSize = originalTileSize * scale; // 48 x 48 the actual tile size
     final int maxScreenCol = 16; // how many tiles can we see - column
     final int maxScreenRow = 12; // how many tiles can we see - row
-    public final int screenWidth = tileSize * maxScreenCol; // 768 pixels
-    public final int screenHeight = tileSize * maxScreenRow; // 576 pixels
+    public int screenWidth = tileSize * maxScreenCol; // 768 pixels
+    public int screenHeight = tileSize * maxScreenRow; // 576 pixels
     // for camera limits
 
     // volume
@@ -91,6 +92,7 @@ public class GamePanel extends JPanel implements Runnable {
     GamePause pause = new GamePause(this);
     public UI ui = new UI(this);
     public SuperObject[] obj = new SuperObject[10];
+    public Map map = new Map("res/level1/level1.tmx", this);
 
     // for npc
 
@@ -107,6 +109,7 @@ public class GamePanel extends JPanel implements Runnable {
     public final int pauseState = 2;
     public final int characterStatus = 3;
     public final int dialogueState = 4;
+    public final int mapState = 10;
 
     int menuOption = 0;
     // 0 = INITIAL STATE (draw)
@@ -189,6 +192,9 @@ public class GamePanel extends JPanel implements Runnable {
         if (gameState == menuState) {
             // drawing the menu
             menu.draw(g2temp);
+        } else if (gameState == mapState) {
+            // draw mini map
+            map.drawFullMapScreen(g2temp);
         } else if (gameState == playState || gameState == dialogueState || gameState == characterStatus) {
 
             // tile
@@ -210,7 +216,13 @@ public class GamePanel extends JPanel implements Runnable {
 
             // player
             player.draw(g2temp);
+            // mini map
+            if (map.miniMapOn) {
+                // map.drawFullMapScreen(g2temp);
+            }
 
+            // minimap
+            map.drawMiniMap(g2temp);
             // ui
             ui.draw(g2temp);
         }
@@ -329,9 +341,10 @@ public class GamePanel extends JPanel implements Runnable {
             tiledMapViewer.loadMap("res/level2/level2.tmx");
         }
 
+        tileSize = tiledMapViewer.tileWidth;
+
         // resetare
-        player.worldX = 8;
-        player.worldY = 48;
+        player.setPlayerStartPosition(level);
 
         for (int i = 0; i < obj.length; i++) {
             obj[i] = null;
@@ -349,5 +362,35 @@ public class GamePanel extends JPanel implements Runnable {
         System.out.println(" LEVEL CHANGED TO: " + level );
 
     }
+
+    public void adjustZoom(boolean zoomIn) {
+
+        double cameraWorldX = tiledMapViewer.screenX + (screenWidth2 / 2.0);
+        double cameraWorldY = tiledMapViewer.screenY + (screenHeight2 / 2.0);
+
+        if (zoomIn) {
+            tileSize += 4;
+        } else {
+            tileSize = Math.max(4, tileSize - 4); // prevenim tilesize = 0
+        }
+
+        // actualizare dimensiune ecran
+        screenWidth2 = tileSize * maxScreenCol;
+        screenHeight2 = tileSize * maxScreenRow;
+
+        // pozitia camerei
+        tiledMapViewer.screenX = (int)(cameraWorldX - screenWidth2 / 2.0);
+        tiledMapViewer.screenY = (int)(cameraWorldY - screenHeight2 / 2.0);
+
+        // rescalam tempscreen
+        tempScreen = new BufferedImage(screenWidth, screenHeight, BufferedImage.TYPE_INT_ARGB);
+        g2temp = (Graphics2D) tempScreen.getGraphics();
+
+        tiledMapViewer.clampCamera(); // corectare camera
+
+        player.calculateScreenPosition();
+
+    }
+
 
 }

@@ -11,7 +11,7 @@ import java.text.DecimalFormat;
 public class UI {
     GamePanel gp;
     Graphics2D g2;
-    Font arial_20;
+    public Font arial_20;
     Font arial_80;
     BufferedImage keyImage;
     BufferedImage heart_full;

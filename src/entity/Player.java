@@ -20,8 +20,8 @@ public class Player extends Entity{
     KeyHandler keyH;
     UtilityTool uTool = new UtilityTool();
 
-    public final int screenX;
-    public final int screenY;
+    public int screenX;
+    public int screenY;
 
     public int hasKey = 0;
     public int hasKey1 = 0; // number of special keys to open really important rooms
@@ -379,5 +379,24 @@ public class Player extends Entity{
             }
         }
         gp.keyH.fPressed = false;
+    }
+
+    public void setPlayerStartPosition( int level ) {
+
+        switch (level) {
+            case 1:
+                worldX = 21 * gp.tileSize;
+                worldY = 23 * gp.tileSize;
+                break;
+            case 2:
+                worldX = 8 * gp.tileSize;
+                worldY = 45 * gp.tileSize;
+                break;
+        }
+    }
+
+    public void calculateScreenPosition() {
+        screenX = gp.screenWidth / 2 - (gp.tileSize / 2);
+        screenY = gp.screenHeight / 2 - (gp.tileSize / 2);
     }
 }
