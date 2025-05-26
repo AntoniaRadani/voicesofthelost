@@ -3,6 +3,7 @@ package main;
 import entity.Entity;
 import entity.Monster;
 import entity.Player;
+import environment.EnvironmentManager;
 import object.SuperObject;
 import tile.Map;
 import tile.TileManager;
@@ -13,6 +14,7 @@ import trap_room.TrapRoomLevel1;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 import java.util.Objects;
 
@@ -47,6 +49,8 @@ public class GamePanel extends JPanel implements Runnable {
     // for maps
     public final int maxMap = 3; // the max number of maps that we can have
     public int currentMap = 0;
+    public boolean showFullMap = false;
+    public boolean showLighting = false;
 
     // for full screen
     public int screenWidth2 = screenWidth;
@@ -98,6 +102,7 @@ public class GamePanel extends JPanel implements Runnable {
     public SuperObject[][] obj = new SuperObject[3][10];
     public Monster[] monsters = new Monster[10];
     public TrapRoomLevel1 trapRoomLevel1 = new TrapRoomLevel1(this);
+    EnvironmentManager eManager = new EnvironmentManager(this);
 
     // for trap room 1
     public boolean waitingForNumberInput = false;
@@ -165,6 +170,7 @@ public class GamePanel extends JPanel implements Runnable {
         aSetter.setObject();
         aSetter.setNPC();
         aSetter.setMonster();
+        eManager.setup();
         playMusic(0);
 
         stopMusic();
@@ -240,13 +246,19 @@ public class GamePanel extends JPanel implements Runnable {
 
             // player
             player.draw(g2temp);
+
             // mini map
-            if (map.miniMapOn) {
-                // map.drawFullMapScreen(g2temp);
+            if (showFullMap == true) {
+                 map.drawFullMapScreen(g2temp);
             }
 
             // minimap
             map.drawMiniMap(g2temp);
+
+            // lighting
+            if (showLighting) {
+                eManager.draw(g2temp);
+            }
             // ui
             ui.draw(g2temp);
         }
@@ -415,6 +427,9 @@ public class GamePanel extends JPanel implements Runnable {
         player.calculateScreenPosition();
 
     }
+
+
+
 
 
 }
