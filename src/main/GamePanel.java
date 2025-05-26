@@ -6,7 +6,7 @@ import entity.Player;
 import environment.EnvironmentManager;
 import object.SuperObject;
 import tile.Map;
-import tile.TileManager;
+
 import tile.TiledMapViewer;
 
 import entity.Monster;
@@ -371,29 +371,58 @@ public class GamePanel extends JPanel implements Runnable {
 
         currentLevel = level; // update
 
-        if (level == 1) {
-            tiledMapViewer.loadMap("res/level1/level1.tmx");
-        } else if (level == 2) {
-            tiledMapViewer.loadMap("res/level2/level2.tmx");
+        switch (level) {
+            case 1:
+                tiledMapViewer.loadTMX("res/level1/level1.tmx");
+                tiledMapViewer.loadMap("res/level1/level1.tmx");
+                for (int i = 0; i < obj.length; i++) {
+                    obj[i] = null;
+                }
+                for (int i = 0; i < npc.length; i++) {
+                    npc[i] = null;
+
+                }
+                // reincarcam pe noua mapa
+                aSetter.setObject();
+                aSetter.setNPC();
+                player.setPlayerStartPosition(level);
+                break;
+            case 2:
+                tiledMapViewer.loadTMX("res/level2/level2.tmx");
+               // tiledMapViewer.loadMap("res/leve2/level2.tmx");
+                for (int i = 0; i < obj.length; i++) {
+                    obj[i] = null;
+                }
+                for (int i = 0; i < npc.length; i++) {
+                    npc[i] = null;
+
+                }
+                // reincarcam pe noua mapa
+                aSetter.setObject();
+                aSetter.setNPC();
+                player.setPlayerStartPosition(level);
+                break;
+            case 3:
+                tiledMapViewer.loadTMX("res/level3/level3.tmx");
+                tiledMapViewer.loadMap("res/level3/level3.tmx");
+                for (int i = 0; i < obj.length; i++) {
+                    obj[i] = null;
+                }
+                for (int i = 0; i < npc.length; i++) {
+                    npc[i] = null;
+
+                }
+                // reincarcam pe noua mapa
+                aSetter.setObject();
+                aSetter.setNPC();
+                player.setPlayerStartPosition(level);
+                break;
+                // trebuie puse si obj, npc, si alte detalii la fiecare. cel mai bine ar fi in functiile de set sa facem cu case
         }
 
         tileSize = tiledMapViewer.tileWidth;
 
-        // resetare
-        player.setPlayerStartPosition(level);
-
-        for (int i = 0; i < obj.length; i++) {
-            obj[i] = null;
-        }
-        for (int i = 0; i < npc.length; i++) {
-            npc[i] = null;
-
-        }
-        // reincarcam pe noua mapa
-        aSetter.setObject();
-        aSetter.setNPC();
-
-        tiledMapViewer.updateCamera(8, 48);
+        tiledMapViewer.updateCamera(player.worldX, player.worldY);
 
         System.out.println(" LEVEL CHANGED TO: " + level );
 

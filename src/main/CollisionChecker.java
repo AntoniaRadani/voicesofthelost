@@ -33,51 +33,116 @@ public class CollisionChecker {
         int entityBottomRow = entityBottomWorldY / gp.tileSize;
 
         int tileNum1 = 0, tileNum2 = 0;
+        int layer1 = 1, layer2 = 2; // in functie de nivel, reprezinta layerele pe care sunt obiecte cu coliziune
 
+        switch (gp.currentLevel) {
+            case 1:
+                layer1 = 1; // walls
+                layer2 = 2; // decor
+                break;
+            case 2:
+                layer1 = 5; // decor
+                layer2 = 4; // walls
+                break;
+            case 3:
+                layer1 = 2; // walls
+                layer2 = 3; // decor
+        }
         switch (entity.direction) {
             case "up":
                 entityTopRow = (entityTopWorldY - entity.speed) / gp.tileSize;
                 if (isInsideMap(entityTopRow, entityLeftCol)) {
-                    tileNum1 = gp.tiledMapViewer.mapData[1][entityTopRow][entityLeftCol];
+                    tileNum1 = gp.tiledMapViewer.mapData[layer1][entityTopRow][entityLeftCol];
                 }
                 if (isInsideMap(entityTopRow, entityRightCol)) {
-                    tileNum2 = gp.tiledMapViewer.mapData[1][entityTopRow][entityRightCol];
+                    tileNum2 = gp.tiledMapViewer.mapData[layer1][entityTopRow][entityRightCol];
                 }
                 break;
 
             case "down":
                 entityBottomRow = (entityBottomWorldY + entity.speed) / gp.tileSize;
                 if (isInsideMap(entityBottomRow, entityLeftCol)) {
-                    tileNum1 = gp.tiledMapViewer.mapData[1][entityBottomRow][entityLeftCol];
+                    tileNum1 = gp.tiledMapViewer.mapData[layer1][entityBottomRow][entityLeftCol];
                 }
                 if (isInsideMap(entityBottomRow, entityRightCol)) {
-                    tileNum2 = gp.tiledMapViewer.mapData[1][entityBottomRow][entityRightCol];
+                    tileNum2 = gp.tiledMapViewer.mapData[layer1][entityBottomRow][entityRightCol];
                 }
                 break;
 
             case "left":
                 entityLeftCol = (entityLeftWorldX - entity.speed) / gp.tileSize;
                 if (isInsideMap(entityTopRow, entityLeftCol)) {
-                    tileNum1 = gp.tiledMapViewer.mapData[1][entityTopRow][entityLeftCol];
+                    tileNum1 = gp.tiledMapViewer.mapData[layer1][entityTopRow][entityLeftCol];
                 }
                 if (isInsideMap(entityBottomRow, entityLeftCol)) {
-                    tileNum2 = gp.tiledMapViewer.mapData[1][entityBottomRow][entityLeftCol];
+                    tileNum2 = gp.tiledMapViewer.mapData[layer1][entityBottomRow][entityLeftCol];
                 }
                 break;
 
             case "right":
                 entityRightCol = (entityRightWorldX + entity.speed) / gp.tileSize;
                 if (isInsideMap(entityTopRow, entityRightCol)) {
-                    tileNum1 = gp.tiledMapViewer.mapData[1][entityTopRow][entityRightCol];
+                    tileNum1 = gp.tiledMapViewer.mapData[layer1][entityTopRow][entityRightCol];
                 }
                 if (isInsideMap(entityBottomRow, entityRightCol)) {
-                    tileNum2 = gp.tiledMapViewer.mapData[1][entityBottomRow][entityRightCol];
+                    tileNum2 = gp.tiledMapViewer.mapData[layer1][entityBottomRow][entityRightCol];
                 }
                 break;
         }
 
         if ((tileNum1 > 0 && gp.tiledMapViewer.tileCollision[tileNum1]) ||
                 (tileNum2 > 0 && gp.tiledMapViewer.tileCollision[tileNum2])) {
+            //System.out.println(" AM LOVIT CEVA PE PRIMUL LAYER");
+            entity.collisionOn = true;
+        }
+
+        // pentru al 2 lea layer
+
+        switch (entity.direction) {
+            case "up":
+                entityTopRow = (entityTopWorldY - entity.speed) / gp.tileSize;
+                if (isInsideMap(entityTopRow, entityLeftCol)) {
+                    tileNum1 = gp.tiledMapViewer.mapData[layer2][entityTopRow][entityLeftCol];
+                }
+                if (isInsideMap(entityTopRow, entityRightCol)) {
+                    tileNum2 = gp.tiledMapViewer.mapData[layer2][entityTopRow][entityRightCol];
+                }
+                break;
+
+            case "down":
+                entityBottomRow = (entityBottomWorldY + entity.speed) / gp.tileSize;
+                if (isInsideMap(entityBottomRow, entityLeftCol)) {
+                    tileNum1 = gp.tiledMapViewer.mapData[layer2][entityBottomRow][entityLeftCol];
+                }
+                if (isInsideMap(entityBottomRow, entityRightCol)) {
+                    tileNum2 = gp.tiledMapViewer.mapData[layer2][entityBottomRow][entityRightCol];
+                }
+                break;
+
+            case "left":
+                entityLeftCol = (entityLeftWorldX - entity.speed) / gp.tileSize;
+                if (isInsideMap(entityTopRow, entityLeftCol)) {
+                    tileNum1 = gp.tiledMapViewer.mapData[layer2][entityTopRow][entityLeftCol];
+                }
+                if (isInsideMap(entityBottomRow, entityLeftCol)) {
+                    tileNum2 = gp.tiledMapViewer.mapData[layer2][entityBottomRow][entityLeftCol];
+                }
+                break;
+
+            case "right":
+                entityRightCol = (entityRightWorldX + entity.speed) / gp.tileSize;
+                if (isInsideMap(entityTopRow, entityRightCol)) {
+                    tileNum1 = gp.tiledMapViewer.mapData[layer2][entityTopRow][entityRightCol];
+                }
+                if (isInsideMap(entityBottomRow, entityRightCol)) {
+                    tileNum2 = gp.tiledMapViewer.mapData[layer2][entityBottomRow][entityRightCol];
+                }
+                break;
+        }
+
+        if ((tileNum1 > 0 && gp.tiledMapViewer.tileCollision[tileNum1]) ||
+                (tileNum2 > 0 && gp.tiledMapViewer.tileCollision[tileNum2])) {
+            //System.out.println(" AM LOVIT CEVA PE AL 2 LEA LAYER");
             entity.collisionOn = true;
         }
     }

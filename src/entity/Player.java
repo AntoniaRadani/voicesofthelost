@@ -170,10 +170,12 @@ public class Player extends Entity{
             int playerX = worldX / gp.tileSize;
             int playerY = worldY / gp.tileSize;
 
-            int tileID = gp.tiledMapViewer.mapData[1][playerX][playerY];
-            System.out.println("playerX: " + playerX + " playerY: " + playerY + "ID: " + tileID );
-            if (gp.currentLevel == 1 && playerX == 5 && playerY == 2 ) {
+            //System.out.println("playerX: " + playerX + " playerY: " + playerY );
+            if (gp.currentLevel == 1 && playerX == 5 && playerY == 2 ) { // pt trecerea la nivelul 2
                 gp.loadLevel(2);
+            }
+            if (gp.currentLevel == 2 && playerY == 1 && (playerX == 7 || playerX == 12) ) {
+                gp.loadLevel(3);
             }
         }
 
@@ -403,10 +405,12 @@ public class Player extends Entity{
                 worldY = 23 * gp.tileSize;
                 break;
             case 2:
-                System.out.println("tileSize " + gp.tiledMapViewer.tileHeight);
                 worldX = 8 * gp.tileSize;
                 worldY = 45 * gp.tileSize;
                 break;
+            case 3:
+                worldX = 9 * gp.tileSize;
+                worldY = 5 * gp.tileSize;
         }
     }
 
