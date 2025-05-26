@@ -15,7 +15,7 @@ public class MonsterLevel1 extends Monster{
         super(gp);
         System.out.println("CREAT MONSTRU");
         life = 3;
-
+        dead = false;
         getPlayerImage();
         setDialogue();
     }

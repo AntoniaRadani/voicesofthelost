@@ -7,6 +7,8 @@ import object.SuperObject;
 import tile.Map;
 import tile.TileManager;
 import tile.TiledMapViewer;
+
+import entity.Monster;
 import trap_room.TrapRoomLevel1;
 
 import javax.swing.*;
@@ -162,6 +164,7 @@ public class GamePanel extends JPanel implements Runnable {
     public void setUpGame() {
         aSetter.setObject();
         aSetter.setNPC();
+        aSetter.setMonster();
         playMusic(0);
 
         stopMusic();
