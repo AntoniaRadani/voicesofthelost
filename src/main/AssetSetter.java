@@ -65,6 +65,14 @@ public class AssetSetter {
         if (gp.obj[mapNum] == null) {
             gp.obj[mapNum] = new SuperObject[100];
         }
+        gp.obj[mapNum][i] = new OBJ_Chest(gp);
+        gp.obj[mapNum][i].worldX = 46 * gp.tileSize;
+        gp.obj[mapNum][i].worldY = 1 * gp.tileSize;
+        i++;
+        gp.obj[mapNum][i] = new OBJ_Apple(gp);
+        gp.obj[mapNum][i].worldX = 26 * gp.tileSize;
+        gp.obj[mapNum][i].worldY = 8 * gp.tileSize;
+        i++;
         gp.obj[mapNum][i] = new OBJ_Key(gp);
         gp.obj[mapNum][i].worldX = 2 * gp.tileSize;
         gp.obj[mapNum][i].worldY = 2 * gp.tileSize;
