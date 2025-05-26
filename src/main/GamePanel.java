@@ -148,8 +148,6 @@ public class GamePanel extends JPanel implements Runnable {
         aSetter.setNPC();
     }
 
-
-
     public void startGameThread() {
         gameThread = new Thread(this);
         gameThread.start();
