@@ -172,10 +172,6 @@ public class GamePanel extends JPanel implements Runnable {
         aSetter.setMonster();
         eManager.setup();
         playMusic(0);
-
-        stopMusic();
-        gameState = playState;
-
     }
 
     public void update() {
@@ -187,24 +183,23 @@ public class GamePanel extends JPanel implements Runnable {
         else if (gameState == 1) {
             // game mode
             player.update();
+
+            for (int i = 0; i < npc.length; i++) {
+                if (npc[i] != null) {
+                    npc[i].update();
+                }
+            }
+
+            if(!roomCleared) {
+                trapRoomLevel1.update();
+                if (escapedFromTrapRoom == true)
+                    roomCleared = true;
+            }
         }
         else if (gameState == 2)
             // pause mode
             pause.update();
-        else if (gameState == 1)
-            // game mode
-            player.update();
-        for (int i = 0; i < npc.length; i++) {
-            if (npc[i] != null) {
-                npc[i].update();
-            }
-        }
 
-        if(!roomCleared) {
-            trapRoomLevel1.update();
-            if (escapedFromTrapRoom == true)
-                roomCleared = true;
-        }
     }
 
 

@@ -45,6 +45,7 @@ public class TrapRoomLevel1 {
     }
 
     public void blockExit(){
+        System.out.println("Apel blockExit");
         gp.tiledMapViewer.mapData[1][exitTileY][exitTileX] = lockedTileIndexUp;
         gp.tiledMapViewer.mapData[1][exitTileY][exitTileX + 1] = lockedTileIndexUp;
         gp.tiledMapViewer.mapData[1][exitTileY][exitTileX + 2] = lockedTileIndexUp;
@@ -65,6 +66,7 @@ public class TrapRoomLevel1 {
             monster = gp.monsters[0];
 
         if (roomArea.intersects(playerBox) && gp.player.doorOpen1) {
+            System.out.println("APEL FUNCTIE TRAP ROOM");
             // daca traproom ul nu e activ si player ul a deschis usa
             if (!active) {
                 active = true;
