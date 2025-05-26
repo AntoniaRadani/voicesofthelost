@@ -11,16 +11,16 @@ import java.awt.*;
 
 public class TrapRoomLevel1 {
 
-    private GamePanel gp;
-    private Rectangle roomArea;
-    private boolean active = false;
-    private boolean roomLocked = false;
-    private long lastDamageTime;
+    public GamePanel gp;
+    public Rectangle roomArea;
+    public boolean active = false;
+    public boolean roomLocked = false;
+    public long lastDamageTime;
     public Monster monster;
-    private int exitTileX, exitTileY;
-    private int lockedTileIndexUp;
-    private int lockedTileIndexDown;
-    private int normalTileIndex;
+    public int exitTileX, exitTileY;
+    public int lockedTileIndexUp;
+    public int lockedTileIndexDown;
+    public int normalTileIndex;
 
     public TrapRoomLevel1(GamePanel gp) {
         this.gp = gp;
