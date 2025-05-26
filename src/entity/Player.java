@@ -380,4 +380,25 @@ public class Player extends Entity{
         }
         gp.keyH.fPressed = false;
     }
+
+    public void calculateScreenPosition() {
+        screenX = gp.screenWidth / 2 - (gp.tileSize / 2);
+        screenY = gp.screenHeight / 2 - (gp.tileSize / 2);
+    }
+
+    public void setPlayerStartPosition(int level) {
+        switch (level) {
+            case 1:
+                worldX = 21 * gp.tileSize;
+                worldY = 23 * gp.tileSize;
+                break;
+            case 2:
+                System.out.println("tileSize " + gp.tiledMapViewer.tileHeight);
+                worldX = 8 * gp.tileSize;
+                worldY = 45 * gp.tileSize;
+                break;
+        }
+    }
+
+
 }
