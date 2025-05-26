@@ -1,11 +1,13 @@
 package main;
 
 import entity.Entity;
+import entity.Monster;
 import entity.Player;
 import object.SuperObject;
 import tile.Map;
 import tile.TileManager;
 import tile.TiledMapViewer;
+
 import entity.Monster;
 import trap_room.TrapRoomLevel1;
 
