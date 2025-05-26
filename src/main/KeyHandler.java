@@ -60,12 +60,28 @@ public class KeyHandler implements KeyListener {
             if (code == KeyEvent.VK_E) {
                 gp.toggleFullscreen();
             }
+            if (code == KeyEvent.VK_1) {
+                gp.adjustZoom(true); // zoom in
+            }
+            if (code == KeyEvent.VK_0) {
+                gp.adjustZoom(false); // zoom out
+            }
 
             if (code == KeyEvent.VK_SHIFT) {
                 shiftPressed = true;
                 // in play mode
                 gp.gameState = gp.characterStatus; // character status mode
                 characterStatus(code);
+            }
+            if( code == KeyEvent.VK_M ) {
+                gp.gameState = gp.mapState;
+            }
+            if( code == KeyEvent.VK_X ) {
+                if ( gp.map.miniMapOn == false ) {
+                    gp.map.miniMapOn = true;
+                } else {
+                    gp.map.miniMapOn = false;
+                }
             }
         }
         else if(gp.gameState == gp.characterStatus) {
@@ -82,6 +98,8 @@ public class KeyHandler implements KeyListener {
         else if(gp.gameState == gp.dialogueState){
             if(code == KeyEvent.VK_F)
                 gp.gameState = gp.playState;
+        } else if (gp.gameState == gp.mapState) {
+            mapState(code);
         }
     }
 
@@ -111,7 +129,7 @@ public class KeyHandler implements KeyListener {
             }
         }
         if (code == KeyEvent.VK_E) {
-            gp.toggleFullscreen();  // vei avea nevoie de această metodă în GamePanel
+            gp.toggleFullscreen();
         }
     }
 
@@ -139,6 +157,15 @@ public class KeyHandler implements KeyListener {
         if(code == KeyEvent.VK_SHIFT){
             shiftPressed = false;
         }
+
+    }
+
+    public void mapState( int code ) {
+        if (code == KeyEvent.VK_M) {
+
+            gp.gameState = gp.playState;
+        }
+
     }
 
     public void inputNumber(int code){

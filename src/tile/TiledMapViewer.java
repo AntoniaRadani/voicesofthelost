@@ -21,8 +21,8 @@ public class TiledMapViewer {
     GamePanel gp;
 
     public int[][][] mapData; // MapTileNum
-    private int tileWidth = 16;  // Set default tile size (adjustable)
-    private int tileHeight = 16;
+    public int tileWidth = 16;  // Set default tile size (adjustable)
+    public int tileHeight = 16;
     public int mapWidth, mapHeight;
     public int layerLength;
 
@@ -30,7 +30,7 @@ public class TiledMapViewer {
     private BufferedImage[] tileImages;
 
 
-    private int screenX, screenY;
+    public int screenX, screenY;
 
     public boolean[] tileCollision;
 
@@ -43,9 +43,9 @@ public class TiledMapViewer {
     }
 
     public void updateCamera(int playerX, int playerY) {
-        // Setează screenX și screenY astfel încât jucătorul să fie în mijlocul ecranului
-        screenX = playerX - (gp.screenWidth / 2);  // Centrarea camerei pe jucător
-        screenY = playerY - (gp.screenHeight / 2);
+        // seteaza jucatorul pe mijloc
+        screenX = playerX - (gp.screenWidth2 / 2);  // Centrarea camerei pe jucător
+        screenY = playerY - (gp.screenHeight2 / 2);
 
         // Asigură-te că camera nu depășește limitele hărții
         if (screenX < 0) {
@@ -54,11 +54,14 @@ public class TiledMapViewer {
         if (screenY < 0) {
             screenY = 0;
         }
-        if (screenX > mapWidth * tileWidth - gp.screenWidth) {
-            screenX = mapWidth * tileWidth - gp.screenWidth;
+        if (screenX > mapWidth * tileWidth - gp.screenWidth2) {
+           // screenX = mapWidth * tileWidth - gp.screenWidth2;
+            screenX = Math.max(0, Math.min(screenX, mapWidth * tileWidth - gp.screenWidth2));
+
         }
-        if (screenY > mapHeight * tileHeight - gp.screenHeight) {
-            screenY = mapHeight * tileHeight - gp.screenHeight;
+        if (screenY > mapHeight * tileHeight - gp.screenHeight2) {
+           // screenY = mapHeight * tileHeight - gp.screenHeight2;
+            screenY = Math.max(0, Math.min(screenY, mapHeight * tileHeight - gp.screenHeight2));
         }
 
         System.out.println("SCREEN VALUES : " + screenX + screenY);
@@ -244,6 +247,36 @@ public class TiledMapViewer {
     public void loadMap(String tmxFilePath) {
         loadTMX(tmxFilePath);
     }
+
+    public void clampCamera() {
+        if (screenX < 0) screenX = 0;
+        if (screenY < 0) screenY = 0;
+
+        int maxX = mapWidth * tileWidth - gp.screenWidth2;
+        int maxY = mapHeight * tileHeight - gp.screenHeight2;
+
+        if (screenX > maxX) screenX = maxX;
+        if (screenY > maxY) screenY = maxY;
+    }
+
+    public void drawFullMap(Graphics2D g2) { // for the mini map
+        for (int layer = 0; layer < mapData.length; layer++) {
+            for (int row = 0; row < mapHeight; row++) {
+                for (int col = 0; col < mapWidth; col++) {
+
+                    int worldX = col * gp.tileSize;
+                    int worldY = row * gp.tileSize;
+
+                    int tileId = mapData[layer][row][col];
+
+                    if (tileId > 0 && tileId < tileImages.length && tileImages[tileId] != null) {
+                        g2.drawImage(tileImages[tileId], worldX, worldY, gp.tileSize, gp.tileSize, null);
+                    }
+                }
+            }
+        }
+    }
+
 
 }
 
