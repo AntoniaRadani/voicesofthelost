@@ -60,7 +60,7 @@ public class Player extends Entity{
     public  void setDefaultValues(){
         worldX = gp.tileSize * 24; // players position in the world map
         worldY = gp.tileSize * 49; // where the player starts the game   gp.tileSize * coordonata( linis/coloana din matrice)
-        speed = 4;
+        speed = 10;
         direction = "down";
 
         // player status
@@ -172,7 +172,7 @@ public class Player extends Entity{
             int playerX = worldX / gp.tileSize;
             int playerY = worldY / gp.tileSize;
 
-            //System.out.println("playerX: " + playerX + " playerY: " + playerY );
+            System.out.println("playerX: " + playerX + " playerY: " + playerY );
             if (gp.currentLevel == 1 && playerX == 5 && playerY == 2 ) { // pt trecerea la nivelul 2
                 gp.loadLevel(2);
             }
@@ -442,6 +442,8 @@ public class Player extends Entity{
                 worldX = 9 * gp.tileSize;
                 worldY = 5 * gp.tileSize;
         }
+        System.out.println("Player start position: " + worldX + ", " + worldY);
+
     }
 
 

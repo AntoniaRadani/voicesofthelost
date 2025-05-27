@@ -69,6 +69,8 @@ public class TiledMapViewer {
     }
 
     public void loadTMX(String filePath) {
+
+
         try {
             File tmxFile = new File(filePath);
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -276,6 +278,17 @@ public class TiledMapViewer {
             }
         }
     }
+
+    public void resetMap() {
+        mapData = null;
+        tileImages = null;
+        tilesetImage = null;
+        tileCollision = null;
+        mapWidth = 0;
+        mapHeight = 0;
+        layerLength = 0;
+    }
+
 
 
 }
