@@ -34,6 +34,8 @@ public class MatchCards {
     int cardWigth = 400; // pixels
     int cardHeight = 200;
 
+    public boolean gameWon = false;
+
     ArrayList<Card> cardSet; // a deck of cards
     ImageIcon cardBackImageIcon; // one of the 6 images
 
@@ -59,7 +61,7 @@ public class MatchCards {
     JButton card2Selected;
 
 
-    MatchCards() {
+    public MatchCards() {
 
         setupCards();
         suffleCards();
@@ -122,9 +124,17 @@ public class MatchCards {
                                 hideCardTimer.start();
                             }
                             else {
+
+                                setsGuessed++;
+
                                 card1Selected = null;
                                 card2Selected = null;
 
+                                if (setsGuessed == cardList.length) {
+                                    gameWon = true;
+                                    gameReady = false;
+                                    JOptionPane.showMessageDialog(frame, "Felicitări! Ai câștigat jocul cu " + errorCount + " greșeli.");
+                                }
                             }
 
                         }
@@ -154,6 +164,7 @@ public class MatchCards {
                 }
                 // new game settings
                 gameReady = false;
+                gameWon = false;
                 restartButton.setEnabled(false);
                 card1Selected = null;
                 card2Selected = null;
@@ -248,8 +259,6 @@ public class MatchCards {
         }
 
     }
-
-
 
 
 }
