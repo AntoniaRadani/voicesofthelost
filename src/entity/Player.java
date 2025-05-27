@@ -58,8 +58,9 @@ public class Player extends Entity{
     }
 
     public  void setDefaultValues(){
-        worldX = gp.tileSize * 24; // players position in the world map
-        worldY = gp.tileSize * 49; // where the player starts the game   gp.tileSize * coordonata( linis/coloana din matrice)
+       // worldX = gp.tileSize * 24; // players position in the world map
+        //worldY = gp.tileSize * 49; // where the player starts the game   gp.tileSize * coordonata( linis/coloana din matrice)
+        setPlayerStartPosition(1);
         speed = 10;
         direction = "down";
 
@@ -455,12 +456,12 @@ public class Player extends Entity{
     public void setPlayerStartPosition(int level) {
         switch (level) {
             case 1:
-                worldX = 21 * gp.tileSize;
-                worldY = 23 * gp.tileSize;
+                worldX = 24 * gp.tileSize;
+                worldY = 42 * gp.tileSize;
                 break;
             case 2:
-                worldX = 8 * gp.tileSize;
-                worldY = 45 * gp.tileSize;
+                worldX = 6 * gp.tileSize;
+                worldY = 31 * gp.tileSize;
                 break;
             case 3:
                 worldX = 9 * gp.tileSize;
