@@ -38,8 +38,8 @@ public class GamePanel extends JPanel implements Runnable {
     public final int scale = 3; // to make our player and tiles bigger
 
     public int tileSize = originalTileSize * scale; // 48 x 48 the actual tile size
-    final int maxScreenCol = 16; // how many tiles can we see - column
-    final int maxScreenRow = 12; // how many tiles can we see - row
+    public int maxScreenCol = 16; // how many tiles can we see - column
+    public int maxScreenRow = 12; // how many tiles can we see - row
     public int screenWidth = tileSize * maxScreenCol; // 768 pixels
     public int screenHeight = tileSize * maxScreenRow; // 576 pixels
     // for camera limits
@@ -73,10 +73,10 @@ public class GamePanel extends JPanel implements Runnable {
 
     // WORLD PARAMETERS
 
-    public final int maxWorldCol = 50;
-    public final int maxWorldRow = 50;
-    public final int worldWidth = tileSize * maxWorldCol;
-    public final int worldHeight = tileSize * maxWorldRow;
+    public int maxWorldCol = 50;
+    public int maxWorldRow = 50;
+    public int worldWidth = tileSize * maxWorldCol;
+    public int worldHeight = tileSize * maxWorldRow;
 
     // OBJECTS
 
@@ -88,7 +88,7 @@ public class GamePanel extends JPanel implements Runnable {
     int FPS = 60;
 
     // SYSTEM
-    public TiledMapViewer tiledMapViewer = new TiledMapViewer("res/level1/level1.tmx", this);
+    public TiledMapViewer tiledMapViewer = new TiledMapViewer(getPathForLevel(1), this);
     public KeyHandler keyH = new KeyHandler(this);
     Thread gameThread; // keeps our program running
     public CollisionChecker cChecker = new CollisionChecker(this);
@@ -399,10 +399,11 @@ public class GamePanel extends JPanel implements Runnable {
                 player.setPlayerStartPosition(level);
                 break;
             case 2:
+                System.out.println("soon level 2");
                 currentMap = 1;
-
+                tiledMapViewer.resetMap();
                 tiledMapViewer.loadTMX("res/level2/level2.tmx");
-               // tiledMapViewer.loadMap("res/leve2/level2.tmx");
+                tiledMapViewer.loadMap("res/level2/level2.tmx");
                 for (int i = 0; i < obj[0].length; i++) {
                     obj[0][i] = null;
                 }
@@ -417,7 +418,9 @@ public class GamePanel extends JPanel implements Runnable {
                 player.setPlayerStartPosition(level);
                 break;
             case 3:
+                System.out.println(" soon level 3");
                 currentMap = 2;
+                tiledMapViewer.resetMap();
                 tiledMapViewer.loadTMX("res/level3/level3.tmx");
                 tiledMapViewer.loadMap("res/level3/level3.tmx");
                 for (int i = 0; i < obj[1].length; i++) {
@@ -437,8 +440,12 @@ public class GamePanel extends JPanel implements Runnable {
         }
 
         tileSize = tiledMapViewer.tileWidth;
+        maxWorldCol = tiledMapViewer.mapWidth;
+        maxWorldRow = tiledMapViewer.mapHeight;
 
         tiledMapViewer.updateCamera(player.worldX, player.worldY);
+
+        map = new Map(getPathForLevel(level), this);
 
         System.out.println(" LEVEL CHANGED TO: " + level );
 
@@ -493,6 +500,17 @@ public class GamePanel extends JPanel implements Runnable {
             player.calculateScreenPosition();
         }
 
+
+
+    }
+
+    public String getPathForLevel(int level) {
+        switch (level) {
+            case 1: return "res/level1/level1.tmx";
+            case 2: return "res/level2/level2.tmx";
+            case 3: return "res/level3/level3.tmx";
+        }
+        return "res/level1/level1.tmx";
     }
 
 
