@@ -63,7 +63,7 @@ public class TrapRoomLevel1 {
                 player.solidArea.height);
 
         if(monster == null)
-            monster = gp.monsters[0];
+            monster = gp.monsters[0][0];
 
         if (roomArea.intersects(playerBox) && gp.player.doorOpen1 ) {
             System.out.println("APEL FUNCTIE TRAP ROOM");
@@ -94,7 +94,7 @@ public class TrapRoomLevel1 {
                 System.out.println("SUNT AICI");
                 roomLocked = false;
                 monster = null;
-                gp.monsters[0] = null;
+                gp.monsters[0][0] = null;
 
                 // adaugare in inventar cheie nivel urmator
                 gp.player.inventory.add(new OBJ_LevelKey(gp));

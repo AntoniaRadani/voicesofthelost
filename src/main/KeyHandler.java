@@ -16,6 +16,7 @@ public class KeyHandler implements KeyListener {
     public boolean escPressed;
     public boolean shiftPressed;
     public boolean fPressed;
+    public boolean qPressed;
 
     public KeyHandler(GamePanel gp){
         this.gp = gp;
@@ -52,6 +53,9 @@ public class KeyHandler implements KeyListener {
             }
             if (code == KeyEvent.VK_F) {
                 fPressed = true;
+            }
+            if(code == KeyEvent.VK_Q){
+                qPressed = true;
             }
             if (code == KeyEvent.VK_ESCAPE) {
                 escPressed = true;
@@ -200,7 +204,7 @@ public class KeyHandler implements KeyListener {
                     gp.inputNumber = "";
                     gp.ui.inputString = "";
                     gp.trapRoomLevel1.monster.dead = true;
-                    gp.monsters[0].dead = true;
+                    gp.monsters[gp.currentMap][0].dead = true;
                 } else {
                     gp.inputNumber = "";
                     gp.ui.inputString = "";

@@ -100,7 +100,7 @@ public class GamePanel extends JPanel implements Runnable {
     GamePause pause = new GamePause(this);
     public UI ui = new UI(this);
     public SuperObject[][] obj = new SuperObject[3][10];
-    public Monster[] monsters = new Monster[10];
+    public Monster[][] monsters = new Monster[3][10];
     public TrapRoomLevel1 trapRoomLevel1 = new TrapRoomLevel1(this);
     EnvironmentManager eManager = new EnvironmentManager(this);
 
@@ -196,6 +196,12 @@ public class GamePanel extends JPanel implements Runnable {
                 }
             }
 
+            for (int i = 0; i < monsters[currentMap].length; i++) {
+                if (monsters[currentMap][i] != null) {
+                    monsters[currentMap][i].update();
+                }
+            }
+
             if(!roomCleared) {
                 trapRoomLevel1.update();
                 if (escapedFromTrapRoom == true)
@@ -241,9 +247,9 @@ public class GamePanel extends JPanel implements Runnable {
             }
 
             // monster
-            for ( int i = 0; i < monsters.length; i++ ) {
-                if ( monsters[i] != null ) {
-                    monsters[i].draw(g2temp, this);
+            for ( int i = 0; i < monsters[currentMap].length; i++ ) {
+                if ( monsters[currentMap][i] != null ) {
+                    monsters[currentMap][i].draw(g2temp, this);
                 }
             }
 
@@ -396,6 +402,7 @@ public class GamePanel extends JPanel implements Runnable {
                 // reincarcam pe noua mapa
                 aSetter.setObject();
                 aSetter.setNPC();
+                aSetter.setMonster();
                 player.setPlayerStartPosition(level);
                 break;
             case 2:
@@ -415,6 +422,7 @@ public class GamePanel extends JPanel implements Runnable {
                 // reincarcam pe noua mapa
                 aSetter.setObject();
                 aSetter.setNPC();
+                aSetter.setMonster();
                 player.setPlayerStartPosition(level);
                 break;
             case 3:
@@ -434,6 +442,7 @@ public class GamePanel extends JPanel implements Runnable {
                 // reincarcam pe noua mapa
                 aSetter.setObject();
                 aSetter.setNPC();
+                aSetter.setMonster();
                 player.setPlayerStartPosition(level);
                 break;
                 // trebuie puse si obj, npc, si alte detalii la fiecare. cel mai bine ar fi in functiile de set sa facem cu case

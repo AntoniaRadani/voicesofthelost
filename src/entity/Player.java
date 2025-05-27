@@ -1,6 +1,6 @@
 package entity;
 
-import jdk.jshell.execution.Util;
+import games.MatchCards;
 import main.GamePanel;
 import main.KeyHandler;
 import main.UtilityTool;
@@ -24,7 +24,7 @@ public class Player extends Entity{
     public int screenY;
 
     public int hasKey = 1;
-    public int hasKey1 = 1; // number of special keys to open really important rooms
+    public int hasSpecialKey = 1; // number of special keys to open really important rooms
     public int hasApple = 0;
     public int hasHealthPotion = 0;
     public int hasCard = 0;
@@ -85,6 +85,24 @@ public class Player extends Entity{
 
     }
 
+    public void takeDamage(int amount) {
+        life -= amount;
+        if (life <= 0) {
+            // logică pentru moartea playerului
+        }
+    }
+
+    public void attackMonster(int i) {
+        if (i != -1) {
+            Monster monster = gp.monsters[gp.currentMap][i];
+
+            int damage = this.getAttack() - monster.getDefense();
+            if (damage < 1) damage = 1;
+
+            monster.takeDamage(damage);
+        }
+    }
+
     public int getAttack(){
         if(currentWeapon != null)
             return attack = strength * currentWeapon.attack;
@@ -133,6 +151,12 @@ public class Player extends Entity{
                 direction = "right";
                 //worldX += speed;
             }
+            if (gp.keyH.qPressed) {
+                int monsterIndex = gp.cChecker.checkEntity(this, gp.monsters[gp.currentMap]);
+                attackMonster(monsterIndex);
+                gp.keyH.enterPressed = false; // resetăm după atac
+            }
+
 
             // verificare coliziune
             this.collisionOn = false;
@@ -226,8 +250,8 @@ public class Player extends Entity{
                         gp.obj[mapNum][i] = null;
                         gp.ui.showMessage("You got a key!");
                         break;
-                    case "Key1":
-                        hasKey1++;
+                    case "SpecialKey":
+                        hasSpecialKey++;
                         gp.playSE(2);
                         inventory.add(gp.obj[mapNum][i]);
                         gp.obj[mapNum][i] = null;
@@ -272,7 +296,30 @@ public class Player extends Entity{
                             inventory.add(new OBJ_Sword(gp));
                             inventory.add(new OBJ_Shield(gp));
                             // cheia care deschide usa unde se afla butoaiele care trebuie numarate
-                            inventory.add(new OBJ_Key1(gp));
+                            inventory.add(new OBJ_SpecialKey(gp));
+                            int worldX = gp.obj[mapNum][i].worldX;
+                            int worldY = gp.obj[mapNum][i].worldY;
+                            gp.obj[mapNum][i] = new OBJ_Chest2(gp);
+                            gp.obj[mapNum][i].worldX = worldX;
+                            gp.obj[mapNum][i].worldY = worldY;
+                            hasKey--;
+                            gp.ui.showMessage("You opened a chest!");
+                        } else {
+                            gp.ui.showMessage("You need a key!");
+                        }
+                        break;
+                    case "ChestLevel2":
+                        if (hasKey > 0) {
+                            gp.playSE(1);
+                            for(int j = 0; j < inventory.size(); j++)
+                                if(Objects.equals(inventory.get(j).name, "Key")) {
+                                    inventory.remove(j);
+                                    break;
+                                }
+                            inventory.add(new OBJ_HealthPotion(gp));
+                            inventory.add(new OBJ_RedSword(gp));
+                            inventory.add(new OBJ_Shield(gp));
+                            inventory.add(new OBJ_SpecialKey(gp));
                             int worldX = gp.obj[mapNum][i].worldX;
                             int worldY = gp.obj[mapNum][i].worldY;
                             gp.obj[mapNum][i] = new OBJ_Chest2(gp);
@@ -308,16 +355,16 @@ public class Player extends Entity{
                         break;
                     case "ClosedDoor":
                         // usa trap room
-                        if (hasKey1 > 0) {
+                        if (hasSpecialKey > 0) {
                             gp.playSE(1);
                             for(int j = 0; j < inventory.size(); j++)
-                                if(Objects.equals(inventory.get(j).name, "Key1")) {
+                                if(Objects.equals(inventory.get(j).name, "Special")) {
                                     inventory.remove(j);
                                     break;
                                 }
                             doorOpen1 = true;
                             gp.obj[mapNum][i] = null;
-                            hasKey1--;
+                            hasSpecialKey--;
                             gp.ui.showMessage("You opened the right door!");
                         } else {
                             collisionOn = true;
@@ -344,12 +391,13 @@ public class Player extends Entity{
                         break;
                     case "Table":
                         gp.playSE(2);
-                        //startMiniGame();
-                        //if(miniGameCleared == true)
-                        //  inventory.add(new OBJ_Card(gp)
+                        MatchCards mc = new MatchCards();
+                        if(mc.gameWon){
+                            inventory.add(new OBJ_Card(gp));
+                            gp.obj[mapNum][i] = null;
+                        }
                         // facem masa sa dispara ca sa nu poata lua mai multe carti de la un singur nivel
                         // poate daca avem timp implementam si varianta in care ramane masa idk
-                        gp.obj[mapNum][i] = null;
                         break;
                     case "ClosedDoor2":
                         // usa catre nivelul urmator pentru care are nevoie de o cheie speciala
