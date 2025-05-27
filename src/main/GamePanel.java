@@ -34,7 +34,7 @@ public class GamePanel extends JPanel implements Runnable {
     public boolean isSoundMuted = false;
 
     // the default size of the player
-    public final int originalTileSize = 16; // 16 x 16 tile size
+    public int originalTileSize = 16; // 16 x 16 tile size
     public final int scale = 3; // to make our player and tiles bigger
 
     public int tileSize = originalTileSize * scale; // 48 x 48 the actual tile size
@@ -140,6 +140,12 @@ public class GamePanel extends JPanel implements Runnable {
     // 0 = PAUSED
     // 1 = RELOADED
 
+    // for zoom
+    int targetTileSize = tileSize;
+    boolean zooming = false;
+    int zoomSpeed = 2; // cât de repede se face zoom-ul
+
+
     public GamePanel() {
         // how big is the window
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -199,6 +205,8 @@ public class GamePanel extends JPanel implements Runnable {
                 npc[i].update();
             }
         }
+
+        zoom();
 
         if(!roomCleared) {
             trapRoomLevel1.update();
@@ -283,7 +291,7 @@ public class GamePanel extends JPanel implements Runnable {
         // any system resources that its using
         // g2temp este un canvas intern pe care desenam jocul, iar g2 este graficul real al ferestrei
         g2.drawImage(tempScreen, drawX, drawY, drawWidth, drawHeight, null);
-       // g2.dispose();
+        g2.dispose();
     } 
 
     public void playMusic(int i){
@@ -389,6 +397,7 @@ public class GamePanel extends JPanel implements Runnable {
                 player.setPlayerStartPosition(level);
                 break;
             case 2:
+
                 tiledMapViewer.loadTMX("res/level2/level2.tmx");
                 tiledMapViewer.loadMap("res/leve2/level2.tmx");
                 for (int i = 0; i < obj.length; i++) {
@@ -431,32 +440,57 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void adjustZoom(boolean zoomIn) {
 
-        double cameraWorldX = tiledMapViewer.screenX + (screenWidth2 / 2.0);
-        double cameraWorldY = tiledMapViewer.screenY + (screenHeight2 / 2.0);
-
+        int zoomStep = 4;
         if (zoomIn) {
-            tileSize += 4;
+            targetTileSize = tileSize + zoomStep; // zoom mai mare
         } else {
-            tileSize = Math.max(4, tileSize - 4); // prevenim tilesize = 0
+            targetTileSize = Math.max(4, tileSize - zoomStep); // zoom out
         }
 
-        // actualizare dimensiune ecran
-        screenWidth2 = tileSize * maxScreenCol;
-        screenHeight2 = tileSize * maxScreenRow;
+        zooming = true; // pornește animarea
+    }
 
-        // pozitia camerei
-        tiledMapViewer.screenX = (int)(cameraWorldX - screenWidth2 / 2.0);
-        tiledMapViewer.screenY = (int)(cameraWorldY - screenHeight2 / 2.0);
+    public void zoom() {
+        if (zooming) {
+            // Salvează poziția vizuală a playerului
+            int playerScreenXBefore = player.worldX - tiledMapViewer.screenX;
+            int playerScreenYBefore = player.worldY - tiledMapViewer.screenY;
 
-        // rescalam tempscreen
-        tempScreen = new BufferedImage(screenWidth, screenHeight, BufferedImage.TYPE_INT_ARGB);
-        g2temp = (Graphics2D) tempScreen.getGraphics();
+            // Modificăm tileSize treptat
+            if (tileSize < targetTileSize) {
+                tileSize += zoomSpeed;
+                if (tileSize > targetTileSize) tileSize = targetTileSize;
+            } else if (tileSize > targetTileSize) {
+                tileSize -= zoomSpeed;
+                if (tileSize < targetTileSize) tileSize = targetTileSize;
+            }
 
-        tiledMapViewer.clampCamera(); // corectare camera
+            // Când am ajuns la destinație, oprim animarea
+            if (tileSize == targetTileSize) {
+                zooming = false;
+            }
 
-        player.calculateScreenPosition();
+            // Actualizăm dimensiunile ecranului
+            screenWidth2 = tileSize * maxScreenCol;
+            screenHeight2 = tileSize * maxScreenRow;
+
+            // Refacem tempScreen
+            tempScreen = new BufferedImage(screenWidth, screenHeight, BufferedImage.TYPE_INT_ARGB);
+            g2temp = (Graphics2D) tempScreen.getGraphics();
+
+            // Repoziționăm camera pentru a menține poziția vizuală a jucătorului
+            tiledMapViewer.screenX = player.worldX - playerScreenXBefore;
+            tiledMapViewer.screenY = player.worldY - playerScreenYBefore;
+
+            // Clamp și recalculare
+            tiledMapViewer.clampCamera();
+            player.calculateScreenPosition();
+        }
 
     }
+
+
+
 
 
 
