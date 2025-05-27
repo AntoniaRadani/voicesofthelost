@@ -464,8 +464,8 @@ public class Player extends Entity{
                 worldY = 31 * gp.tileSize;
                 break;
             case 3:
-                worldX = 9 * gp.tileSize;
-                worldY = 5 * gp.tileSize;
+                worldX = 9 * 16;
+                worldY = 5 * 16;
         }
         System.out.println("Player start position: " + worldX + ", " + worldY);
 

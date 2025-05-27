@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tileset version="1.10" tiledversion="1.11.2" name="level3" tilewidth="16" tileheight="16" tilecount="3200" columns="80">
- <image source="../../Downloads/level3.png" width="1280" height="640"/>
+ <image source="level3.png" width="1280" height="640"/>
  <tile id="40">
   <properties>
    <property name="collision" type="bool" value="true"/>

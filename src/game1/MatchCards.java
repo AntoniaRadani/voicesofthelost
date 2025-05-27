@@ -1,4 +1,4 @@
-package games;
+package game1;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -195,7 +195,7 @@ public class MatchCards {
 
         for( String cardName : cardList ) {
             // incarcam fiecare imagine
-            Image cardImg = new ImageIcon( getClass().getResource("./images/" + cardName + ".png")).getImage();
+            Image cardImg = new ImageIcon( getClass().getResource("res/game1/" + cardName + ".png")).getImage();
             ImageIcon cardImageIcon = new ImageIcon(cardImg.getScaledInstance(cardWigth,cardHeight, Image.SCALE_SMOOTH)); // o scalam la dimensiunea noastra
 
             Card card = new Card(cardName, cardImageIcon);
