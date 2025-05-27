@@ -34,7 +34,7 @@ public class GamePanel extends JPanel implements Runnable {
     public boolean isSoundMuted = false;
 
     // the default size of the player
-    public final int originalTileSize = 16; // 16 x 16 tile size
+    public int originalTileSize = 16; // 16 x 16 tile size
     public final int scale = 3; // to make our player and tiles bigger
 
     public int tileSize = originalTileSize * scale; // 48 x 48 the actual tile size
@@ -368,26 +368,29 @@ public class GamePanel extends JPanel implements Runnable {
 
         switch (level) {
             case 1:
+                currentMap = 0;
                 tiledMapViewer.loadTMX("res/level1/level1.tmx");
                 tiledMapViewer.loadMap("res/level1/level1.tmx");
-                for (int i = 0; i < obj.length; i++) {
-                    obj[i] = null;
-                }
-                for (int i = 0; i < npc.length; i++) {
-                    npc[i] = null;
-
-                }
+//                for (int i = 0; i < obj.length; i++) {
+//                    obj[i] = null;
+//                }
+//                for (int i = 0; i < npc.length; i++) {
+//                    npc[i] = null;
+//
+//                }
                 // reincarcam pe noua mapa
                 aSetter.setObject();
                 aSetter.setNPC();
                 player.setPlayerStartPosition(level);
                 break;
             case 2:
+                currentMap = 1;
                 tiledMapViewer.loadTMX("res/level2/level2.tmx");
                // tiledMapViewer.loadMap("res/leve2/level2.tmx");
-                for (int i = 0; i < obj.length; i++) {
-                    obj[i] = null;
+                for (int i = 0; i < obj[0].length; i++) {
+                    obj[0][i] = null;
                 }
+
                 for (int i = 0; i < npc.length; i++) {
                     npc[i] = null;
 
@@ -398,11 +401,13 @@ public class GamePanel extends JPanel implements Runnable {
                 player.setPlayerStartPosition(level);
                 break;
             case 3:
+                currentMap = 2;
                 tiledMapViewer.loadTMX("res/level3/level3.tmx");
                 tiledMapViewer.loadMap("res/level3/level3.tmx");
-                for (int i = 0; i < obj.length; i++) {
-                    obj[i] = null;
+                for (int i = 0; i < obj[1].length; i++) {
+                    obj[1][i] = null;
                 }
+
                 for (int i = 0; i < npc.length; i++) {
                     npc[i] = null;
 

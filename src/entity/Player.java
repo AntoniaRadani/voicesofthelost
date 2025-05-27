@@ -49,7 +49,7 @@ public class Player extends Entity{
 
         // making the "body" of the player smaller for better collision handling
         //solidArea = new Rectangle(12, 24, 24, 24); // posibil sa schimbam in frunctie de sprite dr zenn
-        solidArea = new Rectangle(12, 24, 20, 20);
+        solidArea = new Rectangle(12, 24, 10, 10);
         solidAreaDefaultX = solidArea.x;
         solidAreaDefaultY = solidArea.y;
         setDefaultValues();

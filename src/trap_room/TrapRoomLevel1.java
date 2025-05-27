@@ -65,7 +65,7 @@ public class TrapRoomLevel1 {
         if(monster == null)
             monster = gp.monsters[0];
 
-        if (roomArea.intersects(playerBox) && gp.player.doorOpen1) {
+        if (roomArea.intersects(playerBox) && gp.player.doorOpen1 ) {
             System.out.println("APEL FUNCTIE TRAP ROOM");
             // daca traproom ul nu e activ si player ul a deschis usa
             if (!active) {
