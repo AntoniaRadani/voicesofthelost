@@ -65,18 +65,26 @@ public class AssetSetter {
         if (gp.obj[mapNum] == null) {
             gp.obj[mapNum] = new SuperObject[100];
         }
-        gp.obj[mapNum][i] = new OBJ_Chest(gp);
-        gp.obj[mapNum][i].worldX = 46 * gp.tileSize;
-        gp.obj[mapNum][i].worldY = 1 * gp.tileSize;
+        gp.obj[mapNum][i] = new OBJ_Table(gp);
+        gp.obj[mapNum][i].worldX = 9 * gp.tileSize;
+        gp.obj[mapNum][i].worldY = 10 * gp.tileSize;
         i++;
-        gp.obj[mapNum][i] = new OBJ_Apple(gp);
-        gp.obj[mapNum][i].worldX = 26 * gp.tileSize;
-        gp.obj[mapNum][i].worldY = 8 * gp.tileSize;
+        gp.obj[mapNum][i] = new OBJ_Chest(gp);
+        gp.obj[mapNum][i].worldX = 17 * gp.tileSize;
+        gp.obj[mapNum][i].worldY = 19 * gp.tileSize;
+        // adaugat elemente mobila in camera
+        i++;
+        gp.obj[mapNum][i] = new OBJ_Chest(gp);
+        gp.obj[mapNum][i].worldX = 27 * gp.tileSize;
+        gp.obj[mapNum][i].worldY = 17 * gp.tileSize;
         i++;
         gp.obj[mapNum][i] = new OBJ_Key(gp);
-        gp.obj[mapNum][i].worldX = 2 * gp.tileSize;
-        gp.obj[mapNum][i].worldY = 2 * gp.tileSize;
+        gp.obj[mapNum][i].worldX = 43 * gp.tileSize;
+        gp.obj[mapNum][i].worldY = 32 * gp.tileSize;
         i++;
+        gp.obj[mapNum][i] = new OBJ_HealthPotion(gp);
+        gp.obj[mapNum][i].worldX = 29 * gp.tileSize;
+        gp.obj[mapNum][i].worldY = 7 * gp.tileSize;
     }
 
     public void setNPC() {

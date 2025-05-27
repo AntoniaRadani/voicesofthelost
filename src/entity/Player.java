@@ -48,8 +48,8 @@ public class Player extends Entity{
         screenY = gp.screenHeight/2 - gp.tileSize/2;
 
         // making the "body" of the player smaller for better collision handling
-        solidArea = new Rectangle(12, 24, 24, 24); // posibil sa schimbam in frunctie de sprite dr zenn
-
+        //solidArea = new Rectangle(12, 24, 24, 24); // posibil sa schimbam in frunctie de sprite dr zenn
+        solidArea = new Rectangle(12, 24, 20, 20);
         solidAreaDefaultX = solidArea.x;
         solidAreaDefaultY = solidArea.y;
         setDefaultValues();
@@ -272,9 +272,33 @@ public class Player extends Entity{
                             inventory.add(new OBJ_Shield(gp));
                             // cheia care deschide usa unde se afla butoaiele care trebuie numarate
                             inventory.add(new OBJ_Key1(gp));
+                            int worldX = gp.obj[mapNum][i].worldX;
+                            int worldY = gp.obj[mapNum][i].worldY;
                             gp.obj[mapNum][i] = new OBJ_Chest2(gp);
-                            gp.obj[mapNum][i].worldX = 4 * gp.tileSize;
-                            gp.obj[mapNum][i].worldY = 21 * gp.tileSize;
+                            gp.obj[mapNum][i].worldX = worldX;
+                            gp.obj[mapNum][i].worldY = worldY;
+                            hasKey--;
+                            gp.ui.showMessage("You opened a chest!");
+                        } else {
+                            gp.ui.showMessage("You need a key!");
+                        }
+                        break;
+                    case "Chest":
+                        if (hasKey > 0) {
+                            gp.playSE(1);
+                            for(int j = 0; j < inventory.size(); j++)
+                                if(Objects.equals(inventory.get(j).name, "Key")) {
+                                    inventory.remove(j);
+                                    break;
+                                }
+                            inventory.add(new OBJ_Apple(gp));
+                            // ceva de stamina idk
+                            inventory.add(new OBJ_Apple(gp));
+                            int worldX = gp.obj[mapNum][i].worldX;
+                            int worldY = gp.obj[mapNum][i].worldY;
+                            gp.obj[mapNum][i] = new OBJ_Chest2(gp);
+                            gp.obj[mapNum][i].worldX = worldX;
+                            gp.obj[mapNum][i].worldY = worldY;
                             hasKey--;
                             gp.ui.showMessage("You opened a chest!");
                         } else {
@@ -291,12 +315,12 @@ public class Player extends Entity{
                                     break;
                                 }
                             doorOpen1 = true;
-                            gp.obj[mapNum][i] = new OBJ_Chest2(gp);
+                            gp.obj[mapNum][i] = null;
                             hasKey1--;
                             gp.ui.showMessage("You opened the right door!");
                         } else {
                             collisionOn = true;
-                            gp.ui.showMessage("You need a special key!");
+                            gp.ui.showMessage("You nseed a special key!");
                         }
                         break;
                     case "Door":

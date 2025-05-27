@@ -364,7 +364,6 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void loadLevel(int level ) {
 
-        tiledMapViewer.resetMap();
         currentLevel = level; // update
 
         switch (level) {
@@ -385,7 +384,7 @@ public class GamePanel extends JPanel implements Runnable {
                 break;
             case 2:
                 tiledMapViewer.loadTMX("res/level2/level2.tmx");
-                tiledMapViewer.loadMap("res/leve2/level2.tmx");
+               // tiledMapViewer.loadMap("res/leve2/level2.tmx");
                 for (int i = 0; i < obj.length; i++) {
                     obj[i] = null;
                 }
