@@ -5,10 +5,12 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 
+import jdk.jshell.execution.Util;
 import main.GamePanel;
 import main.KeyHandler;
 
 
+import main.UtilityTool;
 import org.w3c.dom.*;
 
 import java.awt.*;
@@ -34,6 +36,7 @@ public class TiledMapViewer {
 
     public boolean[] tileCollision;
 
+    public UtilityTool uTool = new UtilityTool();
 
     public TiledMapViewer(String tmxFilePath, GamePanel gp) {
         loadTMX(tmxFilePath);
@@ -183,8 +186,12 @@ public class TiledMapViewer {
         for (int y = 0; y < rows; y++) {
             for (int x = 0; x < columns; x++) {
                 int index = y * columns + x + 1;
-                tileImages[index] = tilesetImage.getSubimage(
-                        x * tileWidth, y * tileHeight, tileWidth, tileHeight);
+                {
+                    tileImages[index] = tilesetImage.getSubimage(
+                            x * tileWidth, y * tileHeight, tileWidth, tileHeight);
+                    tileImages[index] = uTool.scaleImage(tileImages[index], 48, 48);
+
+                }
 
             }
         }
@@ -223,8 +230,8 @@ public class TiledMapViewer {
             for (int row = 0; row < mapHeight; row++) {
                 for (int col = 0; col < mapWidth; col++) {
 
-                    int worldX = col * gp.tileSize;
-                    int worldY = row * gp.tileSize;
+                    int worldX = gp.tileSize * col;
+                    int worldY = gp.tileSize * row;
 
                     int screenX = worldX - gp.player.worldX + gp.player.screenX;
                     int screenY = worldY - gp.player.worldY + gp.player.screenY;
@@ -238,13 +245,20 @@ public class TiledMapViewer {
                                     worldY - gp.tileSize < gp.player.worldY + gp.player.screenY
                     ) {
                         if (tileId > 0 && tileId < tileImages.length && tileImages[tileId] != null) {
-                            g2.drawImage(tileImages[tileId], screenX, screenY, gp.tileSize, gp.tileSize, null);
+                                g2.drawImage(tileImages[tileId], screenX, screenY, gp.tileSize, gp.tileSize, null);
+
                         }
                     }
                 }
             }
         }
     }
+
+    /*
+                              UtilityTool uTool = new UtilityTool();
+                            tileImages[tileId] = uTool.rescale(tileImages[tileId], 48, 48);
+                            tileImages[tileId] = uTool.scaleImage(tileImages[tileId], 48, 48);
+     */
 
     public void loadMap(String tmxFilePath) {
         loadTMX(tmxFilePath);

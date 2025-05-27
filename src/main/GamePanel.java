@@ -178,10 +178,6 @@ public class GamePanel extends JPanel implements Runnable {
         aSetter.setMonster();
         eManager.setup();
         playMusic(0);
-
-        stopMusic();
-        gameState = playState;
-
     }
 
     public void update() {
@@ -193,18 +189,23 @@ public class GamePanel extends JPanel implements Runnable {
         else if (gameState == 1) {
             // game mode
             player.update();
+
+            for (int i = 0; i < npc.length; i++) {
+                if (npc[i] != null) {
+                    npc[i].update();
+                }
+            }
+
+            if(!roomCleared) {
+                trapRoomLevel1.update();
+                if (escapedFromTrapRoom == true)
+                    roomCleared = true;
+            }
         }
         else if (gameState == 2)
             // pause mode
             pause.update();
-        else if (gameState == 1)
-            // game mode
-            player.update();
-        for (int i = 0; i < npc.length; i++) {
-            if (npc[i] != null) {
-                npc[i].update();
-            }
-        }
+
 
         zoom();
 
@@ -213,6 +214,7 @@ public class GamePanel extends JPanel implements Runnable {
             if (escapedFromTrapRoom == true)
                 roomCleared = true;
         }
+
     }
 
 
@@ -377,32 +379,34 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void loadLevel(int level ) {
 
-        tiledMapViewer.resetMap();
         currentLevel = level; // update
 
         switch (level) {
             case 1:
+                currentMap = 0;
                 tiledMapViewer.loadTMX("res/level1/level1.tmx");
                 tiledMapViewer.loadMap("res/level1/level1.tmx");
-                for (int i = 0; i < obj.length; i++) {
-                    obj[i] = null;
-                }
-                for (int i = 0; i < npc.length; i++) {
-                    npc[i] = null;
-
-                }
+//                for (int i = 0; i < obj.length; i++) {
+//                    obj[i] = null;
+//                }
+//                for (int i = 0; i < npc.length; i++) {
+//                    npc[i] = null;
+//
+//                }
                 // reincarcam pe noua mapa
                 aSetter.setObject();
                 aSetter.setNPC();
                 player.setPlayerStartPosition(level);
                 break;
             case 2:
+                currentMap = 1;
 
                 tiledMapViewer.loadTMX("res/level2/level2.tmx");
-                tiledMapViewer.loadMap("res/leve2/level2.tmx");
-                for (int i = 0; i < obj.length; i++) {
-                    obj[i] = null;
+               // tiledMapViewer.loadMap("res/leve2/level2.tmx");
+                for (int i = 0; i < obj[0].length; i++) {
+                    obj[0][i] = null;
                 }
+
                 for (int i = 0; i < npc.length; i++) {
                     npc[i] = null;
 
@@ -413,11 +417,13 @@ public class GamePanel extends JPanel implements Runnable {
                 player.setPlayerStartPosition(level);
                 break;
             case 3:
+                currentMap = 2;
                 tiledMapViewer.loadTMX("res/level3/level3.tmx");
                 tiledMapViewer.loadMap("res/level3/level3.tmx");
-                for (int i = 0; i < obj.length; i++) {
-                    obj[i] = null;
+                for (int i = 0; i < obj[1].length; i++) {
+                    obj[1][i] = null;
                 }
+
                 for (int i = 0; i < npc.length; i++) {
                     npc[i] = null;
 
