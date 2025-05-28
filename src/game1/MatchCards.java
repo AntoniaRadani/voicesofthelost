@@ -1,14 +1,19 @@
 package game1;
 
+import main.GamePanel;
+import object.OBJ_Card;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 import javax.swing.*;
+import main.GamePanel;
 
 
 public class MatchCards {
 
     class Card {
+
 
         String cardName;
         ImageIcon cardImageIcon;
@@ -61,7 +66,8 @@ public class MatchCards {
     JButton card2Selected;
 
 
-    public MatchCards() {
+    public MatchCards(GamePanel gp) {
+
 
         setupCards();
         suffleCards();
@@ -131,9 +137,14 @@ public class MatchCards {
                                 card2Selected = null;
 
                                 if (setsGuessed == cardList.length) {
-                                    gameWon = true;
                                     gameReady = false;
-                                    JOptionPane.showMessageDialog(frame, "Felicitări! Ai câștigat jocul cu " + errorCount + " greșeli.");
+                                    frame.dispose();
+
+                                    if(errorCount == 0) {
+                                        gameWon = true;
+                                        gp.player.inventory.add(new OBJ_Card(gp));
+                                        gp.player.hasCard++;
+                                    }
                                 }
                             }
 
@@ -206,17 +217,19 @@ public class MatchCards {
 
         for( String cardName : cardList ) {
             // incarcam fiecare imagine
-            Image cardImg = new ImageIcon( getClass().getResource("res/game1/" + cardName + ".png")).getImage();
+            int i = 1;
+            Image cardImg = new ImageIcon( getClass().getResource("/game1/" + cardName + ".png")).getImage();
             ImageIcon cardImageIcon = new ImageIcon(cardImg.getScaledInstance(cardWigth,cardHeight, Image.SCALE_SMOOTH)); // o scalam la dimensiunea noastra
 
             Card card = new Card(cardName, cardImageIcon);
+            i++;
             cardSet.add(card);
         }
 
         cardSet.addAll(cardSet); // le mai adaugam o data, adica dublam
 
         // load back card image
-        Image cardBackImg = new ImageIcon( getClass().getResource("./images/back.png")).getImage();
+        Image cardBackImg = new ImageIcon( getClass().getResource("/game1/back.png")).getImage();
         cardBackImageIcon = new ImageIcon(cardBackImg.getScaledInstance(cardWigth,cardHeight, Image.SCALE_SMOOTH));
 
     }
@@ -255,7 +268,6 @@ public class MatchCards {
             restartButton.setOpaque(true);
             restartButton.setContentAreaFilled(true);
             restartButton.setBackground(Color.red);
-
         }
 
     }

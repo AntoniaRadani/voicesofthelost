@@ -2,6 +2,7 @@ package main;
 
 import object.OBJ_Heart;
 import object.OBJ_Key;
+import object.OBJ_Stamina;
 import object.SuperObject;
 
 import java.awt.*;
@@ -17,6 +18,12 @@ public class UI {
     BufferedImage heart_full;
     BufferedImage heart_half;
     BufferedImage heart_empty;
+    BufferedImage stamina1;
+    BufferedImage stamina2;
+    BufferedImage stamina3;
+    BufferedImage stamina4;
+    BufferedImage stamina5;
+    BufferedImage stamina6;
     public boolean messageOn = false;
     public String message = "";
     int messageCounter = 0;
@@ -40,6 +47,14 @@ public class UI {
         heart_full = heart.image;
         heart_half = heart.image2;
         heart_empty = heart.image3;
+
+        SuperObject stamina = new OBJ_Stamina(gp);
+        stamina1 = stamina.image;
+        stamina2 = stamina.image2;
+        stamina3 = stamina.image3;
+        stamina4 = stamina.image4;
+        stamina5 = stamina.image5;
+        stamina6 = stamina.image6;
     }
 
     public void draw(Graphics2D g2){
@@ -50,6 +65,7 @@ public class UI {
 
         if(gp.gameState == gp.playState) {
             drawPlayerLife();
+            drawPlayerStamina();
         }
 
         if(gp.gameState == gp.pauseState) {
@@ -58,6 +74,7 @@ public class UI {
 
         if(gp.gameState == gp.dialogueState){
             drawPlayerLife();
+            drawPlayerStamina();
             drawDialogueScreen();
         }
 
@@ -262,6 +279,40 @@ public class UI {
 
         if(gp.player.currentShield != null)
             g2.drawImage(gp.player.currentShield.image, tailX - gp.tileSize, textY, null);
+
+    }
+
+    public void drawPlayerStamina(){
+
+        int currentStamina = gp.player.stamina;
+
+        int x = gp.tileSize / 2;
+        int y = gp.tileSize + 30;
+
+        BufferedImage staminaImg = stamina1;
+
+        switch (currentStamina) {
+            case 5:
+                staminaImg = stamina1;
+                break;
+            case 4:
+                staminaImg = stamina2;
+                break;
+            case 3:
+                staminaImg = stamina3;
+                break;
+            case 2:
+                staminaImg = stamina4;
+                break;
+            case 1:
+                staminaImg = stamina5;
+                break;
+            case 0:
+                staminaImg = stamina6;
+                break;
+        };
+
+        g2.drawImage(staminaImg, x, y, null);
 
     }
 

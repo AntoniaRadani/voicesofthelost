@@ -71,7 +71,7 @@ public class Monster extends Entity{
         int dy = playerY - worldY;
 
         // Alegerea direcției în funcție de cea mai mare distanță
-        if (Math.abs(dx) > Math.abs(dy)) {
+        if (Math.abs(dx) > Math.abs(dy) || collisionOn) {
             if (dx > 0) {
                 direction = "right";
                 worldX += speed;
@@ -81,7 +81,7 @@ public class Monster extends Entity{
             }
 
             // Atac cu cooldown dacă e aproape de jucător
-            if (attackTimer <= 0 && Math.abs(dx) < gp.tileSize && Math.abs(dy) < gp.tileSize) {
+            if (attackTimer <= 0 && Math.abs(dx) < gp.tileSize && Math.abs(dy) < gp.tileSize || collisionOn) {
                 gp.player.takeDamage(1);
                 attackTimer = attackCooldown;
             }

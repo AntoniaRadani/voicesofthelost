@@ -8,7 +8,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class SuperObject {
-    public BufferedImage image, image2, image3;
+    public BufferedImage image, image2, image3, image4, image5, image6;
     public String name;
     public boolean collision = false;
     public int worldX, worldY;
@@ -21,7 +21,7 @@ public class SuperObject {
     public int attack;
     public int defense;
     int value;
-    int harta_id;
+
 
     public void draw(Graphics2D g2, GamePanel gp){
         int screenX = worldX - gp.player.worldX + gp.player.screenX;

@@ -17,6 +17,7 @@ public class KeyHandler implements KeyListener {
     public boolean shiftPressed;
     public boolean fPressed;
     public boolean qPressed;
+    public boolean ctrlPressed;
 
     public KeyHandler(GamePanel gp){
         this.gp = gp;
@@ -56,6 +57,9 @@ public class KeyHandler implements KeyListener {
             }
             if(code == KeyEvent.VK_Q){
                 qPressed = true;
+            }
+            if(code == KeyEvent.VK_CONTROL){
+                ctrlPressed = true;
             }
             if (code == KeyEvent.VK_ESCAPE) {
                 escPressed = true;
@@ -167,6 +171,9 @@ public class KeyHandler implements KeyListener {
         }
         if(code == KeyEvent.VK_SHIFT){
             shiftPressed = false;
+        }
+        if(code == KeyEvent.VK_CONTROL){
+            ctrlPressed = false;
         }
 
     }

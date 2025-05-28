@@ -1,12 +1,11 @@
 package entity;
 
-import games.MatchCards;
 import main.GamePanel;
 import main.KeyHandler;
 import main.UtilityTool;
 import object.*;
 import tile.Vector2f;
-
+import game1.MatchCards;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -32,6 +31,12 @@ public class Player extends Entity{
     public boolean doorOpen1 = false;
     boolean openChest = false;
 
+    public boolean isRunning = false;
+    public long lastDamageTime = 0;
+    public long lastRunTime = 0;
+    private int runSeconds = 0;
+    private boolean damagePenaltyApplied = false;
+
     int counter2 = 0;
 
     // invetory
@@ -49,7 +54,7 @@ public class Player extends Entity{
 
         // making the "body" of the player smaller for better collision handling
         //solidArea = new Rectangle(12, 24, 24, 24); // posibil sa schimbam in frunctie de sprite dr zenn
-        solidArea = new Rectangle(12, 24, 10, 10);
+        solidArea = new Rectangle(12, 24, 24, 24);
         solidAreaDefaultX = solidArea.x;
         solidAreaDefaultY = solidArea.y;
         setDefaultValues();
@@ -67,7 +72,9 @@ public class Player extends Entity{
         // player status
 
         maxLife = 6;
-        life = 3;
+        life = 6;
+        maxStamina = 5;
+        stamina = 5;
         level = 1;
         strength = 1;
         dexterity = 1;
@@ -121,6 +128,8 @@ public class Player extends Entity{
 
     public void update() {
 
+       // System.out.println("STAMINA:" + stamina);
+
         // Limite pe worldX și worldY
         if (worldX < 0) {
             worldX = 0;
@@ -151,12 +160,52 @@ public class Player extends Entity{
                 direction = "right";
                 //worldX += speed;
             }
+
+            // pentru fight uri
             if (gp.keyH.qPressed) {
                 int monsterIndex = gp.cChecker.checkEntity(this, gp.monsters[gp.currentMap]);
                 attackMonster(monsterIndex);
                 gp.keyH.enterPressed = false; // resetăm după atac
             }
 
+            // pentru fugit
+            if (gp.keyH.ctrlPressed && stamina > 0) {
+                System.out.println("Is running");
+                isRunning = true;
+                speed = 4;
+            } else {
+                isRunning = false;
+                speed = 2;
+            }
+
+            // pentru stamina
+
+            // SCĂDERE STAMINA DACĂ FUGI
+            if (isRunning) {
+                if (System.currentTimeMillis() - lastRunTime >= 1000) { // o dată pe secundă
+                    lastRunTime = System.currentTimeMillis();
+                    runSeconds++;
+
+                    if (runSeconds >= 1) {
+                        runSeconds = 0;
+                        if (stamina > 0) stamina--;
+                        if (stamina <= 0) life--;
+                    }
+
+                }
+            } else {
+                runSeconds = 0;
+            }
+
+            // SCĂDERE STAMINA DACĂ AI LUAT DAMAGE ÎN ULTIMELE 30 SECUNDE
+            if (System.currentTimeMillis() - lastDamageTime <= 30000) {
+                if (!damagePenaltyApplied) {
+                    stamina = Math.max(stamina - 1, 0);
+                    damagePenaltyApplied = true;
+                }
+            } else {
+                damagePenaltyApplied = false;
+            }
 
             // verificare coliziune
             this.collisionOn = false;
@@ -223,25 +272,6 @@ public class Player extends Entity{
             String objectName = gp.obj[mapNum][i].name;
 
             if(inventory.size() != maxInventorySize) {
-
-//                if(!Objects.equals(objectName, "Chest")) {
-//                    inventory.add(gp.obj[i]);
-//                    gp.playSE(1); // de cautat un sunet
-//                }
-//                else{
-//                    if(hasKey > 0)
-//                        for(int j = 0; j < inventory.size(); j++)
-//                            if(inventory.get(j).name == "Key") {
-//                                hasKey--;
-//                                inventory.remove(j);
-//                                gp.obj[i] = new OBJ_Chest2(gp);
-//                                break;
-//                            }
-//                    else{
-//                        gp.ui.showMessage("YOU NEED A KEY");
-//                    }
-//                }
-
                 switch (objectName) {
                     case "Key":
                         hasKey++;
@@ -265,21 +295,6 @@ public class Player extends Entity{
                         break;
                     case "HealthPotion":
                         hasHealthPotion++;
-                        gp.playSE(2);
-                        inventory.add(gp.obj[mapNum][i]);
-                        gp.obj[mapNum][i] = null;
-                        break;
-                    case "Sword":
-                        gp.playSE(2);
-                        inventory.add(gp.obj[mapNum][i]);
-                        gp.obj[mapNum][i] = null;
-                        break;
-                    case "RedSword":
-                        gp.playSE(2);
-                        inventory.add(gp.obj[mapNum][i]);
-                        gp.obj[mapNum][i] = null;
-                        break;
-                    case "Shield":
                         gp.playSE(2);
                         inventory.add(gp.obj[mapNum][i]);
                         gp.obj[mapNum][i] = null;
@@ -391,11 +406,8 @@ public class Player extends Entity{
                         break;
                     case "Table":
                         gp.playSE(2);
-                        MatchCards mc = new MatchCards();
-                        if(mc.gameWon){
-                            inventory.add(new OBJ_Card(gp));
-                            gp.obj[mapNum][i] = null;
-                        }
+                        if(gp.currentMap == 0 && hasCard == 0)
+                            new MatchCards(gp);
                         // facem masa sa dispara ca sa nu poata lua mai multe carti de la un singur nivel
                         // poate daca avem timp implementam si varianta in care ramane masa idk
                         break;

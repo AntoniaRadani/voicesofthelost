@@ -32,6 +32,8 @@ public class Entity{
     public int speed;
     public int maxLife;
     public int life;
+    public int maxStamina;
+    public int stamina;
     public int level;
     public int attack;
     public int defense;
