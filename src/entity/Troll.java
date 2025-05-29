@@ -15,7 +15,7 @@ public class Troll extends Entity {
 
         this.gp = gp;
 
-        type = type_monster;
+       // type = type_monster;
         name = "Troll-FinalBoss";
         speed = 1;
         maxLife = 50;
@@ -61,4 +61,11 @@ public class Troll extends Entity {
             actionLockCounter = 0;
         }
     }
+
+    public void damageReaction() {
+        actionLockCounter = 0;
+        direction = gp.player.direction;
+    }
+
+    
 }

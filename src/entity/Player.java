@@ -1,6 +1,6 @@
 package entity;
 
-import games.MatchCards;
+import game1.MatchCards;
 import main.GamePanel;
 import main.KeyHandler;
 import main.UtilityTool;
@@ -170,6 +170,9 @@ public class Player extends Entity{
 
             int npcIndex = gp.cChecker.checkEntity(this, gp.npc );
             interactNPC(npcIndex);
+
+            int monsterIndex = gp.cChecker.checkEntity(this, gp.monsters[level] );
+            contactMonster(monsterIndex);
 
             // daca collisionOn este false, player se misca
 
@@ -516,6 +519,16 @@ public class Player extends Entity{
                 worldY = 5 * 16;
         }
         System.out.println("Player start position: " + worldX + ", " + worldY);
+
+    }
+
+    public void contactMonster( int index) {
+
+        if ( index != 999 ) {
+
+            life -= 1;
+
+        }
 
     }
 
