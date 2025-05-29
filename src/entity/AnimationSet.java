@@ -11,7 +11,7 @@ import java.util.Objects;
 
 public class AnimationSet {
 
-        private final HashMap<String, BufferedImage[]> frames = new HashMap<>();
+    private final HashMap<String, BufferedImage[]> frames = new HashMap<>();
 
     public void loadSeparate(String folderName, String[] directions, String sprite, int frameCount) {
         for (String dir : directions) {
@@ -36,16 +36,16 @@ public class AnimationSet {
 
 
     public BufferedImage getFrame(String direction, int index) {
-            BufferedImage[] dirFrames = frames.get(direction);
-            if (dirFrames != null && index < dirFrames.length) {
-                return dirFrames[index];
-            }
-            return null;
+        BufferedImage[] dirFrames = frames.get(direction);
+        if (dirFrames != null && index < dirFrames.length) {
+            return dirFrames[index];
         }
+        return null;
+    }
 
-        public int getFrameCount(String direction) {
-            return frames.get(direction).length;
-        }
+    public int getFrameCount(String direction) {
+        return frames.get(direction).length;
+    }
 
 
 }

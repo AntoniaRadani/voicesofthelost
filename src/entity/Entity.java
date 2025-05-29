@@ -73,6 +73,12 @@ public class Entity{
     public int solidAreaDefaultX;
     public int solidAreaDefaultY;
 
+    // pentru interactiunea cu monstrul
+    public boolean invincible = false;
+    public int invincibleCounter = 0;
+
+
+
     public Entity(GamePanel gp) {
         this.gp = gp;
     }
@@ -83,6 +89,7 @@ public class Entity{
             spriteCounter = 0;
         }
     }
+
 
     public BufferedImage getCurrentSprite() {
 
@@ -125,7 +132,19 @@ public class Entity{
         collisionOn = false;
         gp.cChecker.checkTile(this);
 
-        gp.cChecker.checkPlayer(this);
+        gp.cChecker.checkEntity(this,gp.npc);
+        gp.cChecker.checkEntity(this, gp.monsters[gp.currentLevel]);
+        boolean contatcPlayer = gp.cChecker.checkPlayer(this);
+
+        if ( (this.type == 2) && (contatcPlayer == true) ) { // if is monster and contact player
+
+            if ( gp.player.invincible == false ) {
+                // we can give damage
+                gp.player.life -= 1;
+                gp.player.invincible = true;
+            }
+
+        }
 
         if(!this.collisionOn) {
             switch (direction) {
