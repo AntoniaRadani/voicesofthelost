@@ -17,11 +17,12 @@ public class Troll extends Entity {
 
        // type = type_monster;
         name = "Troll-FinalBoss";
-        speed = 1;
+        speed = 3;
         maxLife = 50;
         life = maxLife;
         attack = 10;
         defense = 2;
+        type = 2;
         
 
         solidArea.x = 3;

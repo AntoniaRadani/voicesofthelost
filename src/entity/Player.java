@@ -39,6 +39,12 @@ public class Player extends Entity{
     private int runSeconds = 0;
     private boolean damagePenaltyApplied = false;
 
+    public boolean attacking = false;
+
+
+    //atac
+    int attackFrame = 0;
+
     int counter2 = 0;
 
     // invetory
@@ -62,13 +68,14 @@ public class Player extends Entity{
         setDefaultValues();
         setItems();
         getPlayerImage();
+
     }
 
     public  void setDefaultValues(){
        // worldX = gp.tileSize * 24; // players position in the world map
         //worldY = gp.tileSize * 49; // where the player starts the game   gp.tileSize * coordonata( linis/coloana din matrice)
         setPlayerStartPosition(1);
-        speed = 10;
+        speed = 4;
         direction = "down";
 
         // player status
@@ -132,6 +139,8 @@ public class Player extends Entity{
 
        // System.out.println("STAMINA:" + stamina);
 
+
+
         // Limite pe worldX și worldY
         if (worldX < 0) {
             worldX = 0;
@@ -147,7 +156,7 @@ public class Player extends Entity{
         }
 
         // Actualizarea coordonatelor lumii în funcție de direcția de mișcare
-        if (keyH.downPressed == true || keyH.upPressed == true || keyH.rightPressed == true || keyH.leftPressed == true ) {
+        else if (keyH.downPressed == true || keyH.upPressed == true || keyH.rightPressed == true || keyH.leftPressed == true ) {
 
             if (keyH.upPressed) {
                 direction = "up";
@@ -171,14 +180,14 @@ public class Player extends Entity{
             }
 
             // pentru fugit
-            if (gp.keyH.ctrlPressed && stamina > 0) {
+          /*  if (gp.keyH.ctrlPressed && stamina > 0) {
                 System.out.println("Is running");
                 isRunning = true;
                 speed = 4;
             } else {
                 isRunning = false;
                 speed = 2;
-            }
+            } */
 
             // pentru stamina
 
@@ -222,6 +231,7 @@ public class Player extends Entity{
             int npcIndex = gp.cChecker.checkEntity(this, gp.npc );
             interactNPC(npcIndex);
 
+            // monster collision
             int monsterIndex = gp.cChecker.checkEntity(this, gp.monsters[level] );
             contactMonster(monsterIndex);
 
@@ -261,6 +271,15 @@ public class Player extends Entity{
         }
 
         // gp.tiledMapViewer.updateCamera(worldX, worldY, gp.screenWidth, gp.screenHeight);
+
+        // damage. daca e prea repede damage ul marim 60
+        if ( invincible == true ) {
+            invincibleCounter++;
+            if ( invincibleCounter > 60 ) {
+                invincible = false;
+                invincibleCounter = 0;
+            }
+        }
 
     }
 
@@ -538,13 +557,18 @@ public class Player extends Entity{
 
     public void contactMonster( int index) {
 
-        if ( index != 999 ) {
+        if ( index != 999 ) { // player touches a monster
 
-            life -= 1;
+            if ( invincible == false ) {
+                life -= 1;
+                invincible = true;
+            }
+
 
         }
 
     }
+
 
 
 }

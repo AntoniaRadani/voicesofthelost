@@ -13,11 +13,20 @@ public class Monster extends Entity{
     public int attack;
     String [] dir = {"left" , "right"};
 
+
     public Monster(GamePanel gp) {
+
+
         super(gp);
+        type = 2;
         direction = "left";
         solidArea = new Rectangle(0, 0, gp.tileSize, gp.tileSize);
+        solidAreaDefaultX = solidArea.x;
+        solidAreaDefaultY = solidArea.y;
+
         dead = false;
+        maxLife = 4;
+        life = maxLife;
 
         getPlayerImage();
         setDialogue();

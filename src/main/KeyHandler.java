@@ -111,8 +111,10 @@ public class KeyHandler implements KeyListener {
                 gp.gameState = gp.playState;
         }
         else if(gp.gameState == gp.dialogueState){
-            if(code == KeyEvent.VK_F)
+            if(code == KeyEvent.VK_F) {
+                gp.player.attacking = true;
                 gp.gameState = gp.playState;
+            }
         } else if (gp.gameState == gp.mapState) {
             mapState(code);
         }
