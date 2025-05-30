@@ -16,6 +16,7 @@ public class OBJ_Apple extends SuperObject{
         name = "Apple";
         type = 6;
         value = 3;
+        price = 2;
         description = "[Apple]\nGives back 3 life...";
         try{
             image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/object/apple.png")));

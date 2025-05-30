@@ -73,8 +73,8 @@ public class GamePanel extends JPanel implements Runnable {
 
     // WORLD PARAMETERS
 
-    public int maxWorldCol = 50;
-    public int maxWorldRow = 50;
+    public int maxWorldCol = 100;
+    public int maxWorldRow = 100;
     public int worldWidth = tileSize * maxWorldCol;
     public int worldHeight = tileSize * maxWorldRow;
 
@@ -114,7 +114,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     // for npc
 
-    public Entity[] npc = new Entity[10];
+    public Entity[][] npc = new Entity[3][10];
 
     // GAME STATES <- pentru meniu
     // 0 = MENU
@@ -128,6 +128,7 @@ public class GamePanel extends JPanel implements Runnable {
     public final int characterStatus = 3;
     public final int dialogueState = 4;
     public final int mapState = 10;
+    public final int tradeState = 5;
 
     int menuOption = 0;
     // 0 = INITIAL STATE (draw)
@@ -190,9 +191,9 @@ public class GamePanel extends JPanel implements Runnable {
             // game mode
             player.update();
 
-            for (int i = 0; i < npc.length; i++) {
-                if (npc[i] != null) {
-                    npc[i].update();
+            for (int i = 0; i < npc[currentMap].length; i++) {
+                if (npc[currentMap][i] != null) {
+                    npc[currentMap][i].update();
                 }
             }
 
@@ -234,15 +235,16 @@ public class GamePanel extends JPanel implements Runnable {
         if (gameState == menuState) {
             // drawing the menu
             menu.draw(g2temp);
-        } else if (gameState == playState || gameState == dialogueState || gameState == characterStatus) {
+        } else if (gameState == playState || gameState == dialogueState
+                || gameState == characterStatus || gameState == tradeState) {
 
             // tile
             tiledMapViewer.draw(g2temp);
 
             // npc
-            for ( int i = 0; i < npc.length; i++ ) {
-                if ( npc[i] != null ) {
-                    npc[i].draw(g2temp, this);
+            for ( int i = 0; i < npc[currentMap].length; i++ ) {
+                if ( npc[currentMap][i] != null ) {
+                    npc[currentMap][i].draw(g2temp, this);
                 }
             }
 
@@ -415,8 +417,8 @@ public class GamePanel extends JPanel implements Runnable {
                     obj[0][i] = null;
                 }
 
-                for (int i = 0; i < npc.length; i++) {
-                    npc[i] = null;
+                for (int i = 0; i < npc[0].length; i++) {
+                    npc[0][i] = null;
 
                 }
                 // reincarcam pe noua mapa
@@ -435,8 +437,8 @@ public class GamePanel extends JPanel implements Runnable {
                     obj[1][i] = null;
                 }
 
-                for (int i = 0; i < npc.length; i++) {
-                    npc[i] = null;
+                for (int i = 0; i < npc[1].length; i++) {
+                    npc[1][i] = null;
 
                 }
                 // reincarcam pe noua mapa
@@ -449,6 +451,8 @@ public class GamePanel extends JPanel implements Runnable {
         }
 
         tileSize = tiledMapViewer.tileWidth;
+        System.out.println(tiledMapViewer.mapWidth);
+        System.out.println(tiledMapViewer.mapHeight);
         maxWorldCol = tiledMapViewer.mapWidth;
         maxWorldRow = tiledMapViewer.mapHeight;
 

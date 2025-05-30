@@ -12,6 +12,7 @@ public class OBJ_Key extends SuperObject{
 
         this.gp = gp;
         name = "Key";
+        price = 3;
         try{
             image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/object/key.png")));
             image = uTool.scaleImage(image, gp.tileSize, gp.tileSize);

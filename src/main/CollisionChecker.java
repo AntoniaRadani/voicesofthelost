@@ -92,7 +92,7 @@ public class CollisionChecker {
 
         if ((tileNum1 > 0 && gp.tiledMapViewer.tileCollision[tileNum1]) ||
                 (tileNum2 > 0 && gp.tiledMapViewer.tileCollision[tileNum2])) {
-            //System.out.println(" AM LOVIT CEVA PE PRIMUL LAYER");
+            System.out.println(" AM LOVIT CEVA PE PRIMUL LAYER");
             entity.collisionOn = true;
         }
 
