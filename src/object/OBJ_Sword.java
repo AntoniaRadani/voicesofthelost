@@ -13,6 +13,7 @@ public class OBJ_Sword extends SuperObject {
 
         System.out.println("AM CREAT OBIECT SABIE");
         type = 3;
+        price = 10;
         name = "Sword";
         try {
             image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/object/sword.png")));

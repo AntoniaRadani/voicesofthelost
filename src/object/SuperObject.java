@@ -21,6 +21,7 @@ public class SuperObject {
     public int attack;
     public int defense;
     int value;
+    public int price;
 
 
     public void draw(Graphics2D g2, GamePanel gp){

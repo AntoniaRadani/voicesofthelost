@@ -59,6 +59,11 @@ public class Entity{
     public int defenseValue;
     public String description = "";
 
+
+    // invetory
+    public ArrayList<SuperObject> inventory = new ArrayList<>();
+    public final int maxInventorySize = 20;
+
     public static final String[] DIRECTIONS = { "up", "down", "left", "right" };
 
     public AnimationSet animationSet = new AnimationSet(); // vector pt toate imaginile sprite urilor

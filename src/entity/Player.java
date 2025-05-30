@@ -46,10 +46,13 @@ public class Player extends Entity{
     int attackFrame = 0;
 
     int counter2 = 0;
+    public int coin = 0;
+
 
     // invetory
-    public ArrayList<SuperObject> inventory = new ArrayList<>();
-    public final int maxInventorySize = 20;
+   // public ArrayList<SuperObject> inventory = new ArrayList<>();
+    //public final int maxInventorySize = 20;
+
 
     // constructor
     public Player(GamePanel gp, KeyHandler keyH){
@@ -68,7 +71,6 @@ public class Player extends Entity{
         setDefaultValues();
         setItems();
         getPlayerImage();
-
     }
 
     public  void setDefaultValues(){
@@ -88,16 +90,17 @@ public class Player extends Entity{
         strength = 1;
         dexterity = 1;
         cards = 0;
-//        currentWeapon = new OBJ_Sword(gp);
-//        currentShield = new OBJ_Shield(gp);
+        coin = 500;
+        currentWeapon = new OBJ_Sword(gp);
+        currentShield = new OBJ_Shield(gp);
         attack = getAttack(); // total attack value is decided by strength and weapon
         defense = getDefense(); // total defense value is decided by dexterity and shield
     }
 
     public void setItems(){
         // initializarea obiectelor din inventar cu armele basic
-//        inventory.add(currentWeapon);
-//        inventory.add(currentShield);
+        inventory.add(currentWeapon);
+        inventory.add(currentShield);
 
     }
 
@@ -139,8 +142,6 @@ public class Player extends Entity{
 
        // System.out.println("STAMINA:" + stamina);
 
-
-
         // Limite pe worldX și worldY
         if (worldX < 0) {
             worldX = 0;
@@ -180,14 +181,14 @@ public class Player extends Entity{
             }
 
             // pentru fugit
-          /*  if (gp.keyH.ctrlPressed && stamina > 0) {
+            if (gp.keyH.ctrlPressed && stamina > 0) {
                 System.out.println("Is running");
                 isRunning = true;
-                speed = 4;
+                speed = 10;
             } else {
                 isRunning = false;
-                speed = 2;
-            } */
+                speed = 5;
+            }
 
             // pentru stamina
 
@@ -197,7 +198,7 @@ public class Player extends Entity{
                     lastRunTime = System.currentTimeMillis();
                     runSeconds++;
 
-                    if (runSeconds >= 1) {
+                    if (runSeconds >= 30) {
                         runSeconds = 0;
                         if (stamina > 0) stamina--;
                         if (stamina <= 0) life--;
@@ -228,7 +229,7 @@ public class Player extends Entity{
 
             // npc collision verificare
 
-            int npcIndex = gp.cChecker.checkEntity(this, gp.npc );
+            int npcIndex = gp.cChecker.checkEntity(this, gp.npc[gp.currentMap] );
             interactNPC(npcIndex);
 
             // monster collision
@@ -381,6 +382,7 @@ public class Player extends Entity{
                             inventory.add(new OBJ_Apple(gp));
                             // ceva de stamina idk
                             inventory.add(new OBJ_Apple(gp));
+                            coin++;
                             int worldX = gp.obj[mapNum][i].worldX;
                             int worldY = gp.obj[mapNum][i].worldY;
                             gp.obj[mapNum][i] = new OBJ_Chest2(gp);
@@ -548,8 +550,8 @@ public class Player extends Entity{
                 worldY = 31 * gp.tileSize;
                 break;
             case 3:
-                worldX = 9 * 16;
-                worldY = 5 * 16;
+                worldX = 7 * gp.tileSize;
+                worldY = 5 * gp.tileSize;
         }
         System.out.println("Player start position: " + worldX + ", " + worldY);
 

@@ -12,6 +12,7 @@ public class OBJ_Shield extends SuperObject{
 
     public OBJ_Shield(GamePanel gp) {
         type = 5;
+        price = 8;
         name = "Shield";
         try {
             image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/object/shield.png")));

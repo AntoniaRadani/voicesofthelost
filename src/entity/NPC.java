@@ -1,6 +1,9 @@
 package entity;
 
 import main.GamePanel;
+import object.OBJ_Apple;
+import object.OBJ_HealthPotion;
+import object.OBJ_Key;
 
 import java.util.Random;
 
@@ -71,6 +74,8 @@ public class NPC extends Entity {
         }
 
     }
+
+
 
 
 
