@@ -4,6 +4,7 @@ import main.GamePanel;
 import object.OBJ_Apple;
 import object.OBJ_HealthPotion;
 import object.OBJ_Key;
+import object.OBJ_StaminaPotion;
 
 public class TraderNPC extends Entity{
 
@@ -46,6 +47,7 @@ public class TraderNPC extends Entity{
         inventory.add(new OBJ_HealthPotion(gp));
         inventory.add(new OBJ_Key(gp));
         inventory.add(new OBJ_Apple(gp));
+        inventory.add(new OBJ_StaminaPotion(gp));
 
         // poate arme noi
     }

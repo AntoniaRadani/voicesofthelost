@@ -223,8 +223,6 @@ public class GamePanel extends JPanel implements Runnable {
             // game mode
             player.update();
 
-            System.out.println(trapRoomLevel1.active);
-
             for (int i = 0; i < npc[currentMap].length; i++) {
                 if (npc[currentMap][i] != null) {
                     npc[currentMap][i].update();
@@ -413,7 +411,6 @@ public class GamePanel extends JPanel implements Runnable {
 
             }
             if ( timer >= 1000000000) {
-                System.out.println("FPS: " + drawCount);
                 drawCount = 0;
                 timer = 0;
             }

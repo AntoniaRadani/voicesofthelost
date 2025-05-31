@@ -435,6 +435,8 @@ public class UI {
         g2.drawString("Defense", textX, textY);
         textY += lineHeight;
         g2.drawString("Cards", textX, textY);
+        textY += lineHeight;
+        g2.drawString("Coins", textX, textY);
         textY += gp.tileSize + 15;
         g2.drawString("Weapon", textX, textY);
         textY += gp.tileSize;
@@ -478,6 +480,11 @@ public class UI {
         textY += lineHeight;
 
         value = String.valueOf(gp.player.cards);
+        textX = getXForAlignToRight(value, tailX);
+        g2.drawString(value, textX, textY);
+        textY += lineHeight;
+
+        value = String.valueOf(gp.player.coin);
         textX = getXForAlignToRight(value, tailX);
         g2.drawString(value, textX, textY);
         textY += lineHeight;

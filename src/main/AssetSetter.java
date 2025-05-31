@@ -81,13 +81,23 @@ public class AssetSetter {
             gp.obj[mapNum][i].worldX = 44 * gp.tileSize;
             gp.obj[mapNum][i].worldY = 32 * gp.tileSize;
             i++;
-            gp.obj[mapNum][i] = new OBJ_Key(gp);
+            gp.obj[mapNum][i] = new OBJ_Chest(gp);
             gp.obj[mapNum][i].worldX = 29 * gp.tileSize;
-            gp.obj[mapNum][i].worldY = 9 * gp.tileSize;
+            gp.obj[mapNum][i].worldY = 8 * gp.tileSize;
             i++;
             gp.obj[mapNum][i] = new OBJ_Key(gp);
             gp.obj[mapNum][i].worldX = 21 * gp.tileSize;
             gp.obj[mapNum][i].worldY = 31 * gp.tileSize;
+            i++;
+            gp.obj[mapNum][i] = new OBJ_ClosedDoor4(gp);
+            gp.obj[mapNum][i].worldX = 6 * gp.tileSize;
+            gp.obj[mapNum][i].worldY = 18 * gp.tileSize;
+            i++;
+            gp.obj[mapNum][i] = new OBJ_ClosedDoor3(gp);
+            gp.obj[mapNum][i].worldX = 41 * gp.tileSize;
+            gp.obj[mapNum][i].worldY = 6 * gp.tileSize;
+
+
         }
     }
 

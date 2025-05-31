@@ -23,12 +23,12 @@ public class Player extends Entity{
     public int screenX;
     public int screenY;
 
-    public int hasKey = 1;
-    public int hasSpecialKey = 1; // number of special keys to open really important rooms
+    public int hasKey = 0;
+    public int hasSpecialKey = 0; // number of special keys to open really important rooms
     public int hasApple = 0;
     public int hasHealthPotion = 0;
     public int hasCard = 0;
-    public int hasLevelKey = 1;
+    public int hasLevelKey = 0;
     public boolean doorOpen1 = false;
     boolean openChest = false;
 
@@ -89,19 +89,19 @@ public class Player extends Entity{
         strength = 1;
         dexterity = 1;
         cards = 0;
-        coin = 500;
+        coin = 10;
         currentWeapon = null;
         currentShield = null;
         attack = getAttack(); // total attack value is decided by strength and weapon
         defense = getDefense(); // total defense value is decided by dexterity and shield
 
 
-        hasKey = 1;
-        hasSpecialKey = 1; // number of special keys to open really important rooms
+        hasKey = 0;
+        hasSpecialKey = 0; // number of special keys to open really important rooms
         hasApple = 0;
         hasHealthPotion = 0;
         hasCard = 0;
-        hasLevelKey = 1;
+        hasLevelKey = 0;
         doorOpen1 = false;
         openChest = false;
 
@@ -344,6 +344,7 @@ public class Player extends Entity{
                             inventory.add(new OBJ_HealthPotion(gp));
                             inventory.add(new OBJ_Sword(gp));
                             inventory.add(new OBJ_Shield(gp));
+                            coin += 5;
                             // cheia care deschide usa unde se afla butoaiele care trebuie numarate
                             inventory.add(new OBJ_SpecialKey(gp));
                             int worldX = gp.obj[mapNum][i].worldX;
@@ -366,9 +367,11 @@ public class Player extends Entity{
                                     break;
                                 }
                             inventory.add(new OBJ_HealthPotion(gp));
+                            inventory.add(new OBJ_StaminaPotion(gp));
                             inventory.add(new OBJ_RedSword(gp));
                             inventory.add(new OBJ_Shield(gp));
                             inventory.add(new OBJ_SpecialKey(gp));
+                            coin += 5;
                             int worldX = gp.obj[mapNum][i].worldX;
                             int worldY = gp.obj[mapNum][i].worldY;
                             gp.obj[mapNum][i] = new OBJ_Chest2(gp);
@@ -389,9 +392,8 @@ public class Player extends Entity{
                                     break;
                                 }
                             inventory.add(new OBJ_Apple(gp));
-                            // ceva de stamina idk
-                            inventory.add(new OBJ_Apple(gp));
-                            coin++;
+                            inventory.add(new OBJ_StaminaPotion(gp));
+                            coin += 5;
                             int worldX = gp.obj[mapNum][i].worldX;
                             int worldY = gp.obj[mapNum][i].worldY;
                             gp.obj[mapNum][i] = new OBJ_Chest2(gp);
@@ -468,6 +470,40 @@ public class Player extends Entity{
                             collisionOn = true;
                             gp.ui.showMessage("You need a special key!");
                         }
+                    case "ClosedDoor3":
+                        // usa level 3
+                        if (hasLevelKey > 0) {
+                            gp.playSE(1);
+                            for(int j = 0; j < inventory.size(); j++)
+                                if(Objects.equals(inventory.get(j).name, "LevelKey")) {
+                                    inventory.remove(j);
+                                    break;
+                                }
+                            gp.obj[mapNum][i] = null;
+                            hasLevelKey--;
+                            gp.ui.showMessage("You opened the right door!");
+                        } else {
+                            collisionOn = true;
+                            gp.ui.showMessage("You need a special key!");
+                        }
+                        break;
+                    case "ClosedDoor4":
+                        // usa mini game
+                        if (hasKey > 0) {
+                            gp.playSE(1);
+                            for(int j = 0; j < inventory.size(); j++)
+                                if(Objects.equals(inventory.get(j).name, "LevelKey")) {
+                                    inventory.remove(j);
+                                    break;
+                                }
+                            gp.obj[mapNum][i] = null;
+                            hasKey--;
+                            gp.ui.showMessage("You opened the right door!");
+                        } else {
+                            collisionOn = true;
+                            gp.ui.showMessage("You need a special key!");
+                        }
+                        break;
                 }
             }
             else{
