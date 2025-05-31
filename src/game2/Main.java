@@ -1,9 +1,9 @@
 package game2;
 
 public class Main {
-    public static void main(String[] args) {
+    public static boolean main(String[] args) {
 
         GameFrame frame = new GameFrame();
-
+        return true;
     }
 }

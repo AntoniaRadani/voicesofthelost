@@ -95,7 +95,6 @@ public class Entity{
         }
     }
 
-
     public BufferedImage getCurrentSprite() {
 
         return animationSet.getFrame(direction, spriteIndex);
@@ -150,6 +149,9 @@ public class Entity{
             }
 
         }
+        gp.cChecker.checkEntity(this,gp.npc[gp.currentMap]);
+        gp.cChecker.checkEntity(this, gp.monsters[gp.currentMap]);
+
 
         if(!this.collisionOn) {
             switch (direction) {

@@ -29,6 +29,7 @@ public class GamePanel extends JPanel implements Runnable {
     public boolean hoverSettings = false;
     public boolean hoverMuteVolume = false;
     public boolean hoverMuteSound = false;
+    public boolean hoverResume = false;
 
     public boolean isVolumeMuted = false;
     public boolean isSoundMuted = false;
@@ -60,6 +61,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     public boolean isFullscreen = true;
 
+    // volume
 
     public int volumeLevel = 100; // intre 0 și 100
     public int previousVolumeLevel = 100;
@@ -98,6 +100,7 @@ public class GamePanel extends JPanel implements Runnable {
     GameMenu menu = new GameMenu(this);
     MouseHandler mouseH = new MouseHandler(this);
     GamePause pause = new GamePause(this);
+    GameOver gameOver = new GameOver(this);
     public UI ui = new UI(this);
     public SuperObject[][] obj = new SuperObject[3][10];
     public Monster[][] monsters = new Monster[3][10];
@@ -129,6 +132,7 @@ public class GamePanel extends JPanel implements Runnable {
     public final int dialogueState = 4;
     public final int mapState = 10;
     public final int tradeState = 5;
+    public final int gameOverState = 6;
 
     int menuOption = 0;
     // 0 = INITIAL STATE (draw)
@@ -140,6 +144,11 @@ public class GamePanel extends JPanel implements Runnable {
     int pauseOption = 0;
     // 0 = PAUSED
     // 1 = RELOADED
+
+    public int overOption = 0;
+    // 0 = INITIAL STATE
+    // 1 = RESTART
+    // 2 = QUIT
 
     // for zoom
     int targetTileSize = tileSize;
@@ -173,21 +182,44 @@ public class GamePanel extends JPanel implements Runnable {
         gameThread.start();
     }
 
+    public void retry(){
+        player.setDefaultPosition();
+        player.setDefaultValues();
+        player.restoreLifeAndMana();
+        roomCleared = false;
+        trapRoomLevel1.active = false;
+        escapedFromTrapRoom = false;
+        loadLevel(currentLevel);
+    }
+
+    public void restart(){
+        player.setDefaultValues();
+        player.setDefaultPosition();
+        player.restoreLifeAndMana();
+        roomCleared = false;
+        trapRoomLevel1.active = false;
+        escapedFromTrapRoom = false;
+        loadLevel(1);
+    }
+
     public void setUpGame() {
         aSetter.setObject();
         aSetter.setNPC();
         aSetter.setMonster();
         eManager.setup();
+        sound.setVolume(volumeLevel);
         playMusic(0);
     }
 
     public void update() {
 
-        if (gameState == 0)
+        sound.setVolume(volumeLevel);
+
+        if (gameState == menuState)
             // menu mode
             menu.update();
 
-        else if (gameState == 1) {
+        else if (gameState == playState) {
             // game mode
             player.update();
 
@@ -209,12 +241,12 @@ public class GamePanel extends JPanel implements Runnable {
                     roomCleared = true;
             }
         }
-        else if (gameState == 2)
+        else if (gameState == pauseState)
             // pause mode
             pause.update();
-
-
-        zoom();
+        else if(gameState == gameOverState)
+            // game over
+            gameOver.update();
 
         if(!roomCleared) {
             trapRoomLevel1.update();
@@ -283,6 +315,9 @@ public class GamePanel extends JPanel implements Runnable {
         else if (gameState == pauseState) {
             pause.draw(g2temp);
         }
+        else if(gameState == gameOverState){
+            gameOver.draw(g2temp);
+        }
         // calculam cu cat trebuie scalat pt full screen
 
         int panelWidth = getWidth();
@@ -316,6 +351,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void playSE(int i){
         sound.setFile(i);
+        sound.setVolume(soundLevel);
         sound.play();
     }
 
@@ -375,7 +411,6 @@ public class GamePanel extends JPanel implements Runnable {
 
             }
             if ( timer >= 1000000000) {
-                System.out.println("FPS: " + drawCount);
                 drawCount = 0;
                 timer = 0;
             }
@@ -394,13 +429,6 @@ public class GamePanel extends JPanel implements Runnable {
                 currentMap = 0;
                 tiledMapViewer.loadTMX("res/level1/level1.tmx");
                 tiledMapViewer.loadMap("res/level1/level1.tmx");
-//                for (int i = 0; i < obj.length; i++) {
-//                    obj[i] = null;
-//                }
-//                for (int i = 0; i < npc.length; i++) {
-//                    npc[i] = null;
-//
-//                }
                 // reincarcam pe noua mapa
                 aSetter.setObject();
                 aSetter.setNPC();

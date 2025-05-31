@@ -27,6 +27,7 @@ public class GameMenu {
     int startX, startY;
     int exitX, exitY;
     int settingsX, settingsY;
+    int resumeX, resumeY;
     int xX, xY;
     int smallBtnWidth = 40, smallBtnHeight = 40;
     int btnWidth = 200, btnHeight = 50;
@@ -44,6 +45,7 @@ public class GameMenu {
 
     BufferedImage background;
     BufferedImage start;
+    BufferedImage resume;
     BufferedImage quit;
     BufferedImage settings;
     BufferedImage x_btn;
@@ -57,6 +59,8 @@ public class GameMenu {
 
         centerX = (gp.screenWidth  - 200) / 2; // 284
         centerY = (gp.screenHeight - 20) / 2; //278
+        resumeX = centerX;
+        resumeY = centerY - 120;
         startX = centerX;
         startY = centerY - 60;
         exitX = centerX;
@@ -78,6 +82,11 @@ public class GameMenu {
         // loading the images
         try {
             background = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/menu/Background1.png")));
+        }catch (IOException e){
+            System.err.println("ERROR: Image not found");
+        }
+        try{
+            resume = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/menu/Restart.png")));
         }catch (IOException e){
             System.err.println("ERROR: Image not found");
         }
@@ -126,12 +135,17 @@ public class GameMenu {
     public void update(){
        if(gp.menuOption == 0)
            gp.gameState = 0;
-       if(gp.menuOption == 1)
+       if(gp.menuOption == 1){
            gp.gameState = 1;
+           gp.restart();
+    }
        if(gp.menuOption == 2)
            System.exit(0);
        if(gp.menuOption == 3){
            // meniu setari
+       }
+       if(gp.menuOption == 4){
+           gp.gameState = 1;
        }
     }
 
@@ -139,6 +153,13 @@ public class GameMenu {
 
         // Fundal meniu
         g2.drawImage(background, 0, 0, gp.screenWidth, gp.screenHeight, null);
+
+        if(gp.hoverResume){
+            g2.drawImage(resume, resumeX - 10, resumeY - 5, btnWidth + 20, btnHeight + 10, null);
+        }
+        else{
+            g2.drawImage(resume, resumeX, resumeY, btnWidth, btnHeight, null);
+        }
 
         if (gp.hoverStart) {
             g2.drawImage(start, startX - 10, startY - 5, btnWidth + 20, btnHeight + 10, null);

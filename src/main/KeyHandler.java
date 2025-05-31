@@ -106,11 +106,15 @@ public class KeyHandler implements KeyListener {
                 gp.gameState = gp.playState;
             if(code == KeyEvent.VK_ENTER)
                 gp.player.selectItem();
-            playerInventory(code);
+            //playerInventory(code);
         }
         else if(gp.gameState == gp.pauseState){
-            if(code == KeyEvent.VK_ESCAPE)
+            if(code == KeyEvent.VK_ESCAPE) {
                 gp.gameState = gp.playState;
+                if(gp.pauseOption == 2)
+                    gp.pauseOption = 0;
+            }
+
         }
         else if(gp.gameState == gp.dialogueState){
             if(code == KeyEvent.VK_F) {
@@ -123,6 +127,7 @@ public class KeyHandler implements KeyListener {
         else if(gp.gameState == gp.tradeState){
             tradeState(code);
         }
+
     }
 
     private void tradeState(int code) {
@@ -138,7 +143,7 @@ public class KeyHandler implements KeyListener {
                 //gp.playSE(9);
             }
             if(code == KeyEvent.VK_S){
-                gp.ui.commandNum--;
+                gp.ui.commandNum++;
                 if(gp.ui.commandNum > 2)
                     gp.ui.commandNum = 0;
                 //gp.playSE(9);
@@ -235,6 +240,7 @@ public class KeyHandler implements KeyListener {
     }
 
     public void playerInventory(int code){
+
         if(code == KeyEvent.VK_W){
             if(gp.ui.playerslotRow != 0) {
                 gp.ui.playerslotRow--;
@@ -243,6 +249,7 @@ public class KeyHandler implements KeyListener {
         }
         if(code == KeyEvent.VK_A){
             if(gp.ui.playerslotCol != 0) {
+                System.out.println(gp.ui.playerslotCol);
                 gp.ui.playerslotCol--;
                 gp.playSE(1);
             }
@@ -255,6 +262,7 @@ public class KeyHandler implements KeyListener {
         }
         if(code == KeyEvent.VK_D){
             if(gp.ui.playerslotCol != 4) {
+                System.out.println(gp.ui.playerslotCol);
                 gp.ui.playerslotCol++;
                 gp.playSE(1);
             }

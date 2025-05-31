@@ -4,6 +4,7 @@ import entity.Monster;
 import entity.MonsterLevel1;
 import main.GamePanel;
 import entity.Player;
+import object.OBJ_ClosedDoor;
 import object.OBJ_LevelKey;
 
 import java.awt.*;
@@ -45,7 +46,7 @@ public class TrapRoomLevel1 {
     }
 
     public void blockExit(){
-        System.out.println("Apel blockExit");
+        System.out.println("apel block exit");
         gp.tiledMapViewer.mapData[1][exitTileY][exitTileX] = lockedTileIndexUp;
         gp.tiledMapViewer.mapData[1][exitTileY][exitTileX + 1] = lockedTileIndexUp;
         gp.tiledMapViewer.mapData[1][exitTileY][exitTileX + 2] = lockedTileIndexUp;
@@ -66,9 +67,9 @@ public class TrapRoomLevel1 {
             monster = gp.monsters[0][0];
 
         if (roomArea.intersects(playerBox) && gp.player.doorOpen1 ) {
-            System.out.println("APEL FUNCTIE TRAP ROOM");
             // daca traproom ul nu e activ si player ul a deschis usa
             if (!active) {
+                System.out.println("APELAM AICIw");
                 active = true;
                 roomLocked = true;
 
@@ -82,9 +83,9 @@ public class TrapRoomLevel1 {
 
             }
 
-            // Damage la fiecare 20 secunde
+            // Damage la fiecare 20 secunde 20000
             long currentTime = System.currentTimeMillis();
-            if (currentTime - lastDamageTime >= 20000) {
+            if (currentTime - lastDamageTime >= 1000) {
                 player.life--;
                 lastDamageTime = currentTime;
             }
@@ -111,6 +112,11 @@ public class TrapRoomLevel1 {
         } else if (!roomLocked) {
             active = false;
         }
+    }
+
+    public void resetTrapRoom(){
+        active = false;
+        roomLocked = false;
     }
 
 }

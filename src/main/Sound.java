@@ -1,16 +1,17 @@
 package main;
 
 import javax.imageio.ImageIO;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.UnsupportedAudioFileException;
+import javax.sound.sampled.*;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Objects;
 
 public class Sound {
     Clip clip;
+    FloatControl volumeControl;
+    int volumeLevel = 3; // 0 = mute, 5 = max
+    float[] volumeScale = { -80f, -20f, -12f, -5f, 1f, 6f };
+
     URL[] soundURL = new URL[30];
 
     public Sound(){
@@ -25,8 +26,24 @@ public class Sound {
             AudioInputStream ais = AudioSystem.getAudioInputStream(soundURL[i]);
             clip = AudioSystem.getClip();
             clip.open(ais);
+
+            volumeControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+            setVolume(volumeLevel);
         } catch (Exception e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public void setVolume(int volume) {
+        if (clip != null && clip.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
+            volumeControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+
+            // Convertim [0 - 100] în decibeli
+            float min = volumeControl.getMinimum(); // ex: -80.0f
+            float max = volumeControl.getMaximum(); // ex: 6.0f
+
+            float gain = (max - min) * (volume / 100.0f) + min;
+            volumeControl.setValue(gain);
         }
     }
 

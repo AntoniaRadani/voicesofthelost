@@ -1,5 +1,7 @@
 package main;
 
+import entity.Entity;
+
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -14,6 +16,7 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
     int exitX, exitY;
     int settingsX, settingsY;
     int xX, xY;
+    int resumeX, resumeY;
     int smallBtnWidth = 40, smallBtnHeight = 40;
     int btnWidth = 200, btnHeight = 50;
     // dimensiuni slider
@@ -61,6 +64,8 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
         centerY = (gp.screenHeight - 20) / 2; //278
         startX = centerX;
         startY = centerY - 40;
+        resumeX = centerX;
+        resumeY = centerY - 100;
         exitX = centerX;
         exitY = centerY;
         settingsX = centerX;
@@ -86,6 +91,11 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
         int my = scaledMouseY(e);
         if (gp.gameState == gp.menuState && gp.menuOption != 3) {
 
+            // Resume Game
+            if (mx >= resumeX && mx <= resumeX + btnWidth &&
+                    my >= resumeY && my <= resumeY + btnHeight) {
+                gp.menuOption = 4;
+            }
             // Start Game (when the start button is clicked)
             if (mx >= startX && mx <= startX + btnWidth &&
                     my >= startY && my <= startY + btnHeight) {
@@ -140,6 +150,32 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
                 gp.menuOption = 0;
             }
 
+            if(mx >= settingsX && mx <= settingsX + btnWidth &&
+            my >= settingsY && my <= settingsY + btnWidth){
+                gp.gameState = gp.pauseState;
+                gp.pauseOption = 2;
+            }
+            if (mx >= xX && mx <= xX + smallBtnWidth && my >= xY && my <= xY + smallBtnHeight && gp.pauseOption == 2) {
+                gp.pauseOption = 0;
+            }
+        }
+            else if(gp.gameState == gp.gameOverState){
+            // Start Game
+                if (mx >= startX && mx <= startX + btnWidth &&
+                    my >= startY && my <= startY + btnHeight) {
+                    gp.gameState = gp.playState;
+                    gp.overOption = 1;
+                    gp.retry();
+                }
+
+            // Exit
+                if (mx >= exitX && mx <= exitX + btnWidth &&
+                    my >= exitY && my <= exitY + btnHeight) {
+                    gp.gameState = gp.menuState;
+                    gp.menuOption = 0;
+                    gp.overOption = 2;
+                    gp.restart();
+                }
         }
     }
 
@@ -204,6 +240,13 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
         int my = scaledMouseY(e);
 
         if (gp.gameState == gp.menuState) {
+            // Hover pentru Resume
+            if(mx >= resumeX && mx <= resumeX + btnWidth &&
+                my >= resumeY && my <= resumeY + btnHeight)
+                gp.hoverResume = true;
+            else {
+                gp.hoverResume = false;
+            }
             // Hover pentru Start
             if (mx >= startX && mx <= startX + btnWidth &&
                     my >= startY && my <= startY + btnHeight) {
@@ -229,7 +272,24 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
             }
         }
 
-        if (gp.menuOption == 3) {
+        if(gp.gameState == gp.gameOverState){
+            if (mx >= startX && mx <= startX + btnWidth &&
+                    my >= startY && my <= startY + btnHeight) {
+                gp.hoverStart = true;
+            } else {
+                gp.hoverStart = false;
+            }
+
+            // Hover pentru Quit
+            if (mx >= exitX && mx <= exitX + btnWidth &&
+                    my >= exitY && my <= exitY + btnHeight) {
+                gp.hoverQuit = true;
+            } else {
+                gp.hoverQuit = false;
+            }
+        }
+
+        if (gp.menuOption == 3 || gp.pauseOption == 2) {
             if (mx >= xX && mx <= xX + smallBtnWidth && my >= xY && my <= xY + smallBtnHeight) {
                 gp.hoverExitButton = true;
             } else {
@@ -269,12 +329,18 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
             }
         }
 
-        if(gp.gameState == 2){
+        if(gp.gameState == gp.pauseState){
             if (mx >= exitX && mx <= exitX + btnWidth &&
                     my >= exitY && my <= exitY + btnHeight) {
                 gp.hoverQuit = true;
             } else {
                 gp.hoverQuit = false;
+            }
+            if(mx >= settingsX && mx <= settingsX + btnWidth &&
+                    my >= settingsY && my <= settingsY + btnWidth) {
+                gp.hoverSettings = true;
+            }else{
+                gp.hoverSettings = false;
             }
         }
 
