@@ -14,7 +14,8 @@ import java.util.HashMap;
 
 public class Entity{
 
-    GamePanel gp;
+    public static GamePanel gp;
+    //GamePanel gp;
     public int worldX, worldY;
 
     public String direction;
@@ -61,7 +62,7 @@ public class Entity{
 
 
     // invetory
-    public ArrayList<SuperObject> inventory = new ArrayList<>();
+    public static ArrayList<SuperObject> inventory = new ArrayList<>();
     public final int maxInventorySize = 20;
 
     public static final String[] DIRECTIONS = { "up", "down", "left", "right" };
