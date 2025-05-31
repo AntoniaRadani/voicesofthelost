@@ -149,6 +149,15 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
                 gp.gameState = gp.menuState;
                 gp.menuOption = 0;
             }
+
+            if(mx >= settingsX && mx <= settingsX + btnWidth &&
+            my >= settingsY && my <= settingsY + btnWidth){
+                gp.gameState = gp.pauseState;
+                gp.pauseOption = 2;
+            }
+            if (mx >= xX && mx <= xX + smallBtnWidth && my >= xY && my <= xY + smallBtnHeight && gp.pauseOption == 2) {
+                gp.pauseOption = 0;
+            }
         }
             else if(gp.gameState == gp.gameOverState){
             // Start Game
@@ -280,7 +289,7 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
             }
         }
 
-        if (gp.menuOption == 3) {
+        if (gp.menuOption == 3 || gp.pauseOption == 2) {
             if (mx >= xX && mx <= xX + smallBtnWidth && my >= xY && my <= xY + smallBtnHeight) {
                 gp.hoverExitButton = true;
             } else {
@@ -320,12 +329,18 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
             }
         }
 
-        if(gp.gameState == 2){
+        if(gp.gameState == gp.pauseState){
             if (mx >= exitX && mx <= exitX + btnWidth &&
                     my >= exitY && my <= exitY + btnHeight) {
                 gp.hoverQuit = true;
             } else {
                 gp.hoverQuit = false;
+            }
+            if(mx >= settingsX && mx <= settingsX + btnWidth &&
+                    my >= settingsY && my <= settingsY + btnWidth) {
+                gp.hoverSettings = true;
+            }else{
+                gp.hoverSettings = false;
             }
         }
 

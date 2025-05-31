@@ -308,7 +308,6 @@ public class UI {
 
     public void drawInventory(Entity entity, boolean cursor){
 
-        System.out.println("APEL FUNCTIE DRAW INVENTORY");
         int frameX = 0;
         int frameY = 0;
         int frameWidth = 0;
@@ -317,7 +316,6 @@ public class UI {
         int slotRow = 0;
 
         if(entity == gp.player){
-            System.out.println("APEL FUNCTIE IF ENTITY + PLAYER");
             frameX = gp.tileSize * 9;
             frameY = gp.tileSize;
             frameWidth = gp.tileSize * 6;
@@ -353,7 +351,6 @@ public class UI {
                 g2.setColor(new Color(240, 190, 90));
                 g2.fillRoundRect(slotX, slotY, gp.tileSize, gp.tileSize, 10, 10);}
 
-            System.out.println(entity.inventory.size());
             BufferedImage itemImage = entity.inventory.get(i).image;
             g2.drawImage(itemImage, slotX, slotY, null);
             slotX += slotSize;
@@ -367,7 +364,9 @@ public class UI {
         // cursor
         if(cursor){
 
+           // System.out.println(slotRow);
             int cursorX = slotXstart + (slotSize * slotCol);
+            //System.out.println("slotCol : " + slotCol);
             int cursorY = slotYstart + (slotSize * slotRow);
             int cursorWidth = gp.tileSize;
             int cursorHeight = gp.tileSize;

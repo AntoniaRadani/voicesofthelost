@@ -61,6 +61,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     public boolean isFullscreen = true;
 
+    // volume
 
     public int volumeLevel = 100; // intre 0 și 100
     public int previousVolumeLevel = 100;
@@ -206,10 +207,13 @@ public class GamePanel extends JPanel implements Runnable {
         aSetter.setNPC();
         aSetter.setMonster();
         eManager.setup();
+        sound.setVolume(volumeLevel);
         playMusic(0);
     }
 
     public void update() {
+
+        sound.setVolume(volumeLevel);
 
         if (gameState == menuState)
             // menu mode
@@ -349,6 +353,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void playSE(int i){
         sound.setFile(i);
+        sound.setVolume(soundLevel);
         sound.play();
     }
 
