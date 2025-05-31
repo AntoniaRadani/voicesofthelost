@@ -136,8 +136,8 @@ public class Entity{
         collisionOn = false;
         gp.cChecker.checkTile(this);
 
-        gp.cChecker.checkEntity(this,gp.npc);
-        gp.cChecker.checkEntity(this, gp.monsters[gp.currentLevel]);
+        gp.cChecker.checkEntity(this,gp.npc[gp.currentMap]);
+        gp.cChecker.checkEntity(this, gp.monsters[gp.currentMap]);
         boolean contatcPlayer = gp.cChecker.checkPlayer(this);
 
         if ( (this.type == 2) && (contatcPlayer == true) ) { // if is monster and contact player
