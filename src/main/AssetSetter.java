@@ -128,7 +128,13 @@ public class AssetSetter {
             gp.monsters[0][0].worldY = 21 * gp.tileSize;
         }
         else if(mapNum == 1){
+            gp.monsters[1][0] = new MonsterLevel2_1(gp);
+            gp.monsters[1][0].worldX = 6 * gp.tileSize;
+            gp.monsters[1][0].worldY = 25 * gp.tileSize;
 
+            gp.monsters[1][1] = new MonsterLevel2_2(gp);
+            gp.monsters[1][1].worldX = 27 * gp.tileSize;
+            gp.monsters[1][1].worldY = 20 * gp.tileSize;
         }
     }
 }

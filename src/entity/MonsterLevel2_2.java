@@ -20,7 +20,7 @@ public class MonsterLevel2_2 extends Monster{
 
 
     public void getPlayerImage() {
-        animationSet.loadSeparate("npc_fight", dir , "npc_fight", 23); // 23 cadre per direcție
+        animationSet.loadSeparate("monster", dir , "monster", 3); // 23 cadre per direcție
     }
 
     public void update() {

@@ -111,6 +111,7 @@ public class TrapRoomLevel1 {
 
         } else if (!roomLocked) {
             active = false;
+            gp.player.hasLevelKey++;
         }
     }
 

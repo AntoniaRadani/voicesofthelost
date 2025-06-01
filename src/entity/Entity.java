@@ -14,6 +14,7 @@ import java.util.HashMap;
 
 public class Entity{
 
+
     GamePanel gp;
     public int worldX, worldY;
 

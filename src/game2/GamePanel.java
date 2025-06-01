@@ -44,7 +44,7 @@ public class GamePanel extends JPanel implements Runnable{
         }
         if (Score.playerScore >= 3) {
             System.out.println("Ai câștigat! Se închide minigame-ul.");
-            entity.Player.inventory.add(new OBJ_Card(entity.Entity.gp));
+            //entity.Player.inventory.add(new OBJ_Card(entity.Entity.gp));
             gameWon = true;
             frame.dispose();
         }

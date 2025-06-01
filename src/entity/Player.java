@@ -75,14 +75,14 @@ public class Player extends Entity{
     }
 
     public void setDefaultPosition(){
-        setPlayerStartPosition(1);
+        setPlayerStartPosition(gp.currentLevel);
     }
 
 
     public  void setDefaultValues(){
        // worldX = gp.tileSize * 24; // players position in the world map
         //worldY = gp.tileSize * 49; // where the player starts the game   gp.tileSize * coordonata( linis/coloana din matrice)
-        setPlayerStartPosition(1);
+        setPlayerStartPosition(gp.currentLevel);
         setItems();
         speed = 5;
         direction = "down";
@@ -109,7 +109,7 @@ public class Player extends Entity{
         hasApple = 0;
         hasHealthPotion = 0;
         hasCard = 0;
-        hasLevelKey = 0;
+        hasLevelKey = 1;
         doorOpen1 = false;
         openChest = false;
 
@@ -362,6 +362,7 @@ public class Player extends Entity{
                             gp.obj[mapNum][i].worldX = worldX;
                             gp.obj[mapNum][i].worldY = worldY;
                             hasKey--;
+                            hasSpecialKey++;
                             gp.ui.showMessage("You opened a chest!");
                         } else {
                             gp.ui.showMessage("You need a key!");
@@ -415,7 +416,7 @@ public class Player extends Entity{
                         }
                         break;
                     case "ClosedDoor":
-                        // usa trap room
+                        // usa trap roomw
                         if (hasSpecialKey > 0) {
                             gp.playSE(1);
                             for(int j = 0; j < inventory.size(); j++)
