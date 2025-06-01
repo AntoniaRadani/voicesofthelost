@@ -81,6 +81,9 @@ public class Entity{
     // pentru interactiunea cu monstrul
     public boolean invincible = false;
     public int invincibleCounter = 0;
+    public boolean alive = true;
+    public boolean dying = false;
+    public int dyingCounter = 0;
 
 
 
@@ -112,7 +115,14 @@ public class Entity{
                 worldY + gp.tileSize > gp.player.worldY - gp.player.screenY &&
                 worldY - gp.tileSize < gp.player.worldY + gp.player.screenY ) { // coordonatele pt camera frame
 
-            g2.drawImage(image, screenX, screenY, gp.tileSize * 2, gp.tileSize * 2, null);
+            if ( type == 2 ) { // is monster
+                g2.drawImage(image, screenX, screenY, gp.tileSize * 5, gp.tileSize * 4, null);
+            }
+            else {
+                g2.drawImage(image, screenX, screenY, gp.tileSize * 3, gp.tileSize * 2, null);
+            }
+
+           // g2.drawImage(image, screenX, screenY, gp.tileSize * 2, gp.tileSize * 2, null);
 
         }
     }
@@ -144,7 +154,7 @@ public class Entity{
 
             if ( gp.player.invincible == false ) {
                 // we can give damage
-                gp.player.life -= 1;
+                gp.player.life -= 1; // scade viata jucatorului
                 gp.player.invincible = true;
             }
 

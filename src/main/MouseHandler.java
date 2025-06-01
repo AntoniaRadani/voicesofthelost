@@ -148,6 +148,7 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
                     my >= exitY && my <= exitY + btnWidth) {
                 gp.gameState = gp.menuState;
                 gp.menuOption = 0;
+                gp.syncGameState();
             }
 
             if(mx >= settingsX && mx <= settingsX + btnWidth &&

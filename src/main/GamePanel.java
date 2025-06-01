@@ -5,6 +5,7 @@ import entity.Monster;
 import entity.Player;
 import environment.EnvironmentManager;
 import object.SuperObject;
+import state.*;
 import tile.Map;
 
 import tile.TiledMapViewer;
@@ -17,6 +18,9 @@ import java.awt.*;
 import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 import java.util.Objects;
+
+import state.GameState;
+import state.MenuState;
 
 public class GamePanel extends JPanel implements Runnable {
     // screen settings
@@ -97,15 +101,17 @@ public class GamePanel extends JPanel implements Runnable {
     public AssetSetter aSetter = new AssetSetter(this);
     public Player player = new Player(this, keyH);
     Sound sound = new Sound();
-    GameMenu menu = new GameMenu(this);
+    public GameMenu menu = new GameMenu(this);
     MouseHandler mouseH = new MouseHandler(this);
+
     GamePause pause = new GamePause(this);
     GameOver gameOver = new GameOver(this);
+
     public UI ui = new UI(this);
     public SuperObject[][] obj = new SuperObject[3][10];
     public Monster[][] monsters = new Monster[3][10];
     public TrapRoomLevel1 trapRoomLevel1 = new TrapRoomLevel1(this);
-    EnvironmentManager eManager = new EnvironmentManager(this);
+    public EnvironmentManager eManager = new EnvironmentManager(this);
 
     // for trap room 1
     public boolean waitingForNumberInput = false;
@@ -119,6 +125,12 @@ public class GamePanel extends JPanel implements Runnable {
 
     public Entity[][] npc = new Entity[3][10];
 
+    // for game state
+
+    private GameState currentState;
+    public GameState menuStateObj, playStateObj, pauseStateObj, dialogueStateObj, trapRoomStateObj;
+
+
     // GAME STATES <- pentru meniu
     // 0 = MENU
     // 1 = JOC
@@ -129,6 +141,8 @@ public class GamePanel extends JPanel implements Runnable {
     public final int playState = 1;
     public final int pauseState = 2;
     public final int characterStatus = 3;
+    public final int trapRoomState = 5;
+
     public final int dialogueState = 4;
     public final int mapState = 10;
     public final int tradeState = 5;
@@ -168,11 +182,37 @@ public class GamePanel extends JPanel implements Runnable {
         // to receive mouse input
         this.addMouseListener(mouseH);
         this.setFocusable(true);
+
+        menuStateObj = new MenuState(this);
+        playStateObj = new PlayState(this);
+        pauseStateObj = new PauseState(this);
+        dialogueStateObj = new DialogueState(this);
+        trapRoomStateObj = new TrapRoomState(this);
+
+        currentState = menuStateObj;
+
     // pe g2temp vom desena tot jocul, apoi scalam in paintcomponewnt
         tempScreen = new BufferedImage(screenWidth, screenHeight, BufferedImage.TYPE_INT_ARGB);
         g2temp = (Graphics2D) tempScreen.getGraphics();
 
+
+
         aSetter.setNPC();
+        aSetter.setMonster();
+    }
+
+    public void setGameState(GameState state) {
+        this.currentState = state;
+    }
+
+    public void syncGameState() {
+        switch (gameState) {
+            case menuState -> setGameState(menuStateObj);
+            case playState -> setGameState(playStateObj);
+            case pauseState -> setGameState(pauseStateObj);
+            case dialogueState -> setGameState(dialogueStateObj);
+            case 5 -> setGameState(trapRoomStateObj); // 5 pt traproom
+        }
     }
 
 
@@ -213,9 +253,13 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void update() {
 
+
+       /*  if (gameState == 0)
+
         sound.setVolume(volumeLevel);
 
         if (gameState == menuState)
+
             // menu mode
             menu.update();
 
@@ -229,11 +273,24 @@ public class GamePanel extends JPanel implements Runnable {
                 }
             }
 
-            for (int i = 0; i < monsters[currentMap].length; i++) {
+            /*for (int i = 0; i < monsters[currentMap].length; i++) {
                 if (monsters[currentMap][i] != null) {
                     monsters[currentMap][i].update();
                 }
             }
+
+
+            for (int i=0;i<monsters[1].length;i++) {
+                // actualizarea monștrilor
+                if(monsters[currentMap][i]!=null){
+                    if(monsters[currentMap][i].alive && !monsters[currentMap][i].dying)
+                        monsters[currentMap][i].updateMonster();
+                    if(!monsters[currentMap][i].alive)
+                        monsters[currentMap][i]=null;
+                }
+            } */
+
+        currentState.update();
 
             if(!roomCleared) {
                 trapRoomLevel1.update();
@@ -248,11 +305,7 @@ public class GamePanel extends JPanel implements Runnable {
             // game over
             gameOver.update();
 
-        if(!roomCleared) {
-            trapRoomLevel1.update();
-            if (escapedFromTrapRoom == true)
-                roomCleared = true;
-        }
+
 
     }
 
@@ -260,11 +313,12 @@ public class GamePanel extends JPanel implements Runnable {
     public void paintComponent(Graphics g){
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D)g;
+
         // curatam/ eliberam canvas ul intern, ca sa nu se suprapuna imaginile
         g2temp.setColor(Color.BLACK);
         g2temp.fillRect(0, 0, screenWidth, screenHeight);
 
-        if (gameState == menuState) {
+      /*  if (gameState == menuState) {
             // drawing the menu
             menu.draw(g2temp);
         } else if (gameState == playState || gameState == dialogueState
@@ -314,10 +368,15 @@ public class GamePanel extends JPanel implements Runnable {
         }
         else if (gameState == pauseState) {
             pause.draw(g2temp);
-        }
+            }
         else if(gameState == gameOverState){
             gameOver.draw(g2temp);
         }
+
+        } */
+
+        currentState.draw(g2temp);
+
         // calculam cu cat trebuie scalat pt full screen
 
         int panelWidth = getWidth();
@@ -420,6 +479,7 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
 
+
     public void loadLevel(int level ) {
 
         currentLevel = level; // update
@@ -475,8 +535,10 @@ public class GamePanel extends JPanel implements Runnable {
                 aSetter.setMonster();
                 player.setPlayerStartPosition(level);
                 break;
+
                 // trebuie puse si obj, npc, si alte detalii la fiecare. cel mai bine ar fi in functiile de set sa facem cu case
-        }
+            }
+
 
         tileSize = tiledMapViewer.tileWidth;
         System.out.println(tiledMapViewer.mapWidth);
@@ -484,11 +546,15 @@ public class GamePanel extends JPanel implements Runnable {
         maxWorldCol = tiledMapViewer.mapWidth;
         maxWorldRow = tiledMapViewer.mapHeight;
 
-        tiledMapViewer.updateCamera(player.worldX, player.worldY);
 
-        map = new Map(getPathForLevel(level), this);
+            tiledMapViewer.updateCamera(player.worldX, player.worldY);
 
-        System.out.println(" LEVEL CHANGED TO: " + level );
+            map = new Map(getPathForLevel(level), this);
+
+            System.out.println(" LEVEL CHANGED TO: " + level);
+        }  catch (Exception e) {
+            throw new Exception("Failed to load level " + level, e);
+        }
 
     }
 
@@ -553,6 +619,14 @@ public class GamePanel extends JPanel implements Runnable {
         }
         return "res/level1/level1.tmx";
     }
+
+    public void retry(){
+        player.setPlayerStartPosition(currentLevel); // restabilirea pozițiilor implicite ale jucătorului
+        player.restoreLife(); // restaurarea vieților jucătorului
+        aSetter.setMonster(); // inițializarea monștrilor
+    }
+
+
 
 
 

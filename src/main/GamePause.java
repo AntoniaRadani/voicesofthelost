@@ -45,6 +45,15 @@ public class GamePause {
     }
 
     public void update(){
+
+        if (gp.pauseOption == 0) {
+            gp.gameState = gp.pauseState;
+            gp.syncGameState();
+        }
+        if (gp.menuOption == 1) {
+            gp.pauseOption = 1;
+        }
+/*
         if(gp.pauseOption == 0)
             gp.gameState = 2;
         if(gp.pauseOption == 1) {
@@ -56,6 +65,7 @@ public class GamePause {
             gp.menuOption = 3;
         }
 
+ */ // cod vechi 
     }
 
 
