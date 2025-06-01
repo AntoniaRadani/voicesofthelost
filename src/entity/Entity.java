@@ -59,6 +59,11 @@ public class Entity{
     public int defenseValue;
     public String description = "";
 
+
+    // invetory
+    public ArrayList<SuperObject> inventory = new ArrayList<>();
+    public final int maxInventorySize = 20;
+
     public static final String[] DIRECTIONS = { "up", "down", "left", "right" };
 
     public AnimationSet animationSet = new AnimationSet(); // vector pt toate imaginile sprite urilor
@@ -92,7 +97,6 @@ public class Entity{
             spriteCounter = 0;
         }
     }
-
 
     public BufferedImage getCurrentSprite() {
 
@@ -142,8 +146,8 @@ public class Entity{
         collisionOn = false;
         gp.cChecker.checkTile(this);
 
-        gp.cChecker.checkEntity(this,gp.npc);
-        gp.cChecker.checkEntity(this, gp.monsters[gp.currentLevel]);
+        gp.cChecker.checkEntity(this,gp.npc[gp.currentMap]);
+        gp.cChecker.checkEntity(this, gp.monsters[gp.currentMap]);
         boolean contatcPlayer = gp.cChecker.checkPlayer(this);
 
         if ( (this.type == 2) && (contatcPlayer == true) ) { // if is monster and contact player
@@ -155,6 +159,9 @@ public class Entity{
             }
 
         }
+        gp.cChecker.checkEntity(this,gp.npc[gp.currentMap]);
+        gp.cChecker.checkEntity(this, gp.monsters[gp.currentMap]);
+
 
         if(!this.collisionOn) {
             switch (direction) {

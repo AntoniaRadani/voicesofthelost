@@ -33,6 +33,7 @@ public class GamePanel extends JPanel implements Runnable {
     public boolean hoverSettings = false;
     public boolean hoverMuteVolume = false;
     public boolean hoverMuteSound = false;
+    public boolean hoverResume = false;
 
     public boolean isVolumeMuted = false;
     public boolean isSoundMuted = false;
@@ -64,6 +65,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     public boolean isFullscreen = true;
 
+    // volume
 
     public int volumeLevel = 100; // intre 0 și 100
     public int previousVolumeLevel = 100;
@@ -77,8 +79,8 @@ public class GamePanel extends JPanel implements Runnable {
 
     // WORLD PARAMETERS
 
-    public int maxWorldCol = 50;
-    public int maxWorldRow = 50;
+    public int maxWorldCol = 100;
+    public int maxWorldRow = 100;
     public int worldWidth = tileSize * maxWorldCol;
     public int worldHeight = tileSize * maxWorldRow;
 
@@ -101,7 +103,10 @@ public class GamePanel extends JPanel implements Runnable {
     Sound sound = new Sound();
     public GameMenu menu = new GameMenu(this);
     MouseHandler mouseH = new MouseHandler(this);
-    public GamePause pause = new GamePause(this);
+
+    GamePause pause = new GamePause(this);
+    GameOver gameOver = new GameOver(this);
+
     public UI ui = new UI(this);
     public SuperObject[][] obj = new SuperObject[3][10];
     public Monster[][] monsters = new Monster[3][10];
@@ -118,7 +123,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     // for npc
 
-    public Entity[] npc = new Entity[10];
+    public Entity[][] npc = new Entity[3][10];
 
     // for game state
 
@@ -140,6 +145,8 @@ public class GamePanel extends JPanel implements Runnable {
 
     public final int dialogueState = 4;
     public final int mapState = 10;
+    public final int tradeState = 5;
+    public final int gameOverState = 6;
 
     int menuOption = 0;
     // 0 = INITIAL STATE (draw)
@@ -151,6 +158,11 @@ public class GamePanel extends JPanel implements Runnable {
     int pauseOption = 0;
     // 0 = PAUSED
     // 1 = RELOADED
+
+    public int overOption = 0;
+    // 0 = INITIAL STATE
+    // 1 = RESTART
+    // 2 = QUIT
 
     // for zoom
     int targetTileSize = tileSize;
@@ -210,27 +222,54 @@ public class GamePanel extends JPanel implements Runnable {
         gameThread.start();
     }
 
+    public void retry(){
+        player.setDefaultPosition();
+        player.setDefaultValues();
+        player.restoreLifeAndMana();
+        roomCleared = false;
+        trapRoomLevel1.active = false;
+        escapedFromTrapRoom = false;
+        loadLevel(currentLevel);
+    }
+
+    public void restart(){
+        player.setDefaultValues();
+        player.setDefaultPosition();
+        player.restoreLifeAndMana();
+        roomCleared = false;
+        trapRoomLevel1.active = false;
+        escapedFromTrapRoom = false;
+        loadLevel(1);
+    }
+
     public void setUpGame() {
         aSetter.setObject();
         aSetter.setNPC();
         aSetter.setMonster();
         eManager.setup();
+        sound.setVolume(volumeLevel);
         playMusic(0);
     }
 
     public void update() {
 
+
        /*  if (gameState == 0)
+
+        sound.setVolume(volumeLevel);
+
+        if (gameState == menuState)
+
             // menu mode
             menu.update();
 
-        else if (gameState == 1) {
+        else if (gameState == playState) {
             // game mode
             player.update();
 
-            for (int i = 0; i < npc.length; i++) {
-                if (npc[i] != null) {
-                    npc[i].update();
+            for (int i = 0; i < npc[currentMap].length; i++) {
+                if (npc[currentMap][i] != null) {
+                    npc[currentMap][i].update();
                 }
             }
 
@@ -239,6 +278,7 @@ public class GamePanel extends JPanel implements Runnable {
                     monsters[currentMap][i].update();
                 }
             }
+
 
             for (int i=0;i<monsters[1].length;i++) {
                 // actualizarea monștrilor
@@ -251,6 +291,19 @@ public class GamePanel extends JPanel implements Runnable {
             } */
 
         currentState.update();
+
+            if(!roomCleared) {
+                trapRoomLevel1.update();
+                if (escapedFromTrapRoom == true)
+                    roomCleared = true;
+            }
+        }
+        else if (gameState == pauseState)
+            // pause mode
+            pause.update();
+        else if(gameState == gameOverState)
+            // game over
+            gameOver.update();
 
 
 
@@ -268,15 +321,16 @@ public class GamePanel extends JPanel implements Runnable {
       /*  if (gameState == menuState) {
             // drawing the menu
             menu.draw(g2temp);
-        } else if (gameState == playState || gameState == dialogueState || gameState == characterStatus) {
+        } else if (gameState == playState || gameState == dialogueState
+                || gameState == characterStatus || gameState == tradeState) {
 
             // tile
             tiledMapViewer.draw(g2temp);
 
             // npc
-            for ( int i = 0; i < npc.length; i++ ) {
-                if ( npc[i] != null ) {
-                    npc[i].draw(g2temp, this);
+            for ( int i = 0; i < npc[currentMap].length; i++ ) {
+                if ( npc[currentMap][i] != null ) {
+                    npc[currentMap][i].draw(g2temp, this);
                 }
             }
 
@@ -314,9 +368,15 @@ public class GamePanel extends JPanel implements Runnable {
         }
         else if (gameState == pauseState) {
             pause.draw(g2temp);
+            }
+        else if(gameState == gameOverState){
+            gameOver.draw(g2temp);
+        }
+
         } */
 
         currentState.draw(g2temp);
+
         // calculam cu cat trebuie scalat pt full screen
 
         int panelWidth = getWidth();
@@ -350,6 +410,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void playSE(int i){
         sound.setFile(i);
+        sound.setVolume(soundLevel);
         sound.play();
     }
 
@@ -409,7 +470,6 @@ public class GamePanel extends JPanel implements Runnable {
 
             }
             if ( timer >= 1000000000) {
-                System.out.println("FPS: " + drawCount);
                 drawCount = 0;
                 timer = 0;
             }
@@ -419,75 +479,73 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
 
-    public void loadLevel(int level ) throws Exception {
 
-        try {
-            currentLevel = level; // update
+    public void loadLevel(int level ) {
 
-            switch (level) {
-                case 1:
-                    currentMap = 0;
-                    tiledMapViewer.loadTMX("res/level1/level1.tmx");
-                    tiledMapViewer.loadMap("res/level1/level1.tmx");
-                    //                for (int i = 0; i < obj.length; i++) {
-                    //                    obj[i] = null;
-                    //                }
-                    //                for (int i = 0; i < npc.length; i++) {
-                    //                    npc[i] = null;
-                    //
-                    //                }
-                    // reincarcam pe noua mapa
-                    aSetter.setObject();
-                    aSetter.setNPC();
-                    aSetter.setMonster();
-                    player.setPlayerStartPosition(level);
-                    break;
-                case 2:
-                    System.out.println("soon level 2");
-                    currentMap = 1;
-                    tiledMapViewer.resetMap();
-                    tiledMapViewer.loadTMX("res/level2/level2.tmx");
-                    tiledMapViewer.loadMap("res/level2/level2.tmx");
-                    for (int i = 0; i < obj[0].length; i++) {
-                        obj[0][i] = null;
-                    }
+        currentLevel = level; // update
 
-                    for (int i = 0; i < npc.length; i++) {
-                        npc[i] = null;
+        switch (level) {
+            case 1:
+                currentMap = 0;
+                tiledMapViewer.loadTMX("res/level1/level1.tmx");
+                tiledMapViewer.loadMap("res/level1/level1.tmx");
+                // reincarcam pe noua mapa
+                aSetter.setObject();
+                aSetter.setNPC();
+                aSetter.setMonster();
+                player.setPlayerStartPosition(level);
+                break;
+            case 2:
+                System.out.println("soon level 2");
+                currentMap = 1;
+                tiledMapViewer.resetMap();
+                tiledMapViewer.loadTMX("res/level2/level2.tmx");
+                tiledMapViewer.loadMap("res/level2/level2.tmx");
+                for (int i = 0; i < obj[0].length; i++) {
+                    obj[0][i] = null;
+                }
 
-                    }
-                    // reincarcam pe noua mapa
-                    aSetter.setObject();
-                    aSetter.setNPC();
-                    aSetter.setMonster();
-                    player.setPlayerStartPosition(level);
-                    break;
-                case 3:
-                    System.out.println(" soon level 3");
-                    currentMap = 2;
-                    tiledMapViewer.resetMap();
-                    tiledMapViewer.loadTMX("res/level3/level3.tmx");
-                    tiledMapViewer.loadMap("res/level3/level3.tmx");
-                    for (int i = 0; i < obj[1].length; i++) {
-                        obj[1][i] = null;
-                    }
+                for (int i = 0; i < npc[0].length; i++) {
+                    npc[0][i] = null;
 
-                    for (int i = 0; i < npc.length; i++) {
-                        npc[i] = null;
+                }
+                // reincarcam pe noua mapa
+                aSetter.setObject();
+                aSetter.setNPC();
+                aSetter.setMonster();
+                player.setPlayerStartPosition(level);
+                break;
+            case 3:
+                System.out.println(" soon level 3");
+                currentMap = 2;
+                tiledMapViewer.resetMap();
+                tiledMapViewer.loadTMX("res/level3/level3.tmx");
+                tiledMapViewer.loadMap("res/level3/level3.tmx");
+                for (int i = 0; i < obj[1].length; i++) {
+                    obj[1][i] = null;
+                }
 
-                    }
-                    // reincarcam pe noua mapa
-                    aSetter.setObject();
-                    aSetter.setNPC();
-                    aSetter.setMonster();
-                    player.setPlayerStartPosition(level);
-                    break;
+                for (int i = 0; i < npc[1].length; i++) {
+                    npc[1][i] = null;
+
+                }
+                // reincarcam pe noua mapa
+                aSetter.setObject();
+                aSetter.setNPC();
+                aSetter.setMonster();
+                player.setPlayerStartPosition(level);
+                break;
+
                 // trebuie puse si obj, npc, si alte detalii la fiecare. cel mai bine ar fi in functiile de set sa facem cu case
             }
 
-            tileSize = tiledMapViewer.tileWidth;
-            maxWorldCol = tiledMapViewer.mapWidth;
-            maxWorldRow = tiledMapViewer.mapHeight;
+
+        tileSize = tiledMapViewer.tileWidth;
+        System.out.println(tiledMapViewer.mapWidth);
+        System.out.println(tiledMapViewer.mapHeight);
+        maxWorldCol = tiledMapViewer.mapWidth;
+        maxWorldRow = tiledMapViewer.mapHeight;
+
 
             tiledMapViewer.updateCamera(player.worldX, player.worldY);
 

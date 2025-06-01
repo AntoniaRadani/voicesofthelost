@@ -14,6 +14,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
+import game2.Main;
 
 
 public class Player extends Entity{
@@ -24,12 +25,12 @@ public class Player extends Entity{
     public int screenX;
     public int screenY;
 
-    public int hasKey = 1;
-    public int hasSpecialKey = 1; // number of special keys to open really important rooms
+    public int hasKey = 0;
+    public int hasSpecialKey = 0; // number of special keys to open really important rooms
     public int hasApple = 0;
     public int hasHealthPotion = 0;
     public int hasCard = 0;
-    public int hasLevelKey = 1;
+    public int hasLevelKey = 0;
     public boolean doorOpen1 = false;
     boolean openChest = false;
 
@@ -47,10 +48,13 @@ public class Player extends Entity{
     public Rectangle attackArea = new Rectangle(0, 0, 0, 0);
 
     int counter2 = 0;
+    public int coin = 0;
+
 
     // invetory
-    public ArrayList<SuperObject> inventory = new ArrayList<>();
-    public final int maxInventorySize = 20;
+   // public ArrayList<SuperObject> inventory = new ArrayList<>();
+    //public final int maxInventorySize = 20;
+
 
     // constructor
     public Player(GamePanel gp, KeyHandler keyH){
@@ -69,14 +73,19 @@ public class Player extends Entity{
         setDefaultValues();
         setItems();
         getPlayerImage();
-
     }
+
+    public void setDefaultPosition(){
+        setPlayerStartPosition(1);
+    }
+
 
     public  void setDefaultValues(){
        // worldX = gp.tileSize * 24; // players position in the world map
         //worldY = gp.tileSize * 49; // where the player starts the game   gp.tileSize * coordonata( linis/coloana din matrice)
         setPlayerStartPosition(1);
-        speed = 4;
+        setItems();
+        speed = 5;
         direction = "down";
 
         // player status
@@ -89,16 +98,27 @@ public class Player extends Entity{
         strength = 1;
         dexterity = 1;
         cards = 0;
-//        currentWeapon = new OBJ_Sword(gp);
-//        currentShield = new OBJ_Shield(gp);
+        coin = 10;
+        currentWeapon = null;
+        currentShield = null;
         attack = getAttack(); // total attack value is decided by strength and weapon
         defense = getDefense(); // total defense value is decided by dexterity and shield
+
+
+        hasKey = 0;
+        hasSpecialKey = 0; // number of special keys to open really important rooms
+        hasApple = 0;
+        hasHealthPotion = 0;
+        hasCard = 0;
+        hasLevelKey = 0;
+        doorOpen1 = false;
+        openChest = false;
+
     }
 
     public void setItems(){
         // initializarea obiectelor din inventar cu armele basic
-//        inventory.add(currentWeapon);
-//        inventory.add(currentShield);
+        inventory.clear();
 
     }
 
@@ -146,127 +166,136 @@ public class Player extends Entity{
 
        // System.out.println("STAMINA:" + stamina);
 
-
-
-        // Limite pe worldX și worldY
-        if (worldX < 0) {
-            worldX = 0;
+        if(isDead()) {
+            gp.gameState = gp.gameOverState;
+            gp.overOption = 0;
+            setDefaultValues();
         }
-        if (worldY < 0) {
-            worldY = 0;
-        }
-        if (worldX > gp.worldWidth - gp.tileSize) {
-            worldX = gp.worldWidth - gp.tileSize;
-        }
-        if (worldY > gp.worldHeight - gp.tileSize) {
-            worldY = gp.worldHeight - gp.tileSize;
-        }
-
-        // Actualizarea coordonatelor lumii în funcție de direcția de mișcare
-        else if (keyH.downPressed == true || keyH.upPressed == true || keyH.rightPressed == true || keyH.leftPressed == true ) {
-
-            if (keyH.upPressed) {
-                direction = "up";
-              //  worldY -= speed;
-            } else if (keyH.downPressed) {
-                direction = "down";
-               // worldY += speed;
-            } else if (keyH.leftPressed) {
-                direction = "left";
-               // worldX -= speed;
-            } else if (keyH.rightPressed) {
-                direction = "right";
-                //worldX += speed;
+        else {
+            // Limite pe worldX și worldY
+            if (worldX < 0) {
+                worldX = 0;
+            }
+            if (worldY < 0) {
+                worldY = 0;
+            }
+            if (worldX > gp.worldWidth - gp.tileSize) {
+                worldX = gp.worldWidth - gp.tileSize;
+            }
+            if (worldY > gp.worldHeight - gp.tileSize) {
+                worldY = gp.worldHeight - gp.tileSize;
             }
 
-            // pentru fight uri
-            if (gp.keyH.qPressed) {
-                int monsterIndex = gp.cChecker.checkEntity(this, gp.monsters[gp.currentMap]);
-                attackMonster(monsterIndex);
-                gp.keyH.enterPressed = false; // resetăm după atac
-            }
+            // Actualizarea coordonatelor lumii în funcție de direcția de mișcare
+            if (keyH.downPressed == true || keyH.upPressed == true || keyH.rightPressed == true || keyH.leftPressed == true) {
 
-            // pentru fugit
-          /*  if (gp.keyH.ctrlPressed && stamina > 0) {
-                System.out.println("Is running");
-                isRunning = true;
-                speed = 4;
-            } else {
-                isRunning = false;
-                speed = 2;
-            } */
+                if (keyH.upPressed) {
+                    direction = "up";
+                    //  worldY -= speed;
+                } else if (keyH.downPressed) {
+                    direction = "down";
+                    // worldY += speed;
+                } else if (keyH.leftPressed) {
+                    direction = "left";
+                    // worldX -= speed;
+                } else if (keyH.rightPressed) {
+                    direction = "right";
+                    //worldX += speed;
+                }
 
-            // pentru stamina
+                // pentru fight uri
+                if (gp.keyH.qPressed) {
+                    int monsterIndex = gp.cChecker.checkEntity(this, gp.monsters[gp.currentMap]);
+                    attackMonster(monsterIndex);
+                    gp.keyH.enterPressed = false; // resetăm după atac
+                }
 
-            // SCĂDERE STAMINA DACĂ FUGI
-            if (isRunning) {
-                if (System.currentTimeMillis() - lastRunTime >= 1000) { // o dată pe secundă
-                    lastRunTime = System.currentTimeMillis();
-                    runSeconds++;
+                // pentru fugit
+                if (gp.keyH.ctrlPressed && stamina > 0) {
+                    System.out.println("Is running");
+                    isRunning = true;
+                    speed = 10;
+                } else {
+                    isRunning = false;
+                    speed = 5;
+                }
 
-                    if (runSeconds >= 1) {
-                        runSeconds = 0;
-                        if (stamina > 0) stamina--;
-                        if (stamina <= 0) life--;
+                // pentru stamina
+
+                // SCĂDERE STAMINA DACĂ FUGI
+                if (isRunning) {
+                    if (System.currentTimeMillis() - lastRunTime >= 1000) { // o dată pe secundă
+                        lastRunTime = System.currentTimeMillis();
+                        runSeconds++;
+
+                        if (runSeconds >= 30) {
+                            runSeconds = 0;
+                            if (stamina > 0) stamina--;
+                            if (stamina <= 0) life--;
+                        }
+
                     }
-
+                } else {
+                    runSeconds = 0;
                 }
-            } else {
-                runSeconds = 0;
-            }
 
-            // SCĂDERE STAMINA DACĂ AI LUAT DAMAGE ÎN ULTIMELE 30 SECUNDE
-            if (System.currentTimeMillis() - lastDamageTime <= 30000) {
-                if (!damagePenaltyApplied) {
-                    stamina = Math.max(stamina - 1, 0);
-                    damagePenaltyApplied = true;
+                // SCĂDERE STAMINA DACĂ AI LUAT DAMAGE ÎN ULTIMELE 30 SECUNDE
+                if (System.currentTimeMillis() - lastDamageTime <= 30000) {
+                    if (!damagePenaltyApplied) {
+                        stamina = Math.max(stamina - 1, 0);
+                        damagePenaltyApplied = true;
+                    }
+                } else {
+                    damagePenaltyApplied = false;
                 }
-            } else {
-                damagePenaltyApplied = false;
-            }
 
-            // verificare coliziune
-            this.collisionOn = false;
-            gp.cChecker.checkTile(this);
+                // verificare coliziune
+                this.collisionOn = false;
+                gp.cChecker.checkTile(this);
 
-            // verificare coliziune object v2
-            int objIndex = gp.cChecker.checkObject2(this, true);
+                // verificare coliziune object v2
+                int objIndex = gp.cChecker.checkObject2(this, true);
                 pickUpObject2(objIndex);
 
-            // npc collision verificare
+                // npc collision verificare
 
-            int npcIndex = gp.cChecker.checkEntity(this, gp.npc );
-            interactNPC(npcIndex);
+                int npcIndex = gp.cChecker.checkEntity(this, gp.npc[gp.currentMap]);
+                interactNPC(npcIndex);
 
-            // monster collision
-            int monsterIndex = gp.cChecker.checkEntity(this, gp.monsters[level] );
-            contactMonster(monsterIndex);
+                // daca collisionOn este false, player se misca
 
-            // daca collisionOn este false, player se misca
-
-            if(!this.collisionOn) {
-                switch (direction) {
-                    case "up":
-                        worldY -= speed; // Mișcare în sus
-                        break;
-                    case "down":
-                        worldY += speed; // Mișcare în jos
-                        break;
-                    case "left":
-                        worldX -= speed; // Mișcare la stânga
-                        break;
-                    case "right":
-                        worldX += speed; // Mișcare la dreapta
-                        break;
+                if (!this.collisionOn) {
+                    switch (direction) {
+                        case "up":
+                            worldY -= speed; // Mișcare în sus
+                            break;
+                        case "down":
+                            worldY += speed; // Mișcare în jos
+                            break;
+                        case "left":
+                            worldX -= speed; // Mișcare la stânga
+                            break;
+                        case "right":
+                            worldX += speed; // Mișcare la dreapta
+                            break;
+                    }
                 }
-            }
 
-            updateAnimation();
+                updateAnimation();
 
-            // verificam daca este pe pozitia unde trebuie trecut la next level
+                // verificam daca este pe pozitia unde trebuie trecut la next level
 
-            int playerX = worldX / gp.tileSize;
-            int playerY = worldY / gp.tileSize;
+                int playerX = worldX / gp.tileSize;
+                int playerY = worldY / gp.tileSize;
+
+                System.out.println("playerX: " + playerX + " playerY: " + playerY);
+                if (gp.currentLevel == 1 && playerX == 5 && playerY == 2) { // pt trecerea la nivelul 2
+                    gp.loadLevel(2);
+                }
+                if (gp.currentLevel == 2 && playerY == 1 && (playerX == 7 || playerX == 12)) {
+                    gp.loadLevel(3);
+                }
+
 
             System.out.println("playerX: " + playerX + " playerY: " + playerY );
             if (gp.currentLevel == 1 && playerX == 5 && playerY == 2 ) { // pt trecerea la nivelul 2
@@ -284,23 +313,18 @@ public class Player extends Entity{
                     e.printStackTrace();
                     System.err.println("Failed to load level: " + e.getMessage());
                 }
+
             }
         }
 
         // gp.tiledMapViewer.updateCamera(worldX, worldY, gp.screenWidth, gp.screenHeight);
 
-        // damage. daca e prea repede damage ul marim 60
-        if ( invincible == true ) {
-            invincibleCounter++;
-            if ( invincibleCounter > 60 ) {
-                invincible = false;
-                invincibleCounter = 0;
-            }
-        }
+    }
 
-        if ( life <= 0 ) {
-            // gp.gameState = gp.gameOverState
-        }
+
+    public void restoreLifeAndMana(){
+        life = 6;
+        stamina = 6;
 
     }
 
@@ -315,18 +339,124 @@ public class Player extends Entity{
 
     public void pickUpObject2(int i){
 
+
         try {
 
-            int mapNum = gp.currentMap;
-            if (i != 999) {
-                String objectName = gp.obj[mapNum][i].name;
+        int mapNum = gp.currentMap;
+        if(i != 999){
+            String objectName = gp.obj[mapNum][i].name;
 
-                if (inventory.size() != maxInventorySize) {
-                    switch (objectName) {
-                        case "Key":
-                            hasKey++;
-                            gp.playSE(2);
-                            inventory.add(gp.obj[mapNum][i]);
+            if(inventory.size() != maxInventorySize) {
+                switch (objectName) {
+                    case "Key":
+                        System.out.println("AM LUAT CHEIE");
+                        hasKey++;
+                        gp.playSE(2);
+                        inventory.add(gp.obj[mapNum][i]);
+                        gp.obj[mapNum][i] = null;
+                        gp.ui.showMessage("You got a key!");
+                        break;
+                    case "SpecialKey":
+                        hasSpecialKey++;
+                        gp.playSE(2);
+                        inventory.add(gp.obj[mapNum][i]);
+                        gp.obj[mapNum][i] = null;
+                        gp.ui.showMessage("You got a special key!");
+                        break;
+                    case "Apple":
+                        hasApple++;
+                        gp.playSE(2);
+                        inventory.add(gp.obj[mapNum][i]);
+                        gp.obj[mapNum][i] = null;
+                        break;
+                    case "HealthPotion":
+                        hasHealthPotion++;
+                        gp.playSE(2);
+                        inventory.add(gp.obj[mapNum][i]);
+                        gp.obj[mapNum][i] = null;
+                        break;
+                    case "ChestLevel1":
+                        if (hasKey > 0) {
+                            gp.playSE(1);
+                            for(int j = 0; j < inventory.size(); j++)
+                                if(Objects.equals(inventory.get(j).name, "Key")) {
+                                    inventory.remove(j);
+                                    break;
+                                }
+                            inventory.add(new OBJ_HealthPotion(gp));
+                            inventory.add(new OBJ_Sword(gp));
+                            inventory.add(new OBJ_Shield(gp));
+                            coin += 5;
+                            // cheia care deschide usa unde se afla butoaiele care trebuie numarate
+                            inventory.add(new OBJ_SpecialKey(gp));
+                            int worldX = gp.obj[mapNum][i].worldX;
+                            int worldY = gp.obj[mapNum][i].worldY;
+                            gp.obj[mapNum][i] = new OBJ_Chest2(gp);
+                            gp.obj[mapNum][i].worldX = worldX;
+                            gp.obj[mapNum][i].worldY = worldY;
+                            hasKey--;
+                            gp.ui.showMessage("You opened a chest!");
+                        } else {
+                            gp.ui.showMessage("You need a key!");
+                        }
+                        break;
+                    case "ChestLevel2":
+                        if (hasKey > 0) {
+                            gp.playSE(1);
+                            for(int j = 0; j < inventory.size(); j++)
+                                if(Objects.equals(inventory.get(j).name, "Key")) {
+                                    inventory.remove(j);
+                                    break;
+                                }
+                            inventory.add(new OBJ_HealthPotion(gp));
+                            inventory.add(new OBJ_StaminaPotion(gp));
+                            inventory.add(new OBJ_RedSword(gp));
+                            inventory.add(new OBJ_Shield(gp));
+                            inventory.add(new OBJ_SpecialKey(gp));
+                            coin += 5;
+                            int worldX = gp.obj[mapNum][i].worldX;
+                            int worldY = gp.obj[mapNum][i].worldY;
+                            gp.obj[mapNum][i] = new OBJ_Chest2(gp);
+                            gp.obj[mapNum][i].worldX = worldX;
+                            gp.obj[mapNum][i].worldY = worldY;
+                            hasKey--;
+                            gp.ui.showMessage("You opened a chest!");
+                        } else {
+                            gp.ui.showMessage("You need a key!");
+                        }
+                        break;
+                    case "Chest":
+                        if (hasKey > 0) {
+                            gp.playSE(1);
+                            for(int j = 0; j < inventory.size(); j++)
+                                if(Objects.equals(inventory.get(j).name, "Key")) {
+                                    inventory.remove(j);
+                                    break;
+                                }
+                            inventory.add(new OBJ_Apple(gp));
+                            inventory.add(new OBJ_StaminaPotion(gp));
+                            coin += 5;
+                            int worldX = gp.obj[mapNum][i].worldX;
+                            int worldY = gp.obj[mapNum][i].worldY;
+                            gp.obj[mapNum][i] = new OBJ_Chest2(gp);
+                            gp.obj[mapNum][i].worldX = worldX;
+                            gp.obj[mapNum][i].worldY = worldY;
+                            hasKey--;
+                            gp.ui.showMessage("You opened a chest!");
+                        } else {
+                            gp.ui.showMessage("You need a key!");
+                        }
+                        break;
+                    case "ClosedDoor":
+                        // usa trap room
+                        if (hasSpecialKey > 0) {
+                            gp.playSE(1);
+                            for(int j = 0; j < inventory.size(); j++)
+                                if(Objects.equals(inventory.get(j).name, "Special")) {
+                                    inventory.remove(j);
+                                    break;
+                                }
+                            doorOpen1 = true;
                             gp.obj[mapNum][i] = null;
                             gp.ui.showMessage("You got a key!");
                             break;
@@ -478,11 +608,74 @@ public class Player extends Entity{
                                 collisionOn = true;
                                 gp.ui.showMessage("You need a special key!");
                             }
-                    }
-                } else {
-                    gp.ui.showMessage("Inventory full");
+                        break;
+                      case "Table":
+                          gp.playSE(2);
+                          if(gp.currentMap == 0 && hasCard == 0)
+                              new MatchCards(gp);
+                          if(gp.currentMap == 1 && hasCard == 0 || hasCard == 1) {
+                              //new game2.GameFrame(); // apel direct main minigame
+
+                          }
+
+                          // facem masa sa dispara ca sa nu poata lua mai multe carti de la un singur nivel
+                          // poate daca avem timp implementam si varianta in care ramane masa idk
+                          break;
+                      case "ClosedDoor2":
+                          // usa catre nivelul urmator pentru care are nevoie de o cheie speciala
+                          // o castiga in urma fightului din camera cu butoaie
+                          if (hasLevelKey > 0) {
+                              gp.playSE(1);
+                              for(int j = 0; j < inventory.size(); j++)
+                                  if(Objects.equals(inventory.get(j).name, "LevelKey")) {
+                                      inventory.remove(j);
+                                      break;
+                                  }
+                              gp.obj[mapNum][i] = null;
+                              hasLevelKey--;
+                              gp.ui.showMessage("You opened the right door!");
+                          } else {
+                              collisionOn = true;
+                              gp.ui.showMessage("You need a special key!");
+                          }
+                      case "ClosedDoor3":
+                          // usa level 3
+                          if (hasLevelKey > 0) {
+                              gp.playSE(1);
+                              for(int j = 0; j < inventory.size(); j++)
+                                  if(Objects.equals(inventory.get(j).name, "LevelKey")) {
+                                      inventory.remove(j);
+                                      break;
+                                  }
+                              gp.obj[mapNum][i] = null;
+                              hasLevelKey--;
+                              gp.ui.showMessage("You opened the right door!");
+                          } else {
+                              collisionOn = true;
+                              gp.ui.showMessage("You need a special key!");
+                          }
+                          break;
+                      case "ClosedDoor4":
+                          // usa mini game
+                          if (hasKey > 0) {
+                              gp.playSE(1);
+                              for(int j = 0; j < inventory.size(); j++)
+                                  if(Objects.equals(inventory.get(j).name, "LevelKey")) {
+                                      inventory.remove(j);
+                                      break;
+                                  }
+                              gp.obj[mapNum][i] = null;
+                              hasKey--;
+                              gp.ui.showMessage("You opened the right door!");
+                          } else {
+                              collisionOn = true;
+                              gp.ui.showMessage("You need a special key!");
+                          }
+                          break;
+
                 }
-            }
+            }  else {
+                    gp.ui.showMessage("Inventory full");
         } catch (Exception e) {
             System.err.println("Error in pickUpObject2: " + e.getMessage());
             e.printStackTrace();
@@ -531,7 +724,7 @@ public class Player extends Entity{
     }
 
     public void selectItem(){
-        int itemIndex = gp.ui.getItemIndexOnSlot();
+        int itemIndex = gp.ui.getItemIndexOnSlot(gp.ui.playerslotCol, gp.ui.playerslotRow);
         if(itemIndex < inventory.size()){
             SuperObject selectedItem = inventory.get(itemIndex);
             if(selectedItem.type == type_sword) {
@@ -555,7 +748,7 @@ public class Player extends Entity{
             if(gp.keyH.fPressed) {
                 System.out.println(" you are hitting an npc ");
                 gp.gameState = gp.dialogueState;
-                gp.npc[index].speak();
+                gp.npc[gp.currentMap][index].speak();
             }
         }
         gp.keyH.fPressed = false;
@@ -577,8 +770,8 @@ public class Player extends Entity{
                 worldY = 31 * gp.tileSize;
                 break;
             case 3:
-                worldX = 9 * 16;
-                worldY = 5 * 16;
+                worldX = 7 * gp.tileSize;
+                worldY = 5 * gp.tileSize;
         }
         System.out.println("Player start position: " + worldX + ", " + worldY);
 
@@ -610,6 +803,10 @@ public class Player extends Entity{
         invincible = false;
     }
 
+
+    public boolean isDead(){
+        return life <= 0;
+    }
 
 
 }

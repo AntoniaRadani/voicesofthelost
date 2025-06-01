@@ -1,5 +1,7 @@
 package game2;
 
+import object.OBJ_Card;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
@@ -13,6 +15,7 @@ public class GamePanel extends JPanel implements Runnable{
     static final int BALL_DIAMETER = 20;
     static final int PADDLE_WIDTH = 25;
     static final int PADDLE_HEIGHT = 100;
+    public static boolean gameWon;
     Thread gameThread;
     Image image;
     Graphics graphics;
@@ -22,7 +25,7 @@ public class GamePanel extends JPanel implements Runnable{
     Ball ball;
     Score score;
 
-    GamePanel(){
+    GamePanel(JFrame frame){
 
         newBall();
         newPaddles();
@@ -33,6 +36,18 @@ public class GamePanel extends JPanel implements Runnable{
 
         gameThread = new Thread(this);
         gameThread.start();
+
+        if (Score.enemyScore >= 3) {
+            System.out.println("Ai pierdut!");
+            gameWon = false;
+            frame.dispose();
+        }
+        if (Score.playerScore >= 3) {
+            System.out.println("Ai câștigat! Se închide minigame-ul.");
+            entity.Player.inventory.add(new OBJ_Card(entity.Entity.gp));
+            gameWon = true;
+            frame.dispose();
+        }
     }
 
     public void newBall() {
