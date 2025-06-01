@@ -20,7 +20,7 @@ public class OBJ_RedSword extends SuperObject {
         }catch(IOException e){
             System.out.println("Eroare imagine sabie rosie");
         }
-        attack = 10;
+        attack = 100;
         description = "[Sword]\n+10 attack";
     }
 }

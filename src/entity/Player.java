@@ -2,6 +2,7 @@ package entity;
 
 
 import game1.MatchCards;
+import game3.Hangman;
 import main.GamePanel;
 import main.KeyHandler;
 import main.UtilityTool;
@@ -96,6 +97,7 @@ public class Player extends Entity{
         level = 1;
         strength = 1;
         dexterity = 1;
+        hasCard = 3;
         cards = 0;
         coin = 10;
         currentWeapon = null;
@@ -118,7 +120,6 @@ public class Player extends Entity{
     public void setItems(){
         // initializarea obiectelor din inventar cu armele basic
         inventory.clear();
-
     }
 
     public void takeDamage(int amount) {
@@ -456,10 +457,10 @@ public class Player extends Entity{
                         if(gp.currentMap == 0 && hasCard == 0)
                             new MatchCards(gp);
                         if(gp.currentMap == 1 && hasCard == 0 || hasCard == 1) {
-                            //new game2.GameFrame(); // apel direct main minigame
-
+                            new game2.GameFrame();
                         }
-
+                        if(gp.currentMap == 2 && hasCard == 0 || hasCard == 1 || hasCard == 2)
+                            new Hangman();
                         // facem masa sa dispara ca sa nu poata lua mai multe carti de la un singur nivel
                         // poate daca avem timp implementam si varianta in care ramane masa idk
                         break;
@@ -509,6 +510,23 @@ public class Player extends Entity{
                             gp.obj[mapNum][i] = null;
                             hasKey--;
                             gp.ui.showMessage("You opened the right door!");
+                        } else {
+                            collisionOn = true;
+                            gp.ui.showMessage("You need a special key!");
+                        }
+                        break;
+                    case "ClosedDoor5":
+                        // usa final
+                        System.out.println("LOVEL USA CLOSEDOOR5");
+                        if (hasCard == 3 && hasLevelKey > 0) {
+                            gp.playSE(1);
+                            for(int j = 0; j < inventory.size(); j++)
+                                if(Objects.equals(inventory.get(j).name, "LevelKey")) {
+                                    inventory.remove(j);
+                                    break;
+                                }
+                            gp.obj[mapNum][i] = null;
+                            gp.winGame();
                         } else {
                             collisionOn = true;
                             gp.ui.showMessage("You need a special key!");

@@ -1,6 +1,9 @@
 package entity;
 
 import main.GamePanel;
+import object.OBJ_Card;
+import object.OBJ_ClosedDoor4;
+import object.OBJ_LevelKey;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -60,6 +63,7 @@ public class Monster extends Entity{
 
         if (life <= 0) {
             die();
+
         }
     }
 
@@ -139,7 +143,7 @@ public class Monster extends Entity{
 
             // Atac dacă e aproape
             if (attackTimer <= 0 && Math.abs(dx) < gp.tileSize && Math.abs(dy) < gp.tileSize) {
-                gp.player.takeDamage(1);
+                attackPlayer();
                 attackTimer = attackCooldown;
             }
 

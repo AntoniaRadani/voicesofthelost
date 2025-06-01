@@ -8,11 +8,10 @@ public class MonsterLevel2_2 extends Monster{
 
     public MonsterLevel2_2(GamePanel gp) {
         super(gp);
-        System.out.println("AM creat monstru");
-        maxLife = 20;
-        life = 20;
+        maxLife = 10;
+        life = 10;
         speed = 6;
-        attack = 5;
+        attack = 3;
         defense = 5;
         getPlayerImage();
         setDialogue();

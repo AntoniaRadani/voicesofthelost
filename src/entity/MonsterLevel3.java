@@ -3,19 +3,18 @@ package entity;
 import main.GamePanel;
 import object.OBJ_Card;
 import object.OBJ_LevelKey;
-import object.OBJ_SpecialKey;
 
 import java.awt.*;
 
-public class MonsterLevel2_1 extends Monster{
+public class MonsterLevel3 extends Monster{
 
-    public MonsterLevel2_1(GamePanel gp) {
+    public MonsterLevel3(GamePanel gp) {
         super(gp);
-        maxLife = 6;
-        life = 6;
-        speed = 4;
-        attack = 3;
-        defense = 2;
+        maxLife = 20;
+        life = 20;
+        speed = 6;
+        attack = 5;
+        defense = 5;
         getPlayerImage();
         setDialogue();
     }
@@ -29,10 +28,10 @@ public class MonsterLevel2_1 extends Monster{
         // logica monștrilor (mișcare, atac, etc.)
         if (life <= 0) {
             dead = true;
+            gp.player.inventory.add(new OBJ_LevelKey(gp));
             gp.player.inventory.add(new OBJ_Card(gp));
-            gp.player.inventory.add(new OBJ_SpecialKey(gp));
             gp.player.hasCard++;
-            gp.player.hasSpecialKey++;
+            gp.player.hasLevelKey++;
         }
 
         if (!dead) {
@@ -42,6 +41,6 @@ public class MonsterLevel2_1 extends Monster{
 
     public void die() {
         dead = true;
-        gp.monsters[1][0] = null;
+        gp.monsters[2][0] = null;
     }
 }

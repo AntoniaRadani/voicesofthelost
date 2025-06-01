@@ -134,9 +134,9 @@ public class GameMenu {
 
     public void update(){
        if(gp.menuOption == 0)
-           gp.gameState = 0;
+           gp.gameState = gp.menuState;
        if(gp.menuOption == 1){
-           gp.gameState = 1;
+           gp.gameState = gp.playState;
            gp.restart();
     }
        if(gp.menuOption == 2)
@@ -145,7 +145,7 @@ public class GameMenu {
            // meniu setari
        }
        if(gp.menuOption == 4){
-           gp.gameState = 1;
+           gp.gameState = gp.playState;
        }
     }
 

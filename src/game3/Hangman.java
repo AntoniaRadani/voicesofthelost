@@ -8,7 +8,7 @@ import java.util.HashSet;
 import java.util.Timer;
 import java.util.TimerTask;
 
-class Hangman extends JFrame {
+public class Hangman extends JFrame {
     private final String[] words = {"saved", "dungeon", "curse", "battle", "survival"};
     private String word;
     private char[] guessedWord;

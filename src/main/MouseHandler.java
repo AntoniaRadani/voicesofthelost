@@ -177,6 +177,14 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
                     gp.restart();
                 }
         }
+            else if(gp.gameState == gp.winState){
+                if (mx >= exitX && mx <= exitX + btnWidth &&
+                    my >= exitY && my <= exitY + btnHeight) {
+                    gp.gameState = gp.menuState;
+                    gp.menuOption = 0;
+                    gp.restart();
+                }
+        }
     }
 
     @Override
@@ -341,6 +349,15 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
                 gp.hoverSettings = true;
             }else{
                 gp.hoverSettings = false;
+            }
+        }
+
+        if(gp.gameState == gp.winState){
+            if (mx >= exitX && mx <= exitX + btnWidth &&
+                    my >= exitY && my <= exitY + btnHeight) {
+                gp.hoverQuit = true;
+            } else {
+                gp.hoverQuit = false;
             }
         }
 

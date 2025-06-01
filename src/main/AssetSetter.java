@@ -3,6 +3,7 @@ package main;
 import entity.*;
 import object.*;
 
+
 public class AssetSetter {
 
     GamePanel  gp;
@@ -96,8 +97,16 @@ public class AssetSetter {
             gp.obj[mapNum][i] = new OBJ_ClosedDoor3(gp);
             gp.obj[mapNum][i].worldX = 41 * gp.tileSize;
             gp.obj[mapNum][i].worldY = 6 * gp.tileSize;
-
-
+        }
+        else if(mapNum == 2){
+            int i = 0;
+            gp.obj[mapNum][i] = new OBJ_Table(gp);
+            gp.obj[mapNum][i].worldX = 41 * gp.tileSize;
+            gp.obj[mapNum][i].worldY = 8 * gp.tileSize;
+            i++;
+            gp.obj[mapNum][i] = new OBJ_ClosedDoor5(gp);
+            gp.obj[mapNum][i].worldX = 22 * gp.tileSize;
+            gp.obj[mapNum][i].worldY = 35 * gp.tileSize;
         }
     }
 
@@ -135,6 +144,11 @@ public class AssetSetter {
             gp.monsters[1][1] = new MonsterLevel2_2(gp);
             gp.monsters[1][1].worldX = 27 * gp.tileSize;
             gp.monsters[1][1].worldY = 20 * gp.tileSize;
+        }
+        else if(mapNum == 2){
+            gp.monsters[2][0] = new MonsterLevel3(gp);
+            gp.monsters[2][0].worldX = 30 * gp.tileSize;
+            gp.monsters[2][0].worldY = 34 * gp.tileSize;
         }
     }
 }

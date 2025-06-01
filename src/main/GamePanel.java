@@ -101,6 +101,7 @@ public class GamePanel extends JPanel implements Runnable {
     MouseHandler mouseH = new MouseHandler(this);
     GamePause pause = new GamePause(this);
     GameOver gameOver = new GameOver(this);
+    WinGame winGame = new WinGame(this);
     public UI ui = new UI(this);
     public SuperObject[][] obj = new SuperObject[3][10];
     public Monster[][] monsters = new Monster[3][10];
@@ -133,6 +134,7 @@ public class GamePanel extends JPanel implements Runnable {
     public final int mapState = 10;
     public final int tradeState = 5;
     public final int gameOverState = 6;
+    public final int winState = 7;
 
     int menuOption = 0;
     // 0 = INITIAL STATE (draw)
@@ -149,6 +151,10 @@ public class GamePanel extends JPanel implements Runnable {
     // 0 = INITIAL STATE
     // 1 = RESTART
     // 2 = QUIT
+
+    public int winOption = 0;
+    // 0 = INITIAL STATE
+    // 1 = QUIT
 
     // for zoom
     int targetTileSize = tileSize;
@@ -175,7 +181,10 @@ public class GamePanel extends JPanel implements Runnable {
         aSetter.setNPC();
     }
 
-
+    public void winGame(){
+        gameState = winState;
+        winOption = 0;
+    }
 
     public void startGameThread() {
         gameThread = new Thread(this);
@@ -189,7 +198,7 @@ public class GamePanel extends JPanel implements Runnable {
         roomCleared = false;
         trapRoomLevel1.active = false;
         escapedFromTrapRoom = false;
-        loadLevel(currentLevel);
+        loadLevel(1);
     }
 
     public void restart(){
@@ -247,6 +256,8 @@ public class GamePanel extends JPanel implements Runnable {
         else if(gameState == gameOverState)
             // game over
             gameOver.update();
+        else if(gameState == winState)
+            winGame.update();
 
         if(!roomCleared) {
             trapRoomLevel1.update();
@@ -318,6 +329,8 @@ public class GamePanel extends JPanel implements Runnable {
         else if(gameState == gameOverState){
             gameOver.draw(g2temp);
         }
+        else if(gameState == winState)
+            winGame.draw(g2temp);
         // calculam cu cat trebuie scalat pt full screen
 
         int panelWidth = getWidth();
