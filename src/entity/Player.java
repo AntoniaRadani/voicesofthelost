@@ -44,6 +44,7 @@ public class Player extends Entity{
 
     //atac
     int attackFrame = 0;
+    public Rectangle attackArea = new Rectangle(0, 0, 0, 0);
 
     int counter2 = 0;
 
@@ -132,8 +133,14 @@ public class Player extends Entity{
     }
 
     public void getPlayerImage() {
-            animationSet.loadSeparate("player", Entity.DIRECTIONS, "player", 8); // 4 cadre per direcție
+        try {
+            animationSet.loadSeparate("player", Entity.DIRECTIONS, "player", 8); // 8 cadre per direcție
+        } catch (Exception e) {
+            System.err.println("Error loading player images: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
+
 
     public void update() {
 
@@ -263,10 +270,20 @@ public class Player extends Entity{
 
             System.out.println("playerX: " + playerX + " playerY: " + playerY );
             if (gp.currentLevel == 1 && playerX == 5 && playerY == 2 ) { // pt trecerea la nivelul 2
-                gp.loadLevel(2);
+                try {
+                    gp.loadLevel(2);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    System.err.println("Failed to load level: " + e.getMessage());
+                }
             }
             if (gp.currentLevel == 2 && playerY == 1 && (playerX == 7 || playerX == 12) ) {
-                gp.loadLevel(3);
+                try {
+                    gp.loadLevel(3);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    System.err.println("Failed to load level: " + e.getMessage());
+                }
             }
         }
 
@@ -281,6 +298,10 @@ public class Player extends Entity{
             }
         }
 
+        if ( life <= 0 ) {
+            // gp.gameState = gp.gameOverState
+        }
+
     }
 
     public void pickUpObject(int index, Vector2f ob) {
@@ -290,173 +311,181 @@ public class Player extends Entity{
         }
     }
 
-    public void pickUpObject2(int i){
-        int mapNum = gp.currentMap;
-        if(i != 999){
-            String objectName = gp.obj[mapNum][i].name;
 
-            if(inventory.size() != maxInventorySize) {
-                switch (objectName) {
-                    case "Key":
-                        hasKey++;
-                        gp.playSE(2);
-                        inventory.add(gp.obj[mapNum][i]);
-                        gp.obj[mapNum][i] = null;
-                        gp.ui.showMessage("You got a key!");
-                        break;
-                    case "SpecialKey":
-                        hasSpecialKey++;
-                        gp.playSE(2);
-                        inventory.add(gp.obj[mapNum][i]);
-                        gp.obj[mapNum][i] = null;
-                        gp.ui.showMessage("You got a special key!");
-                        break;
-                    case "Apple":
-                        hasApple++;
-                        gp.playSE(2);
-                        inventory.add(gp.obj[mapNum][i]);
-                        gp.obj[mapNum][i] = null;
-                        break;
-                    case "HealthPotion":
-                        hasHealthPotion++;
-                        gp.playSE(2);
-                        inventory.add(gp.obj[mapNum][i]);
-                        gp.obj[mapNum][i] = null;
-                        break;
-                    case "ChestLevel1":
-                        if (hasKey > 0) {
-                            gp.playSE(1);
-                            for(int j = 0; j < inventory.size(); j++)
-                                if(Objects.equals(inventory.get(j).name, "Key")) {
-                                    inventory.remove(j);
-                                    break;
-                                }
-                            inventory.add(new OBJ_HealthPotion(gp));
-                            inventory.add(new OBJ_Sword(gp));
-                            inventory.add(new OBJ_Shield(gp));
-                            // cheia care deschide usa unde se afla butoaiele care trebuie numarate
-                            inventory.add(new OBJ_SpecialKey(gp));
-                            int worldX = gp.obj[mapNum][i].worldX;
-                            int worldY = gp.obj[mapNum][i].worldY;
-                            gp.obj[mapNum][i] = new OBJ_Chest2(gp);
-                            gp.obj[mapNum][i].worldX = worldX;
-                            gp.obj[mapNum][i].worldY = worldY;
-                            hasKey--;
-                            gp.ui.showMessage("You opened a chest!");
-                        } else {
-                            gp.ui.showMessage("You need a key!");
-                        }
-                        break;
-                    case "ChestLevel2":
-                        if (hasKey > 0) {
-                            gp.playSE(1);
-                            for(int j = 0; j < inventory.size(); j++)
-                                if(Objects.equals(inventory.get(j).name, "Key")) {
-                                    inventory.remove(j);
-                                    break;
-                                }
-                            inventory.add(new OBJ_HealthPotion(gp));
-                            inventory.add(new OBJ_RedSword(gp));
-                            inventory.add(new OBJ_Shield(gp));
-                            inventory.add(new OBJ_SpecialKey(gp));
-                            int worldX = gp.obj[mapNum][i].worldX;
-                            int worldY = gp.obj[mapNum][i].worldY;
-                            gp.obj[mapNum][i] = new OBJ_Chest2(gp);
-                            gp.obj[mapNum][i].worldX = worldX;
-                            gp.obj[mapNum][i].worldY = worldY;
-                            hasKey--;
-                            gp.ui.showMessage("You opened a chest!");
-                        } else {
-                            gp.ui.showMessage("You need a key!");
-                        }
-                        break;
-                    case "Chest":
-                        if (hasKey > 0) {
-                            gp.playSE(1);
-                            for(int j = 0; j < inventory.size(); j++)
-                                if(Objects.equals(inventory.get(j).name, "Key")) {
-                                    inventory.remove(j);
-                                    break;
-                                }
-                            inventory.add(new OBJ_Apple(gp));
-                            // ceva de stamina idk
-                            inventory.add(new OBJ_Apple(gp));
-                            int worldX = gp.obj[mapNum][i].worldX;
-                            int worldY = gp.obj[mapNum][i].worldY;
-                            gp.obj[mapNum][i] = new OBJ_Chest2(gp);
-                            gp.obj[mapNum][i].worldX = worldX;
-                            gp.obj[mapNum][i].worldY = worldY;
-                            hasKey--;
-                            gp.ui.showMessage("You opened a chest!");
-                        } else {
-                            gp.ui.showMessage("You need a key!");
-                        }
-                        break;
-                    case "ClosedDoor":
-                        // usa trap room
-                        if (hasSpecialKey > 0) {
-                            gp.playSE(1);
-                            for(int j = 0; j < inventory.size(); j++)
-                                if(Objects.equals(inventory.get(j).name, "Special")) {
-                                    inventory.remove(j);
-                                    break;
-                                }
-                            doorOpen1 = true;
+
+    public void pickUpObject2(int i){
+
+        try {
+
+            int mapNum = gp.currentMap;
+            if (i != 999) {
+                String objectName = gp.obj[mapNum][i].name;
+
+                if (inventory.size() != maxInventorySize) {
+                    switch (objectName) {
+                        case "Key":
+                            hasKey++;
+                            gp.playSE(2);
+                            inventory.add(gp.obj[mapNum][i]);
                             gp.obj[mapNum][i] = null;
-                            hasSpecialKey--;
-                            gp.ui.showMessage("You opened the right door!");
-                        } else {
-                            collisionOn = true;
-                            gp.ui.showMessage("You nseed a special key!");
-                        }
-                        break;
-                    case "Door":
-                        // usa basic in care poate sa gaseasca obiecte
-                        System.out.println("HITTING DOORs");
-                        if (hasKey > 0) {
-                            gp.playSE(1);
-                            for(int j = 0; j < inventory.size(); j++)
-                                if(Objects.equals(inventory.get(j).name, "Key")) {
-                                    inventory.remove(j);
-                                    break;
-                                }
+                            gp.ui.showMessage("You got a key!");
+                            break;
+                        case "SpecialKey":
+                            hasSpecialKey++;
+                            gp.playSE(2);
+                            inventory.add(gp.obj[mapNum][i]);
                             gp.obj[mapNum][i] = null;
-                            hasKey--;
-                            gp.ui.showMessage("You opened a door...");
-                        } else {
-                            collisionOn = true;
-                            gp.ui.showMessage("You need a key!");
-                        }
-                        break;
-                    case "Table":
-                        gp.playSE(2);
-                        if(gp.currentMap == 0 && hasCard == 0)
-                            new MatchCards(gp);
-                        // facem masa sa dispara ca sa nu poata lua mai multe carti de la un singur nivel
-                        // poate daca avem timp implementam si varianta in care ramane masa idk
-                        break;
-                    case "ClosedDoor2":
-                        // usa catre nivelul urmator pentru care are nevoie de o cheie speciala
-                        // o castiga in urma fightului din camera cu butoaie
-                        if (hasLevelKey > 0) {
-                            gp.playSE(1);
-                            for(int j = 0; j < inventory.size(); j++)
-                                if(Objects.equals(inventory.get(j).name, "LevelKey")) {
-                                    inventory.remove(j);
-                                    break;
-                                }
+                            gp.ui.showMessage("You got a special key!");
+                            break;
+                        case "Apple":
+                            hasApple++;
+                            gp.playSE(2);
+                            inventory.add(gp.obj[mapNum][i]);
                             gp.obj[mapNum][i] = null;
-                            hasLevelKey--;
-                            gp.ui.showMessage("You opened the right door!");
-                        } else {
-                            collisionOn = true;
-                            gp.ui.showMessage("You need a special key!");
-                        }
+                            break;
+                        case "HealthPotion":
+                            hasHealthPotion++;
+                            gp.playSE(2);
+                            inventory.add(gp.obj[mapNum][i]);
+                            gp.obj[mapNum][i] = null;
+                            break;
+                        case "ChestLevel1":
+                            if (hasKey > 0) {
+                                gp.playSE(1);
+                                for (int j = 0; j < inventory.size(); j++)
+                                    if (Objects.equals(inventory.get(j).name, "Key")) {
+                                        inventory.remove(j);
+                                        break;
+                                    }
+                                inventory.add(new OBJ_HealthPotion(gp));
+                                inventory.add(new OBJ_Sword(gp));
+                                inventory.add(new OBJ_Shield(gp));
+                                // cheia care deschide usa unde se afla butoaiele care trebuie numarate
+                                inventory.add(new OBJ_SpecialKey(gp));
+                                int worldX = gp.obj[mapNum][i].worldX;
+                                int worldY = gp.obj[mapNum][i].worldY;
+                                gp.obj[mapNum][i] = new OBJ_Chest2(gp);
+                                gp.obj[mapNum][i].worldX = worldX;
+                                gp.obj[mapNum][i].worldY = worldY;
+                                hasKey--;
+                                gp.ui.showMessage("You opened a chest!");
+                            } else {
+                                gp.ui.showMessage("You need a key!");
+                            }
+                            break;
+                        case "ChestLevel2":
+                            if (hasKey > 0) {
+                                gp.playSE(1);
+                                for (int j = 0; j < inventory.size(); j++)
+                                    if (Objects.equals(inventory.get(j).name, "Key")) {
+                                        inventory.remove(j);
+                                        break;
+                                    }
+                                inventory.add(new OBJ_HealthPotion(gp));
+                                inventory.add(new OBJ_RedSword(gp));
+                                inventory.add(new OBJ_Shield(gp));
+                                inventory.add(new OBJ_SpecialKey(gp));
+                                int worldX = gp.obj[mapNum][i].worldX;
+                                int worldY = gp.obj[mapNum][i].worldY;
+                                gp.obj[mapNum][i] = new OBJ_Chest2(gp);
+                                gp.obj[mapNum][i].worldX = worldX;
+                                gp.obj[mapNum][i].worldY = worldY;
+                                hasKey--;
+                                gp.ui.showMessage("You opened a chest!");
+                            } else {
+                                gp.ui.showMessage("You need a key!");
+                            }
+                            break;
+                        case "Chest":
+                            if (hasKey > 0) {
+                                gp.playSE(1);
+                                for (int j = 0; j < inventory.size(); j++)
+                                    if (Objects.equals(inventory.get(j).name, "Key")) {
+                                        inventory.remove(j);
+                                        break;
+                                    }
+                                inventory.add(new OBJ_Apple(gp));
+                                // ceva de stamina idk
+                                inventory.add(new OBJ_Apple(gp));
+                                int worldX = gp.obj[mapNum][i].worldX;
+                                int worldY = gp.obj[mapNum][i].worldY;
+                                gp.obj[mapNum][i] = new OBJ_Chest2(gp);
+                                gp.obj[mapNum][i].worldX = worldX;
+                                gp.obj[mapNum][i].worldY = worldY;
+                                hasKey--;
+                                gp.ui.showMessage("You opened a chest!");
+                            } else {
+                                gp.ui.showMessage("You need a key!");
+                            }
+                            break;
+                        case "ClosedDoor":
+                            // usa trap room
+                            if (hasSpecialKey > 0) {
+                                gp.playSE(1);
+                                for (int j = 0; j < inventory.size(); j++)
+                                    if (Objects.equals(inventory.get(j).name, "Special")) {
+                                        inventory.remove(j);
+                                        break;
+                                    }
+                                doorOpen1 = true;
+                                gp.obj[mapNum][i] = null;
+                                hasSpecialKey--;
+                                gp.ui.showMessage("You opened the right door!");
+                            } else {
+                                collisionOn = true;
+                                gp.ui.showMessage("You nseed a special key!");
+                            }
+                            break;
+                        case "Door":
+                            // usa basic in care poate sa gaseasca obiecte
+                            System.out.println("HITTING DOORs");
+                            if (hasKey > 0) {
+                                gp.playSE(1);
+                                for (int j = 0; j < inventory.size(); j++)
+                                    if (Objects.equals(inventory.get(j).name, "Key")) {
+                                        inventory.remove(j);
+                                        break;
+                                    }
+                                gp.obj[mapNum][i] = null;
+                                hasKey--;
+                                gp.ui.showMessage("You opened a door...");
+                            } else {
+                                collisionOn = true;
+                                gp.ui.showMessage("You need a key!");
+                            }
+                            break;
+                        case "Table":
+                            gp.playSE(2);
+                            if (gp.currentMap == 0 && hasCard == 0)
+                                new MatchCards(gp);
+                            // facem masa sa dispara ca sa nu poata lua mai multe carti de la un singur nivel
+                            // poate daca avem timp implementam si varianta in care ramane masa idk
+                            break;
+                        case "ClosedDoor2":
+                            // usa catre nivelul urmator pentru care are nevoie de o cheie speciala
+                            // o castiga in urma fightului din camera cu butoaie
+                            if (hasLevelKey > 0) {
+                                gp.playSE(1);
+                                for (int j = 0; j < inventory.size(); j++)
+                                    if (Objects.equals(inventory.get(j).name, "LevelKey")) {
+                                        inventory.remove(j);
+                                        break;
+                                    }
+                                gp.obj[mapNum][i] = null;
+                                hasLevelKey--;
+                                gp.ui.showMessage("You opened the right door!");
+                            } else {
+                                collisionOn = true;
+                                gp.ui.showMessage("You need a special key!");
+                            }
+                    }
+                } else {
+                    gp.ui.showMessage("Inventory full");
                 }
             }
-            else{
-                gp.ui.showMessage("Inventory full");
-            }
+        } catch (Exception e) {
+            System.err.println("Error in pickUpObject2: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -478,18 +507,18 @@ public class Player extends Entity{
     }
 
     public BufferedImage setup(String imageName){
-        UtilityTool tool = new UtilityTool();
         BufferedImage image = null;
 
-        try{
+        try {
             image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/object/" + imageName +".png")));
             image = uTool.scaleImage(image, gp.tileSize, gp.tileSize);
-        }catch(IOException e){
-            System.out.println("NOT FOUND");
+        } catch (IOException | NullPointerException e) {
+            System.err.println("Error loading image: " + imageName + " -> " + e.getMessage());
         }
 
         return image;
     }
+
 
     public void draw(Graphics2D g2){
 //        g2.setColor(Color.black);
@@ -557,16 +586,28 @@ public class Player extends Entity{
 
     public void contactMonster( int index) {
 
-        if ( index != 999 ) { // player touches a monster
+        if ( index != -1 ) { // player touches a monster
 
             if ( invincible == false ) {
-                life -= 1;
-                invincible = true;
+                if (gp.monsters[gp.currentMap][index].invincible == false) {
+                    gp.monsters[gp.currentMap][index].life -= 1;
+                    gp.monsters[gp.currentMap][index].invincible = true;
+                 //   gp.monsters[gp.currentMap][index].damageReaction();
+                    if (gp.monsters[gp.currentMap][index].life <= 0) {
+                        gp.monsters[gp.currentMap][index].dying = true;
+                    }
+                }
             }
 
 
         }
 
+    }
+
+    // restaureaza viata jucatorului
+    public void restoreLife() {
+        life = maxLife;
+        invincible = false;
     }
 
 

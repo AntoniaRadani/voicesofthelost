@@ -22,128 +22,135 @@ public class CollisionChecker {
     
     public void checkTile(Entity entity) {
 
-        int entityLeftWorldX = entity.worldX + entity.solidArea.x;
-        int entityRightWorldX = entity.worldX + entity.solidArea.x + entity.solidArea.width;
-        int entityTopWorldY = entity.worldY + entity.solidArea.y;
-        int entityBottomWorldY = entity.worldY + entity.solidArea.y + entity.solidArea.height;
+        try {
 
-        int entityLeftCol = entityLeftWorldX / gp.tileSize;
-        int entityRightCol = entityRightWorldX / gp.tileSize;
-        int entityTopRow = entityTopWorldY / gp.tileSize;
-        int entityBottomRow = entityBottomWorldY / gp.tileSize;
+            int entityLeftWorldX = entity.worldX + entity.solidArea.x;
+            int entityRightWorldX = entity.worldX + entity.solidArea.x + entity.solidArea.width;
+            int entityTopWorldY = entity.worldY + entity.solidArea.y;
+            int entityBottomWorldY = entity.worldY + entity.solidArea.y + entity.solidArea.height;
 
-        int tileNum1 = 0, tileNum2 = 0;
-        int layer1 = 1, layer2 = 2; // in functie de nivel, reprezinta layerele pe care sunt obiecte cu coliziune
+            int entityLeftCol = entityLeftWorldX / gp.tileSize;
+            int entityRightCol = entityRightWorldX / gp.tileSize;
+            int entityTopRow = entityTopWorldY / gp.tileSize;
+            int entityBottomRow = entityBottomWorldY / gp.tileSize;
 
-        switch (gp.currentLevel) {
-            case 1:
-                layer1 = 1; // walls
-                layer2 = 2; // decor
-                break;
-            case 2:
-                layer1 = 5; // decor
-                layer2 = 4; // walls
-                break;
-            case 3:
-                layer1 = 2; // walls
-                layer2 = 3; // decor
-        }
-        switch (entity.direction) {
-            case "up":
-                entityTopRow = (entityTopWorldY - entity.speed) / gp.tileSize;
-                if (isInsideMap(entityTopRow, entityLeftCol)) {
-                    tileNum1 = gp.tiledMapViewer.mapData[layer1][entityTopRow][entityLeftCol];
-                }
-                if (isInsideMap(entityTopRow, entityRightCol)) {
-                    tileNum2 = gp.tiledMapViewer.mapData[layer1][entityTopRow][entityRightCol];
-                }
-                break;
+            int tileNum1 = 0, tileNum2 = 0;
+            int layer1 = 1, layer2 = 2; // in functie de nivel, reprezinta layerele pe care sunt obiecte cu coliziune
 
-            case "down":
-                entityBottomRow = (entityBottomWorldY + entity.speed) / gp.tileSize;
-                if (isInsideMap(entityBottomRow, entityLeftCol)) {
-                    tileNum1 = gp.tiledMapViewer.mapData[layer1][entityBottomRow][entityLeftCol];
-                }
-                if (isInsideMap(entityBottomRow, entityRightCol)) {
-                    tileNum2 = gp.tiledMapViewer.mapData[layer1][entityBottomRow][entityRightCol];
-                }
-                break;
+            switch (gp.currentLevel) {
+                case 1:
+                    layer1 = 1; // walls
+                    layer2 = 2; // decor
+                    break;
+                case 2:
+                    layer1 = 5; // decor
+                    layer2 = 4; // walls
+                    break;
+                case 3:
+                    layer1 = 2; // walls
+                    layer2 = 3; // decor
+            }
+            switch (entity.direction) {
+                case "up":
+                    entityTopRow = (entityTopWorldY - entity.speed) / gp.tileSize;
+                    if (isInsideMap(entityTopRow, entityLeftCol)) {
+                        tileNum1 = gp.tiledMapViewer.mapData[layer1][entityTopRow][entityLeftCol];
+                    }
+                    if (isInsideMap(entityTopRow, entityRightCol)) {
+                        tileNum2 = gp.tiledMapViewer.mapData[layer1][entityTopRow][entityRightCol];
+                    }
+                    break;
 
-            case "left":
-                entityLeftCol = (entityLeftWorldX - entity.speed) / gp.tileSize;
-                if (isInsideMap(entityTopRow, entityLeftCol)) {
-                    tileNum1 = gp.tiledMapViewer.mapData[layer1][entityTopRow][entityLeftCol];
-                }
-                if (isInsideMap(entityBottomRow, entityLeftCol)) {
-                    tileNum2 = gp.tiledMapViewer.mapData[layer1][entityBottomRow][entityLeftCol];
-                }
-                break;
+                case "down":
+                    entityBottomRow = (entityBottomWorldY + entity.speed) / gp.tileSize;
+                    if (isInsideMap(entityBottomRow, entityLeftCol)) {
+                        tileNum1 = gp.tiledMapViewer.mapData[layer1][entityBottomRow][entityLeftCol];
+                    }
+                    if (isInsideMap(entityBottomRow, entityRightCol)) {
+                        tileNum2 = gp.tiledMapViewer.mapData[layer1][entityBottomRow][entityRightCol];
+                    }
+                    break;
 
-            case "right":
-                entityRightCol = (entityRightWorldX + entity.speed) / gp.tileSize;
-                if (isInsideMap(entityTopRow, entityRightCol)) {
-                    tileNum1 = gp.tiledMapViewer.mapData[layer1][entityTopRow][entityRightCol];
-                }
-                if (isInsideMap(entityBottomRow, entityRightCol)) {
-                    tileNum2 = gp.tiledMapViewer.mapData[layer1][entityBottomRow][entityRightCol];
-                }
-                break;
-        }
+                case "left":
+                    entityLeftCol = (entityLeftWorldX - entity.speed) / gp.tileSize;
+                    if (isInsideMap(entityTopRow, entityLeftCol)) {
+                        tileNum1 = gp.tiledMapViewer.mapData[layer1][entityTopRow][entityLeftCol];
+                    }
+                    if (isInsideMap(entityBottomRow, entityLeftCol)) {
+                        tileNum2 = gp.tiledMapViewer.mapData[layer1][entityBottomRow][entityLeftCol];
+                    }
+                    break;
 
-        if ((tileNum1 > 0 && gp.tiledMapViewer.tileCollision[tileNum1]) ||
-                (tileNum2 > 0 && gp.tiledMapViewer.tileCollision[tileNum2])) {
-            //System.out.println(" AM LOVIT CEVA PE PRIMUL LAYER");
-            entity.collisionOn = true;
-        }
+                case "right":
+                    entityRightCol = (entityRightWorldX + entity.speed) / gp.tileSize;
+                    if (isInsideMap(entityTopRow, entityRightCol)) {
+                        tileNum1 = gp.tiledMapViewer.mapData[layer1][entityTopRow][entityRightCol];
+                    }
+                    if (isInsideMap(entityBottomRow, entityRightCol)) {
+                        tileNum2 = gp.tiledMapViewer.mapData[layer1][entityBottomRow][entityRightCol];
+                    }
+                    break;
+            }
 
-        // pentru al 2 lea layer
+            if ((tileNum1 > 0 && gp.tiledMapViewer.tileCollision[tileNum1]) ||
+                    (tileNum2 > 0 && gp.tiledMapViewer.tileCollision[tileNum2])) {
+                //System.out.println(" AM LOVIT CEVA PE PRIMUL LAYER");
+                entity.collisionOn = true;
+            }
 
-        switch (entity.direction) {
-            case "up":
-                entityTopRow = (entityTopWorldY - entity.speed) / gp.tileSize;
-                if (isInsideMap(entityTopRow, entityLeftCol)) {
-                    tileNum1 = gp.tiledMapViewer.mapData[layer2][entityTopRow][entityLeftCol];
-                }
-                if (isInsideMap(entityTopRow, entityRightCol)) {
-                    tileNum2 = gp.tiledMapViewer.mapData[layer2][entityTopRow][entityRightCol];
-                }
-                break;
+            // pentru al 2 lea layer
 
-            case "down":
-                entityBottomRow = (entityBottomWorldY + entity.speed) / gp.tileSize;
-                if (isInsideMap(entityBottomRow, entityLeftCol)) {
-                    tileNum1 = gp.tiledMapViewer.mapData[layer2][entityBottomRow][entityLeftCol];
-                }
-                if (isInsideMap(entityBottomRow, entityRightCol)) {
-                    tileNum2 = gp.tiledMapViewer.mapData[layer2][entityBottomRow][entityRightCol];
-                }
-                break;
+            switch (entity.direction) {
+                case "up":
+                    entityTopRow = (entityTopWorldY - entity.speed) / gp.tileSize;
+                    if (isInsideMap(entityTopRow, entityLeftCol)) {
+                        tileNum1 = gp.tiledMapViewer.mapData[layer2][entityTopRow][entityLeftCol];
+                    }
+                    if (isInsideMap(entityTopRow, entityRightCol)) {
+                        tileNum2 = gp.tiledMapViewer.mapData[layer2][entityTopRow][entityRightCol];
+                    }
+                    break;
 
-            case "left":
-                entityLeftCol = (entityLeftWorldX - entity.speed) / gp.tileSize;
-                if (isInsideMap(entityTopRow, entityLeftCol)) {
-                    tileNum1 = gp.tiledMapViewer.mapData[layer2][entityTopRow][entityLeftCol];
-                }
-                if (isInsideMap(entityBottomRow, entityLeftCol)) {
-                    tileNum2 = gp.tiledMapViewer.mapData[layer2][entityBottomRow][entityLeftCol];
-                }
-                break;
+                case "down":
+                    entityBottomRow = (entityBottomWorldY + entity.speed) / gp.tileSize;
+                    if (isInsideMap(entityBottomRow, entityLeftCol)) {
+                        tileNum1 = gp.tiledMapViewer.mapData[layer2][entityBottomRow][entityLeftCol];
+                    }
+                    if (isInsideMap(entityBottomRow, entityRightCol)) {
+                        tileNum2 = gp.tiledMapViewer.mapData[layer2][entityBottomRow][entityRightCol];
+                    }
+                    break;
 
-            case "right":
-                entityRightCol = (entityRightWorldX + entity.speed) / gp.tileSize;
-                if (isInsideMap(entityTopRow, entityRightCol)) {
-                    tileNum1 = gp.tiledMapViewer.mapData[layer2][entityTopRow][entityRightCol];
-                }
-                if (isInsideMap(entityBottomRow, entityRightCol)) {
-                    tileNum2 = gp.tiledMapViewer.mapData[layer2][entityBottomRow][entityRightCol];
-                }
-                break;
-        }
+                case "left":
+                    entityLeftCol = (entityLeftWorldX - entity.speed) / gp.tileSize;
+                    if (isInsideMap(entityTopRow, entityLeftCol)) {
+                        tileNum1 = gp.tiledMapViewer.mapData[layer2][entityTopRow][entityLeftCol];
+                    }
+                    if (isInsideMap(entityBottomRow, entityLeftCol)) {
+                        tileNum2 = gp.tiledMapViewer.mapData[layer2][entityBottomRow][entityLeftCol];
+                    }
+                    break;
 
-        if ((tileNum1 > 0 && gp.tiledMapViewer.tileCollision[tileNum1]) ||
-                (tileNum2 > 0 && gp.tiledMapViewer.tileCollision[tileNum2])) {
-            //System.out.println(" AM LOVIT CEVA PE AL 2 LEA LAYER");
-            entity.collisionOn = true;
+                case "right":
+                    entityRightCol = (entityRightWorldX + entity.speed) / gp.tileSize;
+                    if (isInsideMap(entityTopRow, entityRightCol)) {
+                        tileNum1 = gp.tiledMapViewer.mapData[layer2][entityTopRow][entityRightCol];
+                    }
+                    if (isInsideMap(entityBottomRow, entityRightCol)) {
+                        tileNum2 = gp.tiledMapViewer.mapData[layer2][entityBottomRow][entityRightCol];
+                    }
+                    break;
+            }
+
+            if ((tileNum1 > 0 && gp.tiledMapViewer.tileCollision[tileNum1]) ||
+                    (tileNum2 > 0 && gp.tiledMapViewer.tileCollision[tileNum2])) {
+                //System.out.println(" AM LOVIT CEVA PE AL 2 LEA LAYER");
+                entity.collisionOn = true;
+            }
+
+        } catch (Exception e) {
+            // re-throw cu informații utile
+            throw new RuntimeException("Collision error at entity position (" + entity.worldX + ", " + entity.worldY + "): " + e.getMessage(), e);
         }
     }
 

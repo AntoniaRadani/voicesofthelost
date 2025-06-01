@@ -4,7 +4,7 @@ import main.GamePanel;
 
 import java.util.Random;
 
-public class Troll extends Entity {
+public class Troll extends Monster {
 
     GamePanel gp;
     String [] dir = {"left" , "right"};
@@ -47,6 +47,8 @@ public class Troll extends Entity {
     }
 
     public void setAction() {
+
+
         actionLockCounter++;
         if ( actionLockCounter == 300 || collisionOn) {
             Random random = new Random();
@@ -64,9 +66,20 @@ public class Troll extends Entity {
     }
 
     public void damageReaction() {
+        super.takeDamage(4);
         actionLockCounter = 0;
         direction = gp.player.direction;
     }
 
-    
+
+    @Override
+    public void updateMonster() {
+        super.update(); // apelează logica de bază din Monster
+    }
+
+
+
+
+
+
 }

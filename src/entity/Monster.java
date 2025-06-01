@@ -123,4 +123,80 @@ public class Monster extends Entity{
     public void setDialogue(){
     }
 
+     public void updateMonster() {
+        setAction(); // Decide direcția pe baza AI-ului
+
+        collisionOn = false;
+        gp.cChecker.checkTile(this); // verifică coliziunea cu tiles
+        gp.cChecker.checkPlayer(this); // coliziune cu player
+
+
+        // Dacă nu este coliziune, modifică poziția
+        if (!collisionOn) {
+            switch (direction) {
+                case "left":
+                    worldX -= speed;
+                    break;
+                case "right":
+                    worldX += speed;
+                    break;
+            }
+        }
+
+        // Dacă e aproape de jucător, atacă
+        if (Math.abs(gp.player.worldX - worldX) < gp.tileSize &&
+                Math.abs(gp.player.worldY - worldY) < gp.tileSize) {
+
+            if (attackTimer <= 0) {
+                attackPlayer(); // metodă deja existentă
+                attackTimer = attackCooldown;
+            }
+        } else {
+            if (attackTimer > 0) {
+                attackTimer--;
+            }
+        }
+
+
+        updateAnimation();
+    }
+
+
+    /*public void updateMonster() {
+        if (!dead) {
+            setAction(); // apelează AI-ul
+
+            collisionOn = false;
+            gp.cChecker.checkTile(this);       // coliziune cu tiles
+            gp.cChecker.checkPlayer(this);     // coliziune cu jucătorul
+
+            if (!collisionOn) {
+                switch (direction) {
+                    case "up":
+                        worldY -= speed;
+                        break;
+                    case "down":
+                        worldY += speed;
+                        break;
+                    case "left":
+                        worldX -= speed;
+                        break;
+                    case "right":
+                        worldX += speed;
+                        break;
+                }
+            }
+
+            updateAnimation(); // dacă ai o animație
+        }
+
+        if (life <= 0 && !dead) {
+            die();
+        }
+
+        if (attackTimer > 0) {
+            attackTimer--;
+        }
+    } */
+
 }

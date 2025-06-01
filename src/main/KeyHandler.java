@@ -28,7 +28,7 @@ public class KeyHandler implements KeyListener {
 
     }
 
-    @Override
+ /*   @Override
     public void keyPressed(KeyEvent e) {
         // returns the integer keyCode associated with the key
         int code = e.getKeyCode();
@@ -64,6 +64,7 @@ public class KeyHandler implements KeyListener {
             if (code == KeyEvent.VK_ESCAPE) {
                 escPressed = true;
                 gp.gameState = gp.pauseState; // paused
+                gp.syncGameState();
             }
             if (code == KeyEvent.VK_E) {
                 gp.toggleFullscreen();
@@ -79,6 +80,7 @@ public class KeyHandler implements KeyListener {
                 shiftPressed = true;
                 // in play mode
                 gp.gameState = gp.characterStatus; // character status mode
+                gp.syncGameState();
                 characterStatus(code);
             }
             if( code == KeyEvent.VK_M ) {
@@ -101,24 +103,118 @@ public class KeyHandler implements KeyListener {
         }
         else if(gp.gameState == gp.characterStatus) {
             characterStatus(code);
-            if(code == KeyEvent.VK_SHIFT)
+            if(code == KeyEvent.VK_SHIFT) {
                 gp.gameState = gp.playState;
+                gp.syncGameState();
+            }
             if(code == KeyEvent.VK_ENTER)
                 gp.player.selectItem();
         }
         else if(gp.gameState == gp.pauseState){
-            if(code == KeyEvent.VK_ESCAPE)
+            if(code == KeyEvent.VK_ESCAPE) {
                 gp.gameState = gp.playState;
+                gp.syncGameState();
+            }
+
         }
         else if(gp.gameState == gp.dialogueState){
             if(code == KeyEvent.VK_F) {
                 gp.player.attacking = true;
                 gp.gameState = gp.playState;
+                gp.syncGameState();
             }
         } else if (gp.gameState == gp.mapState) {
             mapState(code);
         }
+    } */
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        int code = e.getKeyCode();
+
+        switch (gp.gameState) {
+
+            // 1. PLAY STATE
+            case 1 -> {
+                inputNumber(code);
+
+                switch (code) {
+                    case KeyEvent.VK_W -> upPressed = true;
+                    case KeyEvent.VK_S -> downPressed = true;
+                    case KeyEvent.VK_A -> leftPressed = true;
+                    case KeyEvent.VK_D -> rightPressed = true;
+                    case KeyEvent.VK_ENTER -> enterPressed = true;
+                    case KeyEvent.VK_ESCAPE -> {
+                        escPressed = true;
+                        gp.gameState = gp.pauseState;
+                        gp.syncGameState();
+                    }
+                    case KeyEvent.VK_SHIFT -> {
+                        shiftPressed = true;
+                        gp.gameState = gp.characterStatus;
+                        gp.syncGameState();
+                        characterStatus(code);
+                    }
+                    case KeyEvent.VK_F -> fPressed = true;
+                    case KeyEvent.VK_Q -> qPressed = true;
+                    case KeyEvent.VK_CONTROL -> ctrlPressed = true;
+                    case KeyEvent.VK_E -> gp.toggleFullscreen();
+                    case KeyEvent.VK_1 -> gp.adjustZoom(true);
+                    case KeyEvent.VK_0 -> gp.adjustZoom(false);
+                    case KeyEvent.VK_M -> gp.showFullMap = !gp.showFullMap;
+                    case KeyEvent.VK_X -> gp.map.miniMapOn = !gp.map.miniMapOn;
+                    case KeyEvent.VK_L -> gp.showLighting = !gp.showLighting;
+                }
+            }
+
+            // 2. CHARACTER STATUS STATE
+            case 3 -> {
+                characterStatus(code);
+
+                if (code == KeyEvent.VK_SHIFT) {
+                    gp.gameState = gp.playState;
+                    gp.syncGameState();
+                }
+                if (code == KeyEvent.VK_ENTER) {
+                    gp.player.selectItem();
+                }
+            }
+
+            // 3. PAUSE STATE
+            case 2 -> {
+                if (code == KeyEvent.VK_ESCAPE) {
+                    gp.gameState = gp.playState;
+                    gp.syncGameState();
+                }
+            }
+
+            // 4. DIALOGUE STATE
+            case 4 -> {
+                if (code == KeyEvent.VK_F) {
+                    gp.player.attacking = true;
+                    gp.gameState = gp.playState;
+                    gp.syncGameState();
+                }
+            }
+
+            // 5. TRAP ROOM STATE (pentru introducere cod sau dialog inițial)
+            case 5 -> {
+                if (code == KeyEvent.VK_F) {
+                    gp.gameState = gp.playState;
+                    gp.syncGameState();
+                }
+            }
+
+            // 6. MAP STATE
+            case 10 -> {
+                if (code == KeyEvent.VK_M) {
+                    gp.gameState = gp.playState;
+                    gp.syncGameState();
+                }
+            }
+        }
     }
+
 
     public void characterStatus(int code){
         if(code == KeyEvent.VK_W){
@@ -184,6 +280,7 @@ public class KeyHandler implements KeyListener {
         if (code == KeyEvent.VK_M) {
 
             gp.gameState = gp.playState;
+            gp.syncGameState();
         }
 
     }

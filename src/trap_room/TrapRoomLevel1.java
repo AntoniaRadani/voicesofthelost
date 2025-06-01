@@ -36,6 +36,8 @@ public class TrapRoomLevel1 {
         // Alege un monstru din gp, sau instanțiază-l direct:
          // monster = gp.monsters[0];
 
+        update();
+
         // Ieșirea și tile-urile de blocare
         exitTileX = 33;
         exitTileY = 28;
@@ -62,8 +64,12 @@ public class TrapRoomLevel1 {
                 player.solidArea.width,
                 player.solidArea.height);
 
-        if(monster == null)
+        if(monster == null) {
             monster = gp.monsters[0][0];
+            monster = new MonsterLevel1(gp);
+            monster.worldX = 41 * gp.tileSize;
+            monster.worldY = 2 * gp.tileSize;
+        }
 
         if (roomArea.intersects(playerBox) && gp.player.doorOpen1 ) {
             System.out.println("APEL FUNCTIE TRAP ROOM");
@@ -72,8 +78,11 @@ public class TrapRoomLevel1 {
                 active = true;
                 roomLocked = true;
 
-                gp.gameState = gp.dialogueState;
+                gp.setGameState(gp.trapRoomStateObj);
+                gp.gameState = 5; // sau o constantă definită clar
+                gp.syncGameState();
                 monster.speak();
+
 
                 lastDamageTime = System.currentTimeMillis();
 
@@ -95,6 +104,8 @@ public class TrapRoomLevel1 {
                 roomLocked = false;
                 monster = null;
                 gp.monsters[0][0] = null;
+                gp.gameState = gp.playState;
+                gp.syncGameState();
 
                 // adaugare in inventar cheie nivel urmator
                 gp.player.inventory.add(new OBJ_LevelKey(gp));

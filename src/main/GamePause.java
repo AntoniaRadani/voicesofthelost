@@ -34,10 +34,13 @@ public class GamePause {
     }
 
     public void update(){
-        if(gp.pauseOption == 0)
-            gp.gameState = 2;
-        if(gp.menuOption == 1)
+        if (gp.pauseOption == 0) {
+            gp.gameState = gp.pauseState;
+            gp.syncGameState();
+        }
+        if (gp.menuOption == 1) {
             gp.pauseOption = 1;
+        }
     }
 
     public void draw(Graphics2D g2){

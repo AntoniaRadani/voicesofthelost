@@ -124,15 +124,17 @@ public class GameMenu {
     }
 
     public void update(){
-       if(gp.menuOption == 0)
-           gp.gameState = 0;
-       if(gp.menuOption == 1)
-           gp.gameState = 1;
-       if(gp.menuOption == 2)
-           System.exit(0);
-       if(gp.menuOption == 3){
-           // meniu setari
-       }
+        if (gp.menuOption == 0) {
+            gp.gameState = gp.menuState;
+            gp.syncGameState();
+        }
+        if (gp.menuOption == 1) {
+            gp.gameState = gp.playState;
+            gp.syncGameState();
+        }
+        if (gp.menuOption == 2) {
+            System.exit(0);
+        }
     }
 
     public void draw(Graphics2D g2) {
